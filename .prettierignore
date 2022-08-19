@@ -1,0 +1,17 @@
+.cache
+.changeset
+.git
+.husky
+.netlify
+.vscode
+node_modules
+
+build
+dist
+coverage
+
+package.json
+pnpm-lock.yaml
+
+README.md
+examples/basic/mock

@@ -1,0 +1,43 @@
+{
+  "vitest.enable": true,
+  "search.exclude": {"**/*.log": true, "**/dist": true, "pnpm-lock.yaml": true},
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.codeActionsOnSave": [
+    "source.addMissingImports",
+    "source.fixAll.eslint"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "cSpell.words": [
+    "alextim",
+    "googlebot",
+    "pnpm",
+    "pnpx",
+    "robotstxt",
+    "vite",
+    "changesets",
+    "vitest",
+    "outfile",
+    "favicon",
+    "favicons",
+    "crossorigin",
+    "anonymus",
+    "<br/>",
+    "frontmatter"
+  ],
+  "[json][jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
