@@ -24,6 +24,9 @@
     },
     "preview": {
       "outputs": []
+    },
+    "dev": {
+      "outputs": []
     }
   }
 }

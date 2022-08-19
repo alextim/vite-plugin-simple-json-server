@@ -11,3 +11,9 @@ p {
   font-weight: bold;
   margin-top: 40px;
 }
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

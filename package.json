@@ -15,6 +15,8 @@
     "release": "pnpm run build && changeset publish",
     "build": "turbo run build --no-deps --scope=vite-plugin-simple-json-server",
     "build:examples": "turbo run build --scope=\"@example/*\"",
+    "dev": "turbo run dev --no-deps --scope=@example/basic",
+    "preview": "turbo run preview --no-deps --scope=@example/basic",
     "typecheck": "turbo run typecheck --no-deps --concurrency=1",
     "lint": "eslint \"packages/**/*.ts\"",
     "lint:fix": "eslint --fix \"packages/**/*.ts\"",

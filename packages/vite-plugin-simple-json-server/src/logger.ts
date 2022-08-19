@@ -1,4 +1,4 @@
-import { LogLevel } from "vite";
+import { LogLevel } from 'vite';
 
 export interface ILogger {
   info(...msg: string[]): void;
