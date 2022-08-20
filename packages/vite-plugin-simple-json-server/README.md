@@ -2,12 +2,11 @@
 
 # vite-plugin-simple-json-server
 
-This **[Vite plugin](https://docs.vite.build/en/guides/plugins-guide/)** generates a _robots.txt_ for your Vite project during build.
-
 ![Release](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/release.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 - <strong>[Why vite-plugin-simple-json-server](#why-vite-plugin-simple-json-server)</strong>
 - <strong>[Installation](#installation)</strong>
+- <strong>[Usage](#usage)</strong>
 - <strong>[Configuration](#configuration)</strong>
 - <strong>[Examples](#examples)</strong>
 - <strong>[Contributing](#contributing)</strong>
@@ -56,6 +55,78 @@ Then, restart the dev server.
 
 This configuration assumes that all json files are in the `mock` folder under Vite root.
 
+## Usage
+
+Let's have json file `users.json` in `mock` folder.
+
+```json
+[
+  {
+    "id": 1,
+    "name": "John",
+    "age": 20,
+    "height": 175
+  },
+  {
+    "id": 2,
+    "name": "Bill",
+    "age": 20,
+    "height": 180
+  },
+  {
+    "id": 3,
+    "name": "Mary",
+    "age": 20,
+    "height": 175
+  },
+  ...
+]
+```
+
+### Pagination
+
+Default limit is 10.
+
+```sh
+curl http://localhost:5173/users?page=2
+```
+
+```sh
+curl http://localhost:5173/users?page=2&limit=100
+```
+
+### Sorting
+
+Default sort order is `asc`.
+
+```sh
+curl http://localhost:5173/users?sort=name
+```
+
+```sh
+curl http://localhost:5173/users?sort=name&order=desc
+```
+
+Only one field sorting is supported.
+
+### Filtering
+
+```sh
+curl  http://localhost:5173/users?id=2
+
+curl  http://localhost:5173/users?age=20&height=175
+```
+
+The plugin supports only `eq`.
+
+### Count
+
+```sh
+curl  http://localhost:5173/users/count
+
+curl  http://localhost:5173/users/count?age=20
+```
+
 ## Configuration
 
 To configure this plugin, pass an object to the `jsonServer()` function call in `vite.config.ts`.
@@ -80,7 +151,7 @@ export default defineConfig({
 
 It's a subfolder under the Vite root. Place all your static files here.  
 
-If a file name is `index.*` its route will be the parent directory path.  
+If the file name is `index.*` then its route will be the parent directory path.  
 
 Html files are served first. 
 
