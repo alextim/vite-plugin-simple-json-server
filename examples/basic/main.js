@@ -2,54 +2,44 @@ import './style.css';
 
 document.querySelector('#app').innerHTML = '<h1>Hello, Vite</h1>';
 
-let ep = '/api/home';
-fetch(ep, { method: 'GET' })
+const ep1 = '/api/home';
+fetch(ep1, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
     document.querySelector('#app').innerHTML += `
-      <p>${ep} GET response:</p>
+      <p>${ep1} GET response:</p>
       ${JSON.stringify(data, null, '  ')}
     `;
   });
 
-ep = '/api/home';
-fetch(ep, { method: 'PUT' })
+const ep2 = '/api/lines';
+fetch(ep2, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
     document.querySelector('#app').innerHTML += `
-      <p>${ep} PUT response:</p>
+      <p>${ep2} GET response:</p>
       ${JSON.stringify(data, null, '  ')}
     `;
   });
 
-ep = '/api/lines';
-fetch(ep, { method: 'GET' })
-  .then((response) => response.json())
-  .then((data) => {
-    document.querySelector('#app').innerHTML += `
-      <p>${ep} GET response:</p>
-      ${JSON.stringify(data, null, '  ')}
-    `;
-  });
-
-ep = '/api/test?_page=2&_limit=10&_sort=color&_order=desc';
-fetch(ep, { method: 'GET' })
+const ep3 = '/api/test?page=2&limit=10&sort=color&order=desc';
+fetch(ep3, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
     let s = '';
     data.forEach((item) => (s += `<li>${JSON.stringify(item, null, '  ')}</li>`));
     document.querySelector('#app').innerHTML += `
-      <p>${ep} GET response:</p>
+      <p>${ep3} GET response:</p>
       <div>[</div><ul>${s}</ul><div>]</div>
     `;
   });
 
-ep = '/api/test?_page=2&_limit=10&_sort=color&_order=desc';
-fetch(ep, { method: 'PUT' })
+const ep4 = '/api/test?count';
+fetch(ep4, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
     document.querySelector('#app').innerHTML += `
-      <p>${ep} PUT response:</p>
+      <p>${ep4} GET response:</p>
       ${JSON.stringify(data, null, '  ')}
     `;
   });

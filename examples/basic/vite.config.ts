@@ -8,6 +8,7 @@ export default defineConfig({
       handlers: [
         {
           pattern: '/api/home',
+          method: 'GET',
           handle: (req, res) => {
             const data = {
               a: 1,

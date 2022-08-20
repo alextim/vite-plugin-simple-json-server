@@ -1,12 +1,15 @@
 import path from 'node:path';
-
 import type { ServerResponse } from 'node:http';
-
-import { isFileExists, sendFileContent } from './utils';
 import { Connect } from 'vite';
-import { ILogger } from './logger';
-import { validateReq } from './validate-request';
-import { FileType, fileTypes } from './constants';
+
+import type { FileType } from '../constants';
+import { fileTypes } from '../constants';
+
+import { isFileExists } from '../utils/files';
+import { ILogger } from '../utils/logger';
+
+import { validateReq } from '../helpers/validate-request';
+import { sendFileContent } from '../helpers/send-file-content';
 
 export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, testingPath: string, logger: ILogger) {
   if (!isFileExists(testingPath)) {

@@ -1,16 +1,15 @@
 import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
-import { PLUGIN_NAME } from './constants';
 
-export function validateReq(req: Connect.IncomingMessage, res: ServerResponse, code = 403, methods?: string[]) {
-  const method = req.method;
+import formatResMsg from './format-res-msg';
 
+export function validateReq({ url, method }: Connect.IncomingMessage, res: ServerResponse, code = 403, methods?: string[]) {
   if (!method || method === 'GET') {
     return true;
   }
   if (method === 'HEAD') {
     res.statusCode = 200;
-    res.end('[' + PLUGIN_NAME + '] HEAD, { url: "' + req.url + '", method: "' + method + '" }');
+    res.end(formatResMsg('Skipped', url, method));
     return false;
   }
   if (methods?.some((m) => m === method)) {
@@ -29,6 +28,6 @@ export function validateReq(req: Connect.IncomingMessage, res: ServerResponse, c
       msg = '';
       break;
   }
-  res.end('[' + PLUGIN_NAME + '] ' + msg + ', { url: "' + req.url + '", method: "' + method + '" }');
+  res.end(formatResMsg(msg, url, method));
   return false;
 }

@@ -1,22 +1,25 @@
 import type { LogLevel, ResolvedConfig } from 'vite';
 import { Plugin, ViteDevServer, Connect } from 'vite';
-import AntPathMatcher from '@howiefh/ant-path-matcher';
 
 import type { ServerResponse } from 'node:http';
 import path from 'node:path';
 
-import { addSlashes, removeTrailingSlash } from './utils';
-import Logger, { ILogger } from './logger';
+import AntPathMatcher from '@howiefh/ant-path-matcher';
+
 import { PLUGIN_NAME } from './constants';
 
-import { handleHtml } from './handle-html';
-import { handleJson } from './handle-json';
-import { handleOther } from './handle-other';
+import { addSlashes, removeTrailingSlash } from './utils/misc';
+import Logger, { ILogger } from './utils/logger';
+
+import { handleHtml } from './handlers/handle-html';
+import { handleJson } from './handlers/handle-json';
+import { handleOther } from './handlers/handle-other';
+import formatResMsg from './helpers/format-res-msg';
 
 let logger: ILogger;
 
 export type MockFunction = {
-  (req: Connect.IncomingMessage, res: ServerResponse, urlVars?: { [key: string]: string }): void;
+  (req: Connect.IncomingMessage, res: ServerResponse, urlVars?: Record<string, string>): void;
 };
 
 export type MockHandler = {
@@ -25,7 +28,7 @@ export type MockHandler = {
   handle: MockFunction;
 };
 
-export type MockOptions = {
+export type SimpleJsonServerPluginOptions = {
   logLevel?: LogLevel;
   urlPrefixes?: string[];
   handlers?: MockHandler[];
@@ -33,14 +36,14 @@ export type MockOptions = {
   noHandlerResponse404?: boolean;
 };
 
-const defaultOptions: MockOptions = {
+const defaultOptions: SimpleJsonServerPluginOptions = {
   logLevel: 'info',
   urlPrefixes: ['/api/'],
   mockRootDir: 'mock',
   noHandlerResponse404: true,
 };
 
-export default (options: MockOptions = {}): Plugin => {
+const simpleJsonServerPlugin = (options: SimpleJsonServerPluginOptions = {}): Plugin => {
   let config: ResolvedConfig;
 
   return {
@@ -51,17 +54,15 @@ export default (options: MockOptions = {}): Plugin => {
       config = resolvedConfig;
     },
 
-    configureServer: async (server: ViteDevServer) => {
+    async configureServer(server: ViteDevServer) {
       // build url matcher
       const matcher = new AntPathMatcher();
 
       // init options
       options.logLevel = options.logLevel || defaultOptions.logLevel;
-      let urlPrefixes: string[] | undefined = undefined;
-      if (Array.isArray(options.urlPrefixes)) {
-        urlPrefixes = options.urlPrefixes.filter(Boolean).map(addSlashes);
-      }
-      options.urlPrefixes = urlPrefixes?.length ? urlPrefixes : defaultOptions.urlPrefixes;
+      const urlPrefixes = Array.isArray(options.urlPrefixes) ? options.urlPrefixes.filter(Boolean).map(addSlashes) : [];
+
+      options.urlPrefixes = urlPrefixes.length ? urlPrefixes : defaultOptions.urlPrefixes;
       options.mockRootDir = options.mockRootDir || defaultOptions.mockRootDir;
       options.noHandlerResponse404 = options.noHandlerResponse404 ?? defaultOptions.noHandlerResponse404;
 
@@ -70,15 +71,15 @@ export default (options: MockOptions = {}): Plugin => {
       logger.info('mock server started.', `options = ${JSON.stringify(options, null, '  ')}`);
 
       server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
-        doHandle(options, config, matcher, req, res, next);
+        doHandle(options, config.root, matcher, req, res, next);
       });
     },
   };
 };
 
 const doHandle = async (
-  { handlers, urlPrefixes, mockRootDir, noHandlerResponse404 }: MockOptions,
-  config: ResolvedConfig,
+  { handlers, urlPrefixes, mockRootDir, noHandlerResponse404 }: SimpleJsonServerPluginOptions,
+  viteRoot: string,
   matcher: AntPathMatcher,
   req: Connect.IncomingMessage,
   res: ServerResponse,
@@ -89,59 +90,65 @@ const doHandle = async (
     return;
   }
 
-  if (handlers) {
-    const normalizedUrl = req.url.endsWith('/') ? req.url.substring(0, req.url.length - 1) : req.url;
+  let urlPath = removeTrailingSlash(req.url.split('?')[0]);
 
-    for (const handler of handlers) {
-      let path = normalizedUrl;
-      const index = path.indexOf('?');
-      if (index > 0) {
-        path = path.substring(0, index);
+  try {
+    if (handlers) {
+      for (const handler of handlers) {
+        const urlVars: Record<string, string> = {};
+        if (matcher.doMatch(handler.pattern, urlPath, true, urlVars)) {
+          if (handler.method && handler.method !== req.method) {
+            logger.info(
+              'matched (405 Not Allowed)',
+              `handler = ${JSON.stringify(handler, null, '  ')}`,
+              `urlVars = ${JSON.stringify(urlVars, null, '  ')}`,
+            );
+            res.statusCode = 405;
+            res.end(formatResMsg('405 Not Allowed', req.url, req.method));
+            return;
+          }
+          logger.info('matched', `handler = ${JSON.stringify(handler, null, '  ')}`, `urlVars = ${JSON.stringify(urlVars, null, '  ')}`);
+          handler.handle(req, res, { ...urlVars });
+          return;
+        }
       }
-      const pathVars: Record<string, string> = {};
-      let matched = matcher.doMatch(handler.pattern, path, true, pathVars);
-      if (matched && handler.method) {
-        matched = handler.method === req.method;
+    }
+
+    urlPath = removePrefix(urlPath, urlPrefixes);
+    if (urlPath) {
+      const testingPath = path.join(viteRoot, mockRootDir!, urlPath);
+      if (handleHtml(req, res, testingPath, logger)) {
+        return;
       }
-      if (matched) {
-        logger.info('matched', `handler = ${JSON.stringify(handler, null, '  ')}`, `pathVars = ${JSON.stringify(pathVars, null, '  ')}`);
-        handler.handle(req, res, { ...pathVars });
+      if (handleJson(req, res, testingPath, logger)) {
+        return;
+      }
+      if (handleOther(req, res, testingPath, logger)) {
         return;
       }
     }
-  }
 
-  const route = getRoute(req.url, urlPrefixes);
-  if (route) {
-    const testingPath = path.join(config.root, mockRootDir!, route);
-    if (handleHtml(req, res, testingPath, logger)) {
+    if (noHandlerResponse404) {
+      res.statusCode = 404;
+      const { url, method } = req;
+      res.end(formatResMsg('no handler found', url, method));
       return;
     }
-    if (handleJson(req, res, testingPath, logger)) {
-      return;
-    }
-    if (handleOther(req, res, testingPath, logger)) {
-      return;
-    }
-  }
 
-  if (noHandlerResponse404) {
-    res.statusCode = 404;
-    const { url, method } = req;
-    res.end('[' + PLUGIN_NAME + '] no handler found, { url: "' + url + '", method: "' + method + '" }');
-    return;
+    next();
+  } catch (err: any) {
+    logger.error(err.toString());
+    next();
   }
-
-  next();
 };
 
-function getRoute(url: string, urlPrefixes: string[]) {
+function removePrefix(url: string, urlPrefixes: string[]) {
   for (const prefix of urlPrefixes) {
     if (url.startsWith(prefix)) {
-      const s = url.substring(prefix.length);
-      const a = s.split('?');
-      return removeTrailingSlash(a[0]);
+      return url.substring(prefix.length);
     }
   }
   return '';
 }
+
+export default simpleJsonServerPlugin;
