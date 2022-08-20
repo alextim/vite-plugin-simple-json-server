@@ -17,7 +17,11 @@
 
 ## Why vite-plugin-simple-json-server?
 
-This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting and filter. Additionally the plugin serves `html`, `js`, `css` and `txt` files. For flexibility you can add own routes to plugin config.
+This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting and filter.  
+
+Additionally the plugin serves `html`, `js`, `css` and `txt` files.  
+
+Additionally you can define custom routes in the plugin config.
 
 The plugin is light, it has only one dependency.
 
@@ -35,7 +39,7 @@ npm add -D vite-plugin-simple-json-server
 yarn add -D vite-plugin-simple-json-server
 
 # Using PNPM
-pnpx add -D vite-plugin-simple-json-server
+pnpm add -D vite-plugin-simple-json-server
 ```
 
 Then, apply this plugin to your `vite.config.*` file using the `plugins` property:
@@ -57,7 +61,7 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 
 ## Usage
 
-Let's have json file `users.json` in `mock` folder.
+Let's have the `friends.json` in the `mock` folder.
 
 ```json
 [
@@ -79,7 +83,9 @@ Let's have json file `users.json` in `mock` folder.
     "age": 20,
     "height": 175
   },
+
   ...
+
 ]
 ```
 
@@ -88,10 +94,10 @@ Let's have json file `users.json` in `mock` folder.
 Default limit is 10.
 
 ```sh
-curl http://localhost:5173/users?page=2
+curl http://localhost:5173/friends?page=2
 
 
-curl http://localhost:5173/users?page=2&limit=100
+curl http://localhost:5173/friends?page=2&limit=100
 ```
 
 ### Sorting
@@ -99,10 +105,10 @@ curl http://localhost:5173/users?page=2&limit=100
 Default sort order is `asc`.
 
 ```sh
-curl http://localhost:5173/users?sort=name
+curl http://localhost:5173/friends?sort=name
 
 
-curl http://localhost:5173/users?sort=name&order=desc
+curl http://localhost:5173/friends?sort=name&order=desc
 ```
 
 Only one field sorting is supported.
@@ -110,10 +116,10 @@ Only one field sorting is supported.
 ### Filtering
 
 ```sh
-curl  http://localhost:5173/users?id=2
+curl  http://localhost:5173/friends?id=2
 
 
-curl  http://localhost:5173/users?age=20&height=175
+curl  http://localhost:5173/friends?age=20&height=175
 ```
 
 The plugin supports only `eq`.
@@ -121,10 +127,10 @@ The plugin supports only `eq`.
 ### Count
 
 ```sh
-curl  http://localhost:5173/users/count
+curl  http://localhost:5173/friends/count
 
 
-curl  http://localhost:5173/users/count?age=20
+curl  http://localhost:5173/friends/count?age=20
 ```
 
 ## Configuration
@@ -163,7 +169,7 @@ Html files are served first.
 | `css`  | `GET`          |
 | `txt`  | `GET`          |
 
-The server will respond with the 403 error for unsupported method.
+The server will respond with the 403 error for unsupported methods.
 
 **`vite.config.ts`**
 
@@ -203,35 +209,6 @@ export default {
         '/fist-api/', 
         '/second-api/',
       ],
-    }),
-  ],
-};
-```
-
-</details>
-
-<details>
-  <summary><strong>host</strong></summary>
-
-|   Type   | Required | Default value |
-| :------: | :------: | :-----------: |
-| `String` |    No    |  `undefined`  |
-
-Some crawlers (Yandex) support a `Host` directive, allowing websites with multiple mirrors to specify their preferred domain.
-
-**`vite.config.ts`**
-
-```js
-import jsonServer from 'vite-plugin-simple-json-server';
-
-export default {
-  site: 'https://example.com',
-  experimental: {
-    plugins: true,
-  },
-  plugins: [
-    jsonServer({
-      host: 'your-domain-name.com',
     }),
   ],
 };
