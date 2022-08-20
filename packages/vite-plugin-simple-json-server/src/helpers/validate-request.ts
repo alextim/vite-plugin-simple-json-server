@@ -3,16 +3,8 @@ import { Connect } from 'vite';
 
 import formatResMsg from './format-res-msg';
 
-export function validateReq({ url, method }: Connect.IncomingMessage, res: ServerResponse, code = 403, methods?: string[]) {
-  if (!method || method === 'GET') {
-    return true;
-  }
-  if (method === 'HEAD') {
-    res.statusCode = 200;
-    res.end(formatResMsg('Skipped', url, method));
-    return false;
-  }
-  if (methods?.some((m) => m === method)) {
+export function validateReq({ url, method }: Connect.IncomingMessage, res: ServerResponse, code = 403, allowedMethods = ['GET']) {
+  if (!method || allowedMethods?.some((m) => m === method)) {
     return true;
   }
   res.statusCode = code;

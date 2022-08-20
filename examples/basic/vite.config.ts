@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite';
-import mockApi from 'vite-plugin-simple-json-server';
+import jsonServer from 'vite-plugin-simple-json-server';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    mockApi({
+    jsonServer({
       handlers: [
         {
           pattern: '/api/home',

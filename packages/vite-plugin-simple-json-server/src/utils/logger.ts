@@ -20,9 +20,9 @@ export default class Logger implements ILogger {
   private packageName: string;
   private logLevel: LogLevel;
 
-  constructor(packageName: string, logLevel?: LogLevel) {
+  constructor(packageName: string, logLevel: LogLevel = 'info') {
     this.packageName = packageName;
-    this.logLevel = logLevel || 'info';
+    this.logLevel = logLevel;
   }
 
   private log(msg: string[], prefix: string = '') {

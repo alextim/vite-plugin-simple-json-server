@@ -1,9 +1,8 @@
-import fs from 'node:fs';
+import fs, { PathLike } from 'node:fs';
 
-export function isDirExists(s: string) {
+export function isDirExists(s: PathLike) {
   try {
-    const stat = fs.statSync(s);
-    return stat.isDirectory();
+    return fs.statSync(s).isDirectory();
   } catch (err: any) {
     if (err.code === 'ENOENT') {
       return false;
@@ -12,10 +11,9 @@ export function isDirExists(s: string) {
   }
 }
 
-export function isFileExists(s: string) {
+export function isFileExists(s: PathLike) {
   try {
-    const stat = fs.statSync(s);
-    return stat.isFile();
+    return fs.statSync(s).isFile();
   } catch (err: any) {
     if (err.code === 'ENOENT') {
       return false;

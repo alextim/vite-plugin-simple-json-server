@@ -11,6 +11,8 @@ import { ILogger } from '../utils/logger';
 
 import { validateReq } from '../helpers/validate-request';
 import { sendFileContent } from '../helpers/send-file-content';
+import { filter } from './helpers/filter';
+import { getFilteredCount } from './helpers/get-filtered-count';
 
 export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, testingPath: string, logger: ILogger) {
   const name = isDirExists(testingPath) ? 'index' : '';
@@ -79,10 +81,11 @@ export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, te
 
   if (count) {
     logger.info('matched', `query: ${qs}`, `file: ${filePath}`);
-    res.end(JSON.stringify({ count: data.length }));
+    res.end(JSON.stringify({ count: getFilteredCount(data, q) }));
     return true;
   }
 
+  data = filter(data, q);
   if (page || limit) {
     page = page ? page : 1;
     limit = limit ? limit : 10;

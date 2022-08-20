@@ -2,7 +2,7 @@
 
 # Astro Lib
 
-![Release](https://github.com/alextim/astro-lib/actions/workflows/release.yaml/badge.svg) ![Test](https://github.com/alextim/astro-lib/actions/workflows/test.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+![Release](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/release.yaml/badge.svg) ![Test](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/test.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Here are useful additions for [Astro](https://astro.build).
 
@@ -10,9 +10,8 @@ Here are useful additions for [Astro](https://astro.build).
 
 | Package                                         | Release Notes                                                                                                                         |
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| [astro-robots-txt](packages/astro-robots-txt)   | [![astro-robots-txt version](https://img.shields.io/npm/v/astro-robots-txt.svg?label=%20)](packages/astro-robots-txt/CHANGELOG.md)    |
-| [astro-webmanifest](packages/astro-webmanifest) | [![astro-webmanifest version](https://img.shields.io/npm/v/astro-webmanifest.svg?label=%20)](packages/astro-webmanifest/CHANGELOG.md) |
-| [astro-sitemap](packages/astro-sitemap)         | [![astro-sitemap version](https://img.shields.io/npm/v/astro-sitemap.svg?label=%20)](packages/astro-sitemap/CHANGELOG.md)             |
+| [vite-plugin-simple-json-server](packages/vite-plugin-simple-json-server)   | [![vite-plugin-simple-json-server version](https://img.shields.io/npm/v/vite-plugin-simple-json-server.svg?label=%20)](packages/vite-plugin-simple-json-server/CHANGELOG.md)    |
+
 
 ## License
 
