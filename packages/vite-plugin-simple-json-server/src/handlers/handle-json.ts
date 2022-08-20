@@ -11,23 +11,43 @@ import { ILogger } from '../utils/logger';
 
 import { validateReq } from '../helpers/validate-request';
 import { sendFileContent } from '../helpers/send-file-content';
+
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
 
-export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, testingPath: string, logger: ILogger) {
-  const name = isDirExists(testingPath) ? 'index' : '';
-  const ext = 'json';
+const COUNT_SUFFIX = '/count';
+const EXT = 'json';
 
-  const filePath = (name ? path.join(testingPath, name) : testingPath) + '.' + ext;
+export function handleJson(
+  req: Connect.IncomingMessage,
+  res: ServerResponse,
+  viteRoot: string,
+  mockRootDir: string,
+  urlPath: string,
+  logger: ILogger,
+) {
+  let count = false;
+
+  if (urlPath.endsWith(COUNT_SUFFIX)) {
+    urlPath = urlPath.substring(0, urlPath.length - COUNT_SUFFIX.length);
+    count = true;
+  }
+
+  const pathname = path.join(viteRoot, mockRootDir, urlPath);
+
+  const name = isDirExists(pathname) ? 'index' : '';
+
+  const filePath = (name ? path.join(pathname, name) : pathname) + '.' + EXT;
+
   if (!isFileExists(filePath)) {
     return false;
   }
-  if (!validateReq(req, res, 405, ['POST'])) {
+  if (!validateReq(req, res, 405, ['GET', 'POST'])) {
     return true;
   }
 
   const [, qs] = req.url!.split('?');
-  if (!qs) {
+  if (!count && !qs) {
     sendFileContent(res, filePath, fileTypes.json, logger);
     return true;
   }
@@ -38,7 +58,6 @@ export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, te
   let limit = 0;
   let sort = '';
   let order = 'asc';
-  let count = false;
 
   if (q['page']) {
     page = Math.max(1, parseInt(q['page'] as string));
@@ -58,9 +77,6 @@ export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, te
     if (order !== 'asc' && order !== 'desc') {
       order = 'asc';
     }
-  }
-  if (q['count'] !== undefined) {
-    count = true;
   }
 
   res.setHeader('Content-Type', fileTypes.json);
@@ -93,7 +109,7 @@ export function handleJson(req: Connect.IncomingMessage, res: ServerResponse, te
     const end = start + limit;
     data = data.slice(start, end);
   }
-  if (sort && data[0].hasOwnProperty(sort)) {
+  if (sort && data.length && data[0].hasOwnProperty(sort)) {
     const dir = order === 'asc' ? 1 : -1;
     data = data.sort((a: any, b: any) => {
       if (a[sort] > b[sort]) {

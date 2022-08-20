@@ -3,7 +3,7 @@ import jsonServer from 'vite-plugin-simple-json-server';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: 'aaaa',
+  // base: 'aaaa',
   plugins: [
     jsonServer({
       handlers: [

@@ -120,7 +120,7 @@ const doHandle = async (
       if (handleHtml(req, res, testingPath, logger)) {
         return;
       }
-      if (handleJson(req, res, testingPath, logger)) {
+      if (handleJson(req, res, viteRoot, mockRootDir!, urlPath, logger)) {
         return;
       }
       if (handleOther(req, res, testingPath, logger)) {
@@ -130,15 +130,16 @@ const doHandle = async (
 
     if (noHandlerResponse404) {
       res.statusCode = 404;
-      const { url, method } = req;
-      res.end(formatResMsg('no handler found', url, method));
+      res.end(formatResMsg('no handler found', req.url, req.method));
       return;
     }
 
     next();
   } catch (err: any) {
     logger.error(err.toString());
-    next();
+    res.statusCode = 500;
+    res.end(formatResMsg('500 Server error ' + err.toString(), req.url, req.method));
+    return;
   }
 };
 
