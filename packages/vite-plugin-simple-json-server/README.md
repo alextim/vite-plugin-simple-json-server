@@ -89,9 +89,8 @@ Default limit is 10.
 
 ```sh
 curl http://localhost:5173/users?page=2
-```
 
-```sh
+
 curl http://localhost:5173/users?page=2&limit=100
 ```
 
@@ -101,9 +100,8 @@ Default sort order is `asc`.
 
 ```sh
 curl http://localhost:5173/users?sort=name
-```
 
-```sh
+
 curl http://localhost:5173/users?sort=name&order=desc
 ```
 
@@ -114,6 +112,7 @@ Only one field sorting is supported.
 ```sh
 curl  http://localhost:5173/users?id=2
 
+
 curl  http://localhost:5173/users?age=20&height=175
 ```
 
@@ -123,6 +122,7 @@ The plugin supports only `eq`.
 
 ```sh
 curl  http://localhost:5173/users/count
+
 
 curl  http://localhost:5173/users/count?age=20
 ```
