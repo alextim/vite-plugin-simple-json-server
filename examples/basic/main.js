@@ -34,7 +34,7 @@ fetch(ep3, { method: 'GET' })
     `;
   });
 
-const ep4 = '/api/test?count';
+const ep4 = '/api/test/count';
 fetch(ep4, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
