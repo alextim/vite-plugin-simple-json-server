@@ -63,7 +63,7 @@ describe('test handleOther', () => {
     expect(res.end).not.toBeCalled();
     expect(sendFileContent).not.toBeCalled();
   });
-  it.only('path exists, html, should return true', () => {
+  it('path exists, html, should return true', () => {
     const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, 'c:/index.html', logger);
     vi.mock('../utils/files', () => ({
       isFileExists: vi.fn().mockImplementation(() => true),
