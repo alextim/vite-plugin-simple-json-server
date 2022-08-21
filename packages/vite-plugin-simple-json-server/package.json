@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-simple-json-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Provide file based mock API for Vite in dev mode",
   "keywords": [
     "vite",
@@ -21,16 +21,12 @@
   },
   "homepage": "https://github.com/alextim/vite-plugin-simple-json-server/tree/main/packages/vite-plugin-simple-json-server#readme",
   "bugs": "https://github.com/alextim/vite-plugin-simple-json-server/issues",
-
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-
   "files": [
     "dist"
   ],
-
-
   "scripts": {
     "build": "rimraf dist && unbuild",
     "typecheck": "tsc --noEmit --pretty",
