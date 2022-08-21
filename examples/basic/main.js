@@ -1,6 +1,6 @@
 import './style.css';
 
-document.querySelector('#app').innerHTML = '<h1>Hello, Vite</h1>';
+document.querySelector('#app').innerHTML = '<h1>Hello, Json Server</h1>';
 
 const ep1 = '/api/home';
 fetch(ep1, { method: 'GET' })

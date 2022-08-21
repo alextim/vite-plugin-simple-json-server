@@ -67,7 +67,9 @@ Pagination and count is only available for array-based json.
 
 Otherwise, the server responds with 405.  
 
-For sorting and filtering json must be an array of objects. If filter or sort query parameter name is missing in json then such parameter will be ignored.  
+For sorting and filtering the json must be an array of objects.  
+
+If filter or sort query parameter name is missing in the json then such parameter will be ignored.  
 
 Let's have the `products.json` in the `mock` folder.
 
@@ -202,10 +204,11 @@ export default {
 | :--------: | :------: | :-------------: |
 | `String[]` |    No    | `[ '/api/' ]`   |
 
-Array of non empty strings. Slashes are not obligatory.
+Array of non empty strings.  
 
-The plugin will look for requests starting with these prefixes.
+The plugin will look for requests starting with these prefixes.  
 
+Slashes are not obligatory: plugin will add them automatically during option validation.  
 
 **`vite.config.ts`**
 
@@ -233,7 +236,7 @@ export default {
 | :-------: | :------: | :-----------: |
 | `Boolean` |    No    |  `true`       |
 
-If it's `false` the server will not send 404 error.
+If its value is `false` the server won't respond with 404 error.
 
 **`vite.config.ts`**
 
@@ -283,13 +286,15 @@ export default {
 | :-------------: | :------: | :-------------------------------: |
 | `MockHandler[]` |    No    | `undefined`                       |
 
-Array of hanlers
+Array of mock handlers.
 
 The `MockHandler` type consists of `pattern`, `method` and `handle` fields.
 
 **`pattern`**
 
-`String`, required, Apache Ant-style path pattern.
+`String`, required.  
+
+Apache Ant-style path pattern.  
 
 The mapping matches URLs using the following rules:  
 
@@ -300,7 +305,9 @@ The mapping matches URLs using the following rules:
   
 **`method`** 
 
-`String`, optional, any HTTP method: `GET` | `POST` etc;
+`String`, optional.  
+
+Any HTTP method: `GET` | `POST` etc;
 
 **`handle`**
 
@@ -367,7 +374,10 @@ Number of items per page.
 Usage:
 
 ```sh
-curl http://localhost:5173/friends?page=2&limit=100
+curl http://localhost:5173/products?page=2
+
+
+curl http://localhost:5173/products?page=2&limit=100
 ```
 
 **`vite.config.ts`**
