@@ -14,6 +14,8 @@ import { sendFileContent } from '../helpers/send-file-content';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
+import type { SimpleJsonServerPluginOptions } from '..';
+import formatResMsg from '../helpers/format-res-msg';
 
 const COUNT_SUFFIX = '/count';
 const EXT = 'json';
@@ -22,7 +24,7 @@ export function handleJson(
   req: Connect.IncomingMessage,
   res: ServerResponse,
   viteRoot: string,
-  mockRootDir: string,
+  options: SimpleJsonServerPluginOptions,
   urlPath: string,
   logger: ILogger,
 ) {
@@ -33,7 +35,7 @@ export function handleJson(
     count = true;
   }
 
-  const pathname = path.join(viteRoot, mockRootDir, urlPath);
+  const pathname = path.join(viteRoot, options.mockRootDir!, urlPath);
 
   const name = isDirExists(pathname) ? 'index' : '';
 
@@ -48,7 +50,7 @@ export function handleJson(
 
   const [, qs] = req.url!.split('?');
   if (!count && !qs) {
-    sendFileContent(res, filePath, fileTypes.json, logger);
+    sendFileContent(req, res, filePath, fileTypes.json, logger);
     return true;
   }
 
@@ -65,7 +67,7 @@ export function handleJson(
   if (q['limit']) {
     limit = Math.max(0, parseInt(q['limit'] as string));
     if (limit === 0) {
-      limit = 10;
+      limit = options.limit!;
     }
   }
   if (q['sort']) {
@@ -83,25 +85,40 @@ export function handleJson(
   const content = fs.readFileSync(filePath, 'utf-8');
 
   if (!page && !limit && !sort && !count) {
-    logger.info('matched', `file: ${filePath}`);
+    logger.info('matched', `${req.method} ${req.url}`, `file: ${filePath}`);
     res.end(content);
     return true;
   }
 
   let data = JSON.parse(content);
-  if (!Array.isArray(data) || data.length === 0) {
-    logger.info('matched', `file: ${filePath}`);
+
+  if (!Array.isArray(data)) {
+    const msg = ['405 Not Allowed', 'Json is not array'];
+    logger.info('matched', ...msg, `${req.method} ${req.url}`, `file: ${filePath}`);
+    res.statusCode = 405;
+    res.end(formatResMsg(req, ...msg));
+    return true;
+  }
+
+  if (data.length === 0) {
+    logger.info('matched', `${req.method} ${req.url}`, `file: ${filePath}`);
     res.end(content);
     return true;
   }
 
   if (count) {
-    logger.info('matched', `query: ${qs}`, `file: ${filePath}`);
-    res.end(JSON.stringify({ count: getFilteredCount(data, q) }));
+    const filteredCount = getFilteredCount(data, q);
+    const msg = ['matched', `${req.method} ${req.url}`];
+    if (qs) {
+      msg.push(`query: ${qs || ''}`);
+    }
+    logger.info(...msg, `file: ${filePath}`);
+    res.end(JSON.stringify({ count: filteredCount }));
     return true;
   }
 
   data = filter(data, q);
+
   if (page || limit) {
     page = page ? page : 1;
     limit = limit ? limit : 10;
@@ -109,6 +126,7 @@ export function handleJson(
     const end = start + limit;
     data = data.slice(start, end);
   }
+
   if (sort && data.length && data[0].hasOwnProperty(sort)) {
     const dir = order === 'asc' ? 1 : -1;
     data = data.sort((a: any, b: any) => {
@@ -121,7 +139,8 @@ export function handleJson(
       return 0;
     });
   }
-  logger.info('matched', `query: ${qs}`, `file: ${filePath}`);
+
+  logger.info('matched', `${req.method} ${req.url}`, `query: ${qs}`, `file: ${filePath}`);
   res.end(JSON.stringify(data));
 
   return true;

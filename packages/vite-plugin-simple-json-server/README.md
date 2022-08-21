@@ -2,7 +2,7 @@
 
 # vite-plugin-simple-json-server
 
-Provide simple mock API for [Vite](https://vitejs.dev/).
+Provide file based mock API for [Vite](https://vitejs.dev/) in dev mode.
 
 ![Release](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/release.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
@@ -63,27 +63,33 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 
 ## Usage
 
-Let's have the `friends.json` in the `mock` folder.
+Pagination and count is only available for array-based json.  
+
+Otherwise, the server responds with 405.  
+
+For sorting and filtering json must be an array of objects. If filter or sort query parameter name is missing in json then such parameter will be ignored.  
+
+Let's have the `products.json` in the `mock` folder.
 
 ```json
 [
   {
     "id": 1,
-    "name": "John",
-    "age": 20,
-    "height": 175
+    "name": "Banana",
+    "price": 2,
+    "weight": 1
   },
   {
     "id": 2,
-    "name": "Bill",
-    "age": 20,
-    "height": 180
+    "name": "Apple",
+    "price": 2,
+    "weight": 1
   },
   {
     "id": 3,
-    "name": "Mary",
-    "age": 20,
-    "height": 175
+    "name": "Potato",
+    "price": 2,
+    "weight": 10
   },
 
   ...
@@ -93,13 +99,13 @@ Let's have the `friends.json` in the `mock` folder.
 
 ### Pagination
 
-Default limit is 10.
+Default page size limit is 10.
 
 ```sh
-curl http://localhost:5173/friends?page=2
+curl http://localhost:5173/products?page=2
 
 
-curl http://localhost:5173/friends?page=2&limit=100
+curl http://localhost:5173/products?page=2&limit=100
 ```
 
 ### Sorting
@@ -107,10 +113,10 @@ curl http://localhost:5173/friends?page=2&limit=100
 Default sort order is `asc`.
 
 ```sh
-curl http://localhost:5173/friends?sort=name
+curl http://localhost:5173/products?sort=name
 
 
-curl http://localhost:5173/friends?sort=name&order=desc
+curl http://localhost:5173/products?sort=name&order=desc
 ```
 
 Only one field sorting is supported.
@@ -118,10 +124,10 @@ Only one field sorting is supported.
 ### Filtering
 
 ```sh
-curl  http://localhost:5173/friends?id=2
+curl  http://localhost:5173/products?id=2
 
 
-curl  http://localhost:5173/friends?age=20&height=175
+curl  http://localhost:5173/products?price=2&weight=1
 ```
 
 The plugin supports only `eq`.
@@ -129,10 +135,10 @@ The plugin supports only `eq`.
 ### Count
 
 ```sh
-curl  http://localhost:5173/friends/count
+curl  http://localhost:5173/products/count
 
 
-curl  http://localhost:5173/friends/count?age=20
+curl  http://localhost:5173/products/count?price=2
 ```
 ## Configuration
 
@@ -346,6 +352,38 @@ export default {
 ```
 
 :exclamation: Handlers are served first. They intercept namesake file routes.
+
+</details>
+
+<details>
+  <summary><strong>limit</strong></summary>
+
+|   Type     | Required | Default value |
+| :--------: | :------: | :-----------: |
+|  `Number`  |    No    |    10         |
+
+Number of items per page.  
+
+Usage:
+
+```sh
+curl http://localhost:5173/friends?page=2&limit=100
+```
+
+**`vite.config.ts`**
+
+```js
+import jsonServer from 'vite-plugin-simple-json-server';
+
+export default {
+
+  plugins: [
+    jsonServer({
+      limit: 100,
+    }),
+  ],
+};
+```
 
 </details>
 

@@ -20,7 +20,7 @@ export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, te
   }
 
   if (validateReq(req, res)) {
-    sendFileContent(res, filePath, fileTypes[ext], logger);
+    sendFileContent(req, res, filePath, fileTypes[ext], logger);
   }
   return true;
 }

@@ -21,7 +21,7 @@ export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, t
     return false;
   }
   if (validateReq(req, res)) {
-    sendFileContent(res, testingPath, fileTypes[key], logger);
+    sendFileContent(req, res, testingPath, fileTypes[key], logger);
   }
   return true;
 }
