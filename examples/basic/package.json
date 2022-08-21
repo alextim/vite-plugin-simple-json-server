@@ -11,6 +11,6 @@
     "vite": "^3.0.9"
   },
   "dependencies": {
-    "vite-plugin-simple-json-server": "^0.1.0"
+    "vite-plugin-simple-json-server": "^0.1.1"
   }
 }
