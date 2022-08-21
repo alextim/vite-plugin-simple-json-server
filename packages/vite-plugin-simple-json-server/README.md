@@ -194,9 +194,12 @@ export default {
 
 |   Type     | Required |  Default value  |
 | :--------: | :------: | :-------------: |
-| `String[]` |    No    | `[ '\api\' ]`   |
+| `String[]` |    No    | `[ '/api/' ]`   |
 
-The plugin will look for the requests which begin with these prefixes.
+Array of non empty strings. Slashes are not obligatory.
+
+The plugin will look for requests starting with these prefixes.
+
 
 **`vite.config.ts`**
 
@@ -295,11 +298,11 @@ The mapping matches URLs using the following rules:
 
 **`handle`**
 
-`MockFunction`: `(req: Connect.IncomingMessage, res: ServerResponse, urlVars?: Record<string, string>): void;`
+`MockFunction`: `(req: Connect.IncomingMessage, res: ServerResponse, urlVars?: Record<string, string>): void`
 
-- `req`: Connect.IncomingMessage from [Vite](https://github.com/vitejs/vite/blob/main/packages/vite/types/connect.d.ts);
-- `res`: ServerResponse from [Node http](https://nodejs.org/api/http.html);
-- `urlVars`: key-value pairs from url.
+- `req`: `Connect.IncomingMessage` from [Vite](https://github.com/vitejs/vite/blob/main/packages/vite/types/connect.d.ts);
+- `res`: `ServerResponse` from [Node http](https://nodejs.org/api/http.html);
+- `urlVars`: key-value pairs from parsed url.
 
 **`vite.config.ts`**
 
@@ -341,7 +344,6 @@ export default {
   ],
 };
 ```
-
 
 :exclamation: Handlers are served first. They intercept namesake file routes.
 
