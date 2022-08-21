@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Logger from '../utils/logger';
 import { sendFileContent } from '../helpers/send-file-content';
 import { handleOther } from '../handlers/handle-other';
-import { isFileExists } from '../utils/files';
+import path from 'node:path';
 
 const logger = new Logger('test');
 
@@ -29,9 +29,6 @@ const reset = () => {
   req = { ...defReq };
   res = { ...defRes };
 };
-vi.mock('../utils/files', () => ({
-  isFileExists: vi.fn().mockImplementation(() => true),
-}));
 
 reset();
 describe('test handleOther', () => {
@@ -40,36 +37,23 @@ describe('test handleOther', () => {
     vi.clearAllMocks();
   });
   it('path not exist, should return false', () => {
-    vi.mock('../utils/files', () => ({
-      isFileExists: vi.fn().mockImplementation(() => false),
-    }));
-    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, 'index.html', logger);
-    expect(isFileExists).toBeCalled();
-    expect(isFileExists).toHaveReturnedWith(false);
+    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, 'not-exist-index.html', logger);
     expect(result).toBeFalsy();
     expect(res.statusCode).toBe(0);
     expect(res.end).not.toBeCalled();
     expect(sendFileContent).not.toBeCalled();
   });
   it('path exists, not html, should return false', () => {
-    vi.mock('../utils/files', () => ({
-      isFileExists: vi.fn().mockImplementation(() => true),
-    }));
-    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, 'index._html', logger);
-    expect(isFileExists).toBeCalled();
-    expect(isFileExists).toHaveReturnedWith(true);
+    const filepath = path.join(process.cwd(), '..', '..', 'examples', 'basic', 'index._html');
+    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, filepath, logger);
     expect(result).toBeFalsy();
     expect(res.statusCode).toBe(0);
     expect(res.end).not.toBeCalled();
     expect(sendFileContent).not.toBeCalled();
   });
   it('path exists, html, should return true', () => {
-    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, 'c:/index.html', logger);
-    vi.mock('../utils/files', () => ({
-      isFileExists: vi.fn().mockImplementation(() => true),
-    }));
-    expect(isFileExists).toBeCalled();
-    expect(isFileExists).toHaveReturnedWith(true);
+    const filepath = path.join(process.cwd(), '..', '..', 'examples', 'basic', 'index.html');
+    const result = handleOther(req as Connect.IncomingMessage, res as ServerResponse, filepath, logger);
     expect(res.end).not.toBeCalled();
     expect(result).toBeTruthy();
     expect(sendFileContent).toBeCalled();
