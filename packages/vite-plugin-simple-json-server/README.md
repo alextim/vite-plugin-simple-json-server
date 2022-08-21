@@ -2,6 +2,8 @@
 
 # vite-plugin-simple-json-server
 
+Provide simple mock API for [Vite](https://vitejs.dev/).
+
 ![Release](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/release.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 - <strong>[Why vite-plugin-simple-json-server](#why-vite-plugin-simple-json-server)</strong>
@@ -19,9 +21,9 @@
 
 This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting and filter.  
 
-Additionally the plugin serves `html`, `js`, `css` and `txt` files.  
+Additionally the plugin serves `html`, `js`, `css` and `txt` static files.  
 
-Additionally you can define custom routes in the plugin config.
+As well you can define the custom route's handlers in the plugin config.
 
 The plugin is light, it has only one dependency.
 
@@ -132,7 +134,6 @@ curl  http://localhost:5173/friends/count
 
 curl  http://localhost:5173/friends/count?age=20
 ```
-
 ## Configuration
 
 To configure this plugin, pass an object to the `jsonServer()` function call in `vite.config.ts`.
@@ -273,7 +274,32 @@ export default {
 | :-------------: | :------: | :-------------------------------: |
 | `MockHandler[]` |    No    | `undefined`                       |
 
-Available values: `'info' | 'warn' | 'error' | 'silent'`;
+Array of hanlers
+
+The `MockHandler` type consists of `pattern`, `method` and `handle` fields.
+
+**`pattern`**
+
+`String`, required, Apache Ant-style path pattern.
+
+The mapping matches URLs using the following rules:  
+
+- `?` matches one character;
+- `*` matches zero or more characters;
+- `**` matches zero or more directories in a path;
+- `{spring:[a-z]+}` matches the regexp `[a-z]+` as a path variable named `spring`.
+  
+**`method`** 
+
+`String`, optional, any HTTP method: `GET` | `POST` etc;
+
+**`handle`**
+
+`MockFunction`: `(req: Connect.IncomingMessage, res: ServerResponse, urlVars?: Record<string, string>): void;`
+
+- `req`: Connect.IncomingMessage from [Vite](https://github.com/vitejs/vite/blob/main/packages/vite/types/connect.d.ts);
+- `res`: ServerResponse from [Node http](https://nodejs.org/api/http.html);
+- `urlVars`: key-value pairs from url.
 
 **`vite.config.ts`**
 
@@ -315,6 +341,9 @@ export default {
   ],
 };
 ```
+
+
+:exclamation: Handlers are served first. They intercept namesake file routes.
 
 </details>
 
