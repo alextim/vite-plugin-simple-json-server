@@ -1,6 +1,9 @@
 import { getNames } from './get-names';
 
 export const filter = (data: any[], q: Record<string, any>) => {
+  if (data.length === 0) {
+    return data;
+  }
   const names = getNames(q, data[0]);
   if (!names.length) {
     return data;

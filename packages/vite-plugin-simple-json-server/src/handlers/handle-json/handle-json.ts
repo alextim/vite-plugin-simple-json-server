@@ -17,6 +17,7 @@ import formatResMsg from '../../helpers/format-res-msg';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
+import { getNames, hasParam } from './helpers/get-names';
 
 const COUNT_SUFFIX = '/count';
 const EXT = 'json';
@@ -57,13 +58,13 @@ export function handleJson(
 
   const q = querystring.parse(qs);
 
-  let page: number | undefined = undefined;
+  let offset: number | undefined = undefined;
   let limit = 0;
   let sort = '';
   let order = 'asc';
 
-  if (q['page']) {
-    page = Math.max(0, parseInt(q['page'] as string));
+  if (q['offset']) {
+    offset = Math.max(0, parseInt(q['offset'] as string));
   }
   if (q['limit']) {
     limit = Math.max(0, parseInt(q['limit'] as string));
@@ -88,15 +89,15 @@ export function handleJson(
   const msgSuffix = [`${req.method} ${req.url}`, `file: ${filePath}`];
   const msgMatched = ['matched', ...msgSuffix];
 
-  if (page === undefined && !sort && !count) {
+  let data = JSON.parse(content);
+
+  if (offset === undefined && !sort && !count && Array.isArray(data) && data.length > 0 && getNames(q, data[0]).length === 0) {
     logger.info(...msgMatched);
     res.end(content);
     return true;
   }
 
-  let data = JSON.parse(content);
-
-  if (!Array.isArray(data)) {
+  if (!Array.isArray(data) && (offset !== undefined || sort || count || hasParam(q))) {
     const msg = ['405 Not Allowed', 'Json is not array'];
     logger.info(...msg, ...msgSuffix);
     res.statusCode = 405;
@@ -127,11 +128,9 @@ export function handleJson(
       });
     }
 
-    if (page !== undefined) {
+    if (offset !== undefined) {
       limit = limit ? limit : 10;
-      const start = page * limit;
-      const end = start + limit;
-      data = data.slice(start, end);
+      data = data.slice(offset, offset + limit);
     }
   }
 

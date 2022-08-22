@@ -101,18 +101,17 @@ Let's have the `products.json` in the `mock` folder.
 
 ### Pagination
 
-Page numbering starts from zero.  
 
-Default page size limit is 10.
+Default limit is 10.
 
 ```sh
-curl http://localhost:5173/products?page=0
+curl http://localhost:5173/products?offset=0
 
 
-curl http://localhost:5173/products?page=2
+curl http://localhost:5173/products?offset=20
 
 
-curl http://localhost:5173/products?page=2&limit=100
+curl http://localhost:5173/products?offset=200&limit=100
 ```
 
 ### Sorting
@@ -374,15 +373,12 @@ export default {
 | :--------: | :------: | :-----------: |
 |  `Number`  |    No    |    10         |
 
-Number of items per page.  
+Number of items to return.  
 
 Usage:
 
 ```sh
-curl http://localhost:5173/products?page=2
-
-
-curl http://localhost:5173/products?page=2&limit=100
+curl http://localhost:5173/products?offset=300&limit=100
 ```
 
 **`vite.config.ts`**

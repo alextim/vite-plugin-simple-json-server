@@ -12,7 +12,7 @@ fetch(ep1, { method: 'GET' })
     `;
   });
 
-const ep2 = '/api/lines';
+const ep2 = '/api/test?color=active';
 fetch(ep2, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
@@ -22,7 +22,7 @@ fetch(ep2, { method: 'GET' })
     `;
   });
 
-const ep3 = '/api/test?page=2&limit=5&sort=color&order=desc';
+const ep3 = '/api/test?offset=5&limit=5&sort=color&order=desc';
 fetch(ep3, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
