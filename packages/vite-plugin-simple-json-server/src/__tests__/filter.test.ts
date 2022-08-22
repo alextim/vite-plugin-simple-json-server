@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { filter } from '../handlers/helpers/filter';
+import { filter } from '../handlers/handle-json/helpers/filter';
 
 const data = [
   {

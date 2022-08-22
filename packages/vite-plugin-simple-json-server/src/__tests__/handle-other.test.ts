@@ -1,11 +1,11 @@
 import { ServerResponse } from 'node:http';
+import path from 'node:path';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import Logger from '../utils/logger';
 import { sendFileContent } from '../helpers/send-file-content';
 import { handleOther } from '../handlers/handle-other';
-import path from 'node:path';
 
 const logger = new Logger('test');
 
