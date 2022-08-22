@@ -16,9 +16,11 @@ const ep2 = '/api/test?color=active';
 fetch(ep2, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
+    let s = '';
+    data.forEach((item) => (s += `<li>${JSON.stringify(item, null, '  ')}</li>`));
     document.querySelector('#app').innerHTML += `
       <p>${ep2} GET response:</p>
-      ${JSON.stringify(data, null, '  ')}
+      <div>[</div><ul>${s}</ul><div>]</div>
     `;
   });
 
