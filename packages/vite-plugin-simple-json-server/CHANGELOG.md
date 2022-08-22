@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.2.0
+
+### Minor Changes
+
+- fd4853b: "page" query param changed to "offset"
+
 ## 0.1.4
 
 ### Patch Changes
