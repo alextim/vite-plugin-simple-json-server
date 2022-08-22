@@ -5,12 +5,12 @@ export const filter = (data: any[], q: Record<string, any>) => {
   if (!names.length) {
     return data;
   }
-  return (data = data.filter((item) => {
+  return data.filter((item) => {
     for (const name of names) {
       if (item[name] !== q[name]) {
         return false;
       }
     }
     return true;
-  }));
+  });
 };

@@ -56,7 +56,7 @@ export function handleJson(
 
   const q = querystring.parse(qs);
 
-  let page = 0;
+  let page: number | undefined = undefined;
   let limit = 0;
   let sort = '';
   let order = 'asc';
@@ -84,7 +84,7 @@ export function handleJson(
   res.setHeader('Content-Type', fileTypes.json);
   const content = fs.readFileSync(filePath, 'utf-8');
 
-  if (!page && !limit && !sort && !count) {
+  if (page === undefined && !sort && !count) {
     logger.info('matched', `${req.method} ${req.url}`, `file: ${filePath}`);
     res.end(content);
     return true;
@@ -97,12 +97,6 @@ export function handleJson(
     logger.info('matched', ...msg, `${req.method} ${req.url}`, `file: ${filePath}`);
     res.statusCode = 405;
     res.end(formatResMsg(req, ...msg));
-    return true;
-  }
-
-  if (data.length === 0) {
-    logger.info('matched', `${req.method} ${req.url}`, `file: ${filePath}`);
-    res.end(content);
     return true;
   }
 
@@ -119,25 +113,27 @@ export function handleJson(
 
   data = filter(data, q);
 
-  if (page || limit) {
-    page = page ? page : 1;
-    limit = limit ? limit : 10;
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    data = data.slice(start, end);
-  }
+  if (data.length > 0) {
+    if (sort && data[0].hasOwnProperty(sort)) {
+      const dir = order === 'asc' ? 1 : -1;
+      data = data.sort((a: any, b: any) => {
+        if (a[sort] > b[sort]) {
+          return 1 * dir;
+        }
+        if (a[sort] < b[sort]) {
+          return -1 * dir;
+        }
+        return 0;
+      });
+    }
 
-  if (sort && data.length && data[0].hasOwnProperty(sort)) {
-    const dir = order === 'asc' ? 1 : -1;
-    data = data.sort((a: any, b: any) => {
-      if (a[sort] > b[sort]) {
-        return 1 * dir;
-      }
-      if (a[sort] < b[sort]) {
-        return -1 * dir;
-      }
-      return 0;
-    });
+    if (page !== undefined) {
+      page = page ? page : 1;
+      limit = limit ? limit : 10;
+      const start = (page - 1) * limit;
+      const end = start + limit;
+      data = data.slice(start, end);
+    }
   }
 
   logger.info('matched', `${req.method} ${req.url}`, `query: ${qs}`, `file: ${filePath}`);

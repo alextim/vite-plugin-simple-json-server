@@ -22,7 +22,7 @@ fetch(ep2, { method: 'GET' })
     `;
   });
 
-const ep3 = '/api/test?page=2&limit=10&sort=color&order=desc';
+const ep3 = '/api/test?page=2&limit=5&sort=color&order=desc';
 fetch(ep3, { method: 'GET' })
   .then((response) => response.json())
   .then((data) => {
