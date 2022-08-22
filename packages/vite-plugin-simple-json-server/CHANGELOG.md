@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.1.4
+
+### Patch Changes
+
+- d5ba4ec: refactor: json-handler messages
+
 ## 0.1.3
 
 ### Patch Changes
