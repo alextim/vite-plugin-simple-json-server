@@ -62,7 +62,7 @@ export function handleJson(
   let order = 'asc';
 
   if (q['page']) {
-    page = Math.max(1, parseInt(q['page'] as string));
+    page = Math.max(0, parseInt(q['page'] as string));
   }
   if (q['limit']) {
     limit = Math.max(0, parseInt(q['limit'] as string));
@@ -128,9 +128,8 @@ export function handleJson(
     }
 
     if (page !== undefined) {
-      page = page ? page : 1;
       limit = limit ? limit : 10;
-      const start = (page - 1) * limit;
+      const start = page * limit;
       const end = start + limit;
       data = data.slice(start, end);
     }

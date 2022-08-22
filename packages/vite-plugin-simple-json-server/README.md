@@ -101,9 +101,14 @@ Let's have the `products.json` in the `mock` folder.
 
 ### Pagination
 
+Page numbering starts from zero.  
+
 Default page size limit is 10.
 
 ```sh
+curl http://localhost:5173/products?page=0
+
+
 curl http://localhost:5173/products?page=2
 
 
@@ -294,7 +299,7 @@ The `MockHandler` type consists of `pattern`, `method` and `handle` fields.
 
 `String`, required.  
 
-Apache Ant-style path pattern.  
+Apache Ant-style path pattern.  It's done with [@howiefh/ant-path-matcher](https://www.npmjs.com/package/@howiefh/ant-path-matcher).;
 
 The mapping matches URLs using the following rules:  
 
