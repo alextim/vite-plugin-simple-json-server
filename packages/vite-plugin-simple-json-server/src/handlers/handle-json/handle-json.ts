@@ -4,18 +4,19 @@ import querystring from 'node:querystring';
 import type { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 
-import { fileTypes } from '../constants';
+import type { SimpleJsonServerPluginOptions } from '../../types';
+import { ILogger } from '../../utils/logger';
 
-import { isDirExists, isFileExists } from '../utils/files';
-import { ILogger } from '../utils/logger';
+import { fileTypes } from '../../constants';
 
-import { validateReq } from '../helpers/validate-request';
-import { sendFileContent } from '../helpers/send-file-content';
+import { isDirExists, isFileExists } from '../../utils/files';
+
+import { validateReq } from '../../helpers/validate-request';
+import { sendFileContent } from '../../helpers/send-file-content';
+import formatResMsg from '../../helpers/format-res-msg';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
-import type { SimpleJsonServerPluginOptions } from '..';
-import formatResMsg from '../helpers/format-res-msg';
 
 const COUNT_SUFFIX = '/count';
 const EXT = 'json';
@@ -84,8 +85,11 @@ export function handleJson(
   res.setHeader('Content-Type', fileTypes.json);
   const content = fs.readFileSync(filePath, 'utf-8');
 
+  const msgSuffix = [`${req.method} ${req.url}`, `file: ${filePath}`];
+  const msgMatched = ['matched', ...msgSuffix];
+
   if (page === undefined && !sort && !count) {
-    logger.info('matched', `${req.method} ${req.url}`, `file: ${filePath}`);
+    logger.info(...msgMatched);
     res.end(content);
     return true;
   }
@@ -94,7 +98,7 @@ export function handleJson(
 
   if (!Array.isArray(data)) {
     const msg = ['405 Not Allowed', 'Json is not array'];
-    logger.info('matched', ...msg, `${req.method} ${req.url}`, `file: ${filePath}`);
+    logger.info(...msg, ...msgSuffix);
     res.statusCode = 405;
     res.end(formatResMsg(req, ...msg));
     return true;
@@ -102,11 +106,7 @@ export function handleJson(
 
   if (count) {
     const filteredCount = getFilteredCount(data, q);
-    const msg = ['matched', `${req.method} ${req.url}`];
-    if (qs) {
-      msg.push(`query: ${qs || ''}`);
-    }
-    logger.info(...msg, `file: ${filePath}`);
+    logger.info(...msgMatched);
     res.end(JSON.stringify({ count: filteredCount }));
     return true;
   }
@@ -135,7 +135,7 @@ export function handleJson(
     }
   }
 
-  logger.info('matched', `${req.method} ${req.url}`, `query: ${qs}`, `file: ${filePath}`);
+  logger.info(...msgMatched);
   res.end(JSON.stringify(data));
 
   return true;

@@ -14,7 +14,7 @@ import { removeTrailingSlash } from './utils/misc';
 import Logger, { ILogger } from './utils/logger';
 
 import { handleHtml } from './handlers/handle-html';
-import { handleJson } from './handlers/handle-json';
+import { handleJson } from './handlers/handle-json/handle-json';
 import { handleOther } from './handlers/handle-other';
 
 import formatResMsg from './helpers/format-res-msg';

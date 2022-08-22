@@ -5,7 +5,7 @@ export const getFilteredCount = (data: any[], q: Record<string, any>) => {
   if (!names.length) {
     return data.length;
   }
-  return data.reduce((prev, curr, i) => {
+  return data.reduce((prev: number, curr, i) => {
     for (const name of names) {
       if (data[i][name] !== q[name]) {
         return prev;
