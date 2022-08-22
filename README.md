@@ -4,7 +4,7 @@
 
 ![Release](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/release.yaml/badge.svg) ![Test](https://github.com/alextim/vite-plugin-simple-json-server/actions/workflows/test.yaml/badge.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-Provide file based mock API for [Vite](https://vitejs.dev/) in dev mode.
+Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 
 ## Directory
 
