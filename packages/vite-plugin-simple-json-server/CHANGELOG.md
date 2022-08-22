@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.1.3
+
+### Patch Changes
+
+- 2381389: fix: paging
+
 ## 0.1.2
 
 ### Patch Changes
