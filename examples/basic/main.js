@@ -1,47 +1,59 @@
 import './style.css';
 
-document.querySelector('#app').innerHTML = '<h1>Hello, Json Server</h1>';
+updateView('<h1>Hello, Json Server</h1>');
 
-const ep1 = '/api/home';
-fetch(ep1, { method: 'GET' })
-  .then((response) => response.json())
-  .then((data) => {
-    document.querySelector('#app').innerHTML += `
-      <p>${ep1} GET response:</p>
-      ${JSON.stringify(data, null, '  ')}
-    `;
-  });
+fetchApi('/api/home');
 
-const ep2 = '/api/test?color=active';
-fetch(ep2, { method: 'GET' })
-  .then((response) => response.json())
-  .then((data) => {
-    let s = '';
-    data.forEach((item) => (s += `<li>${JSON.stringify(item, null, '  ')}</li>`));
-    document.querySelector('#app').innerHTML += `
-      <p>${ep2} GET response:</p>
-      <div>[</div><ul>${s}</ul><div>]</div>
-    `;
-  });
+fetchApi('/api/test?color=active', 'GET', formatList);
 
-const ep3 = '/api/test?offset=5&limit=5&sort=color&order=desc';
-fetch(ep3, { method: 'GET' })
-  .then((response) => response.json())
-  .then((data) => {
-    let s = '';
-    data.forEach((item) => (s += `<li>${JSON.stringify(item, null, '  ')}</li>`));
-    document.querySelector('#app').innerHTML += `
-      <p>${ep3} GET response:</p>
-      <div>[</div><ul>${s}</ul><div>]</div>
-    `;
-  });
+fetchApi('/api/test?offset=5&limit=5&sort=color&order=desc', 'GET', formatList);
 
-const ep4 = '/api/test/count';
-fetch(ep4, { method: 'GET' })
-  .then((response) => response.json())
-  .then((data) => {
-    document.querySelector('#app').innerHTML += `
-      <p>${ep4} GET response:</p>
-      ${JSON.stringify(data, null, '  ')}
-    `;
-  });
+fetchApi('/api/test/count');
+
+function formatList(data) {
+  if (!data || !Array.isArray(data)) {
+    return '';
+  }
+  let s = '';
+  data.forEach((item) => void (s += `<li>${JSON.stringify(item, null, '  ')}</li>`));
+  return `<div>[</div><ul>${s}</ul><div>]</div>`;
+}
+
+function handleErrors(resp) {
+  if (!resp.ok) {
+    throw Error(`${resp.status} ${resp.statusText}`);
+  }
+  return resp;
+}
+
+function format(url, method) {
+  return `${method || 'GET'} ${url}`;
+}
+
+function fetchApi(url, method = 'GET', formatOutput = undefined) {
+  fetch(url, { method })
+    .then(handleErrors)
+    .then((resp) => {
+      const isJson = resp.headers.get('content-type')?.includes('application/json');
+      if (isJson) {
+        return resp.json();
+      }
+      throw new Error('Response is not Json');
+    })
+    .then((data) => {
+      updateView(`
+      <p>${format(url, method)}</p>
+      ${formatOutput ? formatOutput(data) : JSON.stringify(data, null, '  ')}
+    `);
+    })
+    .catch((err) => {
+      updateView(`
+      <p>${format(url, method)}</p>
+      ${err.toString()}
+    `);
+    });
+}
+
+function updateView(s) {
+  return (document.querySelector('#app').innerHTML += s);
+}

@@ -36,7 +36,7 @@ const simpleJsonServerPlugin = (options: SimpleJsonServerPluginOptions = {}): Pl
       config = resolvedConfig;
     },
 
-    async configureServer(server: ViteDevServer) {
+    async configureServer(devServer: ViteDevServer) {
       // build url matcher
       const matcher = new AntPathMatcher();
 
@@ -45,7 +45,7 @@ const simpleJsonServerPlugin = (options: SimpleJsonServerPluginOptions = {}): Pl
       logger = new Logger(PLUGIN_NAME, opts.logLevel);
       logger.info('mock server started.', `options = ${JSON.stringify(opts, null, '  ')}`);
 
-      server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
+      devServer.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         doHandle(opts, config.root, matcher, req, res, next);
       });
     },
