@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.2.1
+
+### Patch Changes
+
+- a225512: more supported types of static files
+
 ## 0.2.0
 
 ### Minor Changes
