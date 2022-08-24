@@ -1,5 +1,6 @@
 import type { LogLevel, ResolvedConfig } from 'vite';
 import { Plugin, ViteDevServer, Connect } from 'vite';
+import path from 'node:path';
 
 import type { ServerResponse } from 'node:http';
 
@@ -7,18 +8,18 @@ import AntPathMatcher from '@howiefh/ant-path-matcher';
 
 import type { SimpleJsonServerPluginOptions, MockHandler, MockFunction } from './types';
 
-import { PLUGIN_NAME } from './constants';
+import { PLUGIN_NAME } from './plugin-name';
 
-import { removeTrailingSlash } from './utils/misc';
-import Logger, { ILogger } from './utils/logger';
+import { removeTrailingSlash } from '@/utils/misc';
+import Logger, { ILogger } from '@/utils/logger';
+
+import formatResMsg from '@/helpers/format-res-msg';
+
+import { validateOptions } from './validate-options';
 
 import { handleHtml } from './handlers/handle-html';
 import { handleJson } from './handlers/handle-json';
 import { handleOther } from './handlers/handle-other';
-
-import formatResMsg from './helpers/format-res-msg';
-
-import { validateOptions } from './validate-options';
 
 export type { SimpleJsonServerPluginOptions, MockHandler, MockFunction, LogLevel };
 
@@ -26,6 +27,7 @@ let logger: ILogger;
 
 const simpleJsonServerPlugin = (options: SimpleJsonServerPluginOptions = {}): Plugin => {
   let config: ResolvedConfig;
+  let dataRoot: string;
 
   return {
     name: PLUGIN_NAME,
@@ -41,84 +43,88 @@ const simpleJsonServerPlugin = (options: SimpleJsonServerPluginOptions = {}): Pl
 
       const opts = validateOptions(options);
 
+      dataRoot = path.join(config.root, options.mockRootDir!);
+
       logger = new Logger(PLUGIN_NAME, opts.logLevel);
       logger.info('mock server started.', `options = ${JSON.stringify(opts, null, '  ')}`);
 
       devServer.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
-        doHandle(opts, config.root, matcher, req, res, next);
+        try {
+          if (!doHandle(req, res, dataRoot, opts, matcher)) {
+            next();
+          }
+        } catch (err: any) {
+          logger.error(err.toString());
+          devServer.ssrFixStacktrace(err);
+          process.exitCode = 1;
+          next(err);
+        }
       });
     },
   };
 };
 
+const isOurApi = (url: string | undefined, urlPrefixes: string[] | undefined) =>
+  url && urlPrefixes && urlPrefixes.some((prefix) => url.startsWith(prefix));
+
 const doHandle = async (
-  options: SimpleJsonServerPluginOptions,
-  viteRoot: string,
-  matcher: AntPathMatcher,
   req: Connect.IncomingMessage,
   res: ServerResponse,
-  next: Connect.NextFunction,
+  dataRoot: string,
+  options: SimpleJsonServerPluginOptions,
+  matcher: AntPathMatcher,
 ) => {
-  if (!req?.url || !options.urlPrefixes || !options.urlPrefixes.some((prefix) => req.url!.startsWith(prefix))) {
-    next();
-    return;
+  if (!isOurApi(req?.url, options.urlPrefixes)) {
+    return false;
   }
 
-  let urlPath = removeTrailingSlash(req.url.split('?')[0]);
+  let urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
 
-  try {
-    if (options.handlers) {
-      for (const handler of options.handlers) {
-        const urlVars: Record<string, string> = {};
-        if (matcher.doMatch(handler.pattern, urlPath, true, urlVars)) {
-          const handlerInfo = [`handler = ${JSON.stringify(handler, null, '  ')}`];
-          if (Object.keys(urlVars).length) {
-            handlerInfo.push(`urlVars = ${JSON.stringify(urlVars, null, '  ')}`);
-          }
-          const msg = ['matched'];
-          if (handler.method && handler.method !== req.method) {
-            msg.push('405 Not Allowed', `supported method = ${handler.method}`);
-            logger.info(...msg, ...handlerInfo);
-            res.statusCode = 405;
-            res.end(formatResMsg(req, ...msg));
-            return;
-          }
-          logger.info(...msg, ...handlerInfo);
-          handler.handle(req, res, { ...urlVars });
-          return;
+  if (options.handlers) {
+    for (const handler of options.handlers) {
+      const urlVars: Record<string, string> = {};
+      if (matcher.doMatch(handler.pattern, urlPath, true, urlVars)) {
+        const handlerInfo = [`handler = ${JSON.stringify(handler, null, '  ')}`];
+        if (Object.keys(urlVars).length) {
+          handlerInfo.push(`urlVars = ${JSON.stringify(urlVars, null, '  ')}`);
         }
+        const msg = ['matched'];
+        if (handler.method && handler.method !== req.method) {
+          msg.push('405 Not Allowed', `supported method = ${handler.method}`);
+          logger.info(...msg, ...handlerInfo);
+          res.statusCode = 405;
+          res.end(formatResMsg(req, ...msg));
+          return true;
+        }
+        logger.info(...msg, ...handlerInfo);
+        handler.handle(req, res, { ...urlVars });
+        return true;
       }
     }
-
-    urlPath = removePrefix(urlPath, options.urlPrefixes);
-    if (urlPath) {
-      if (handleHtml(req, res, viteRoot, urlPath, options, logger)) {
-        return;
-      }
-      if (handleJson(req, res, viteRoot, urlPath, options, logger)) {
-        return;
-      }
-      if (handleOther(req, res, viteRoot, urlPath, options, logger)) {
-        return;
-      }
-    }
-
-    if (options.noHandlerResponse404) {
-      const msg = '404 No handler or file found';
-      res.statusCode = 404;
-      logger.info(msg, `${req.method} ${req.url}`);
-      res.end(formatResMsg(req, msg));
-      return;
-    }
-
-    next();
-  } catch (err: any) {
-    const msg = ['500 Server error', err.toString()];
-    logger.error(...msg);
-    res.statusCode = 500;
-    res.end(formatResMsg(req, ...msg));
-    return;
   }
+
+  urlPath = removePrefix(urlPath, options.urlPrefixes!);
+  if (urlPath) {
+    if (handleHtml(req, res, dataRoot, urlPath, logger)) {
+      return true;
+    }
+    if (handleJson(req, res, dataRoot, urlPath, options.limit!, logger)) {
+      return true;
+    }
+    if (handleOther(req, res, dataRoot, urlPath, logger)) {
+      return true;
+    }
+  }
+
+  if (options.noHandlerResponse404) {
+    const msg = '404 No handler or file found';
+    logger.info(msg, `${req.method} ${req.url}`);
+    res.statusCode = 404;
+    res.end(formatResMsg(req, msg));
+    return true;
+  }
+
+  return false;
 };
 
 function removePrefix(url: string, urlPrefixes: string[]) {

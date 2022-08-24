@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { isDirExists, isFileExists } from '../utils/files';
-import { supportedMimes } from '../utils/mime-types';
+import { supportedMimes } from '@/utils/mime-types';
 
 const checkPathname = (pathname: string, mime: string) => {
   const name = (isDirExists(pathname) ? path.join(pathname, 'index') : pathname) + '.';

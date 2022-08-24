@@ -11,6 +11,11 @@
     "sourceMap": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "@/utils/*": ["src/utils/*"],
+      "@/helpers/*": ["src/helpers/*"]
+    }
   }
 }

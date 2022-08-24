@@ -4,15 +4,13 @@ import querystring from 'node:querystring';
 import type { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 
-import type { SimpleJsonServerPluginOptions } from '../../types';
+import { ILogger } from '@/utils/logger';
+import { JSON_MIME_TYPE } from '@/utils/mime-types';
 
-import { ILogger } from '../../utils/logger';
-import { JSON_MIME_TYPE } from '../../utils/mime-types';
-
-import { validateReq } from '../../helpers/validate-request';
-import { sendFileContent } from '../../helpers/send-file-content';
-import formatResMsg from '../../helpers/format-res-msg';
-import checkPathname from '../../helpers/check-pathname';
+import { validateReq } from '@/helpers/validate-request';
+import { sendFileContent } from '@/helpers/send-file-content';
+import formatResMsg from '@/helpers/format-res-msg';
+import checkPathname from '@/helpers/check-pathname';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
@@ -25,14 +23,14 @@ const stripCountSuffix = (url: string) => url.substring(0, url.length - COUNT_AP
 export function handleJson(
   req: Connect.IncomingMessage,
   res: ServerResponse,
-  viteRoot: string,
+  dataRoot: string,
   urlPath: string,
-  options: SimpleJsonServerPluginOptions,
+  defaultLimit: number,
   logger: ILogger,
 ) {
   const isCount = isCountApi(urlPath);
 
-  const pathname = path.join(viteRoot, options.mockRootDir!, isCount ? stripCountSuffix(urlPath) : urlPath);
+  const pathname = path.join(dataRoot, isCount ? stripCountSuffix(urlPath) : urlPath);
 
   const filePath = checkPathname(pathname, JSON_MIME_TYPE);
   if (!filePath) {
@@ -62,7 +60,7 @@ export function handleJson(
   if (q['limit']) {
     limit = Math.max(0, parseInt(q['limit'] as string));
     if (limit === 0) {
-      limit = options.limit!;
+      limit = defaultLimit;
     }
   }
   if (q['sort']) {
