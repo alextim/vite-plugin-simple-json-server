@@ -2,7 +2,6 @@ import type { LogLevel, ResolvedConfig } from 'vite';
 import { Plugin, ViteDevServer, Connect } from 'vite';
 
 import type { ServerResponse } from 'node:http';
-import path from 'node:path';
 
 import AntPathMatcher from '@howiefh/ant-path-matcher';
 
@@ -93,14 +92,13 @@ const doHandle = async (
 
     urlPath = removePrefix(urlPath, options.urlPrefixes);
     if (urlPath) {
-      const testingPath = path.join(viteRoot, options.mockRootDir!, urlPath);
-      if (handleHtml(req, res, testingPath, logger)) {
+      if (handleHtml(req, res, viteRoot, urlPath, options, logger)) {
         return;
       }
-      if (handleJson(req, res, viteRoot, options, urlPath, logger)) {
+      if (handleJson(req, res, viteRoot, urlPath, options, logger)) {
         return;
       }
-      if (handleOther(req, res, testingPath, logger)) {
+      if (handleOther(req, res, viteRoot, urlPath, options, logger)) {
         return;
       }
     }

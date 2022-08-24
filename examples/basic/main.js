@@ -4,11 +4,16 @@ updateView('<h1>Hello, Json Server</h1>');
 
 fetchApi('/api/home');
 
-fetchApi('/api/test?color=active', 'GET', formatList);
+fetchApi('/api/test?color=stringer', 'GET', formatList);
 
 fetchApi('/api/test?offset=5&limit=5&sort=color&order=desc', 'GET', formatList);
 
 fetchApi('/api/test/count');
+
+fetchApi('/api/test/count?color=stringer');
+
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=desc', 'GET', formatList);
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=asc', 'GET', formatList);
 
 function formatList(data) {
   if (!data || !Array.isArray(data)) {

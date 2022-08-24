@@ -6,3 +6,5 @@ export const Logger = vi.fn().mockImplementation(() => ({
   success: vi.fn(),
   info: vi.fn(),
 }));
+
+export const sendFileContent = vi.fn();

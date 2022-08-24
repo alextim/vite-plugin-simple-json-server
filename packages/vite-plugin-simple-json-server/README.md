@@ -21,7 +21,7 @@ Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 
 This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting and filter.  
 
-Additionally the plugin serves `html`, `js`, `css` and `txt` static files.  
+Additionally the plugin serves static files such as `html`, `js`, `css`, `txt`.  
 
 As well you can define the custom route's handlers in the plugin config.
 
@@ -174,13 +174,13 @@ If the file name is `index.*` then its route will be the parent directory path.
 
 Html files are served first. 
 
-|   Type | Supported methods |
-| :----: | :------------: |
-| `json` | `GET`, `POST`  |
-| `html` | `GET`          |
-| `js`   | `GET`          |
-| `css`  | `GET`          |
-| `txt`  | `GET`          |
+|   Type                     | Supported methods |
+| :------------------------: | :------------: |
+| `json`                     | `GET`, `POST`  |
+| `html` \| `htm` \| `shtml` | `GET`          |
+| `js` \| `mjs`              | `GET`          |
+| `css`                      | `GET`          |
+| `txt` \| `text`            | `GET`          |
 
 The server will respond with the 403 error for unsupported methods.
 

@@ -1,26 +1,33 @@
-import path from 'node:path';
 import type { ServerResponse } from 'node:http';
+import path from 'node:path';
 import { Connect } from 'vite';
 
-import { fileTypes } from '../constants';
+import { SimpleJsonServerPluginOptions } from '../types';
 
-import { isDirExists, isFileExists } from '../utils/files';
 import { ILogger } from '../utils/logger';
+import { HTML_MIME_TYPE } from '../utils/mime-types';
 
 import { validateReq } from '../helpers/validate-request';
 import { sendFileContent } from '../helpers/send-file-content';
+import checkPathname from '../helpers/check-pathname';
 
-export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, testingPath: string, logger: ILogger) {
-  const name = isDirExists(testingPath) ? 'index' : '';
-  const ext = 'html';
+export function handleHtml(
+  req: Connect.IncomingMessage,
+  res: ServerResponse,
+  viteRoot: string,
+  urlPath: string,
+  options: SimpleJsonServerPluginOptions,
+  logger: ILogger,
+) {
+  const pathname = path.join(viteRoot, options.mockRootDir!, urlPath);
 
-  const filePath = (name ? path.join(testingPath, name) : testingPath) + '.' + ext;
-  if (!isFileExists(filePath)) {
+  const filePath = checkPathname(pathname, HTML_MIME_TYPE);
+  if (!filePath) {
     return false;
   }
 
   if (validateReq(req, res)) {
-    sendFileContent(req, res, filePath, fileTypes[ext], logger);
+    sendFileContent(req, res, filePath, HTML_MIME_TYPE, logger);
   }
   return true;
 }

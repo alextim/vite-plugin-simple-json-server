@@ -1,58 +1,51 @@
-import path from 'node:path';
 import fs from 'node:fs';
+import path from 'node:path';
 import querystring from 'node:querystring';
 import type { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 
 import type { SimpleJsonServerPluginOptions } from '../../types';
+
 import { ILogger } from '../../utils/logger';
-
-import { fileTypes } from '../../constants';
-
-import { isDirExists, isFileExists } from '../../utils/files';
+import { JSON_MIME_TYPE } from '../../utils/mime-types';
 
 import { validateReq } from '../../helpers/validate-request';
 import { sendFileContent } from '../../helpers/send-file-content';
 import formatResMsg from '../../helpers/format-res-msg';
+import checkPathname from '../../helpers/check-pathname';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
 import { getNames, hasParam } from './helpers/get-names';
 
-const COUNT_SUFFIX = '/count';
-const EXT = 'json';
+const COUNT_API_SUFFIX = '/count';
+const isCountApi = (url: string) => url.endsWith(COUNT_API_SUFFIX);
+const stripCountSuffix = (url: string) => url.substring(0, url.length - COUNT_API_SUFFIX.length);
 
 export function handleJson(
   req: Connect.IncomingMessage,
   res: ServerResponse,
   viteRoot: string,
-  options: SimpleJsonServerPluginOptions,
   urlPath: string,
+  options: SimpleJsonServerPluginOptions,
   logger: ILogger,
 ) {
-  let count = false;
+  const isCount = isCountApi(urlPath);
 
-  if (urlPath.endsWith(COUNT_SUFFIX)) {
-    urlPath = urlPath.substring(0, urlPath.length - COUNT_SUFFIX.length);
-    count = true;
-  }
+  const pathname = path.join(viteRoot, options.mockRootDir!, isCount ? stripCountSuffix(urlPath) : urlPath);
 
-  const pathname = path.join(viteRoot, options.mockRootDir!, urlPath);
-
-  const name = isDirExists(pathname) ? 'index' : '';
-
-  const filePath = (name ? path.join(pathname, name) : pathname) + '.' + EXT;
-
-  if (!isFileExists(filePath)) {
+  const filePath = checkPathname(pathname, JSON_MIME_TYPE);
+  if (!filePath) {
     return false;
   }
+
   if (!validateReq(req, res, 405, ['GET', 'POST'])) {
     return true;
   }
 
   const [, qs] = req.url!.split('?');
-  if (!count && !qs) {
-    sendFileContent(req, res, filePath, fileTypes.json, logger);
+  if (!isCount && !qs) {
+    sendFileContent(req, res, filePath, JSON_MIME_TYPE, logger);
     return true;
   }
 
@@ -83,7 +76,7 @@ export function handleJson(
     }
   }
 
-  res.setHeader('Content-Type', fileTypes.json);
+  res.setHeader('Content-Type', JSON_MIME_TYPE);
   const content = fs.readFileSync(filePath, 'utf-8');
 
   const msgSuffix = [`${req.method} ${req.url}`, `file: ${filePath}`];
@@ -91,13 +84,13 @@ export function handleJson(
 
   let data = JSON.parse(content);
 
-  if (offset === undefined && !sort && !count && Array.isArray(data) && data.length > 0 && getNames(q, data[0]).length === 0) {
+  if (offset === undefined && !sort && !isCount && Array.isArray(data) && data.length > 0 && getNames(q, data[0]).length === 0) {
     logger.info(...msgMatched);
     res.end(content);
     return true;
   }
 
-  if (!Array.isArray(data) && (offset !== undefined || sort || count || hasParam(q))) {
+  if (!Array.isArray(data) && (offset !== undefined || sort || isCount || hasParam(q))) {
     const msg = ['405 Not Allowed', 'Json is not array'];
     logger.info(...msg, ...msgSuffix);
     res.statusCode = 405;
@@ -105,7 +98,7 @@ export function handleJson(
     return true;
   }
 
-  if (count) {
+  if (isCount) {
     const filteredCount = getFilteredCount(data, q);
     logger.info(...msgMatched);
     res.end(JSON.stringify({ count: filteredCount }));
