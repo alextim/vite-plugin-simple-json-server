@@ -63,13 +63,15 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 
 ## Usage
 
-Plugin serves handlers routes first, then json API, static files at the end. Query parameters are ignored for static files.
+The plugin serves handlers routes first, then json API, static files at the end.  
 
-Pagination, count and counting is only available for array-based json.
+Query parameters are ignored for static files.
+
+Pagination and count is only available for array-based json.
 For sorting and filtering the json must be an array of objects.  
-Otherwise, the server responds with 405.  
+Otherwise, the server will respond with 405.  
 
-If a filter or sort request has a parameter that is not among the json fields, that parameter will be ignored.
+If there is a parameter in the filter or sort request that is not among the json fields, that parameter will be ignored.  
 
 Let's have the `products.json` in the `mock` folder.
 
@@ -101,7 +103,6 @@ Let's have the `products.json` in the `mock` folder.
 
 ### Pagination
 
-
 Default limit is 10.
 
 ```sh
@@ -111,7 +112,7 @@ curl http://localhost:5173/products?offset=0
 curl http://localhost:5173/products?offset=20
 ```
 
-For custom limit pass it value to query:
+For the custom limit, pass it to the query:
 
 ```sh
 curl http://localhost:5173/products?offset=200&limit=100
@@ -128,7 +129,7 @@ curl http://localhost:5173/products?sort=name
 
 ```
 
-For reverse order pass `order` parameter:
+For the reverse order pass the `order=desc` parameter:
 
 ```sh
 curl http://localhost:5173/products?sort=name&order=desc
@@ -150,10 +151,15 @@ curl  http://localhost:5173/products?price=2&weight=1
 
 ```sh
 curl  http://localhost:5173/products/count
+```
 
+You can filter as well while count.
 
+```sh
 curl  http://localhost:5173/products/count?price=2
 ```
+
+:bulb: The pagination is available with sort and filter.
 
 ## Configuration
 
