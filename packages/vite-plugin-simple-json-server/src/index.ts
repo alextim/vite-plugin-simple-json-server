@@ -9,7 +9,7 @@ import { isDirExists } from '@/utils/files';
 import type { SimpleJsonServerPluginOptions, MockHandler, MockFunction } from './types';
 import { PLUGIN_NAME } from './plugin-name';
 import { validateOptions } from './validate-options';
-import doHandle from './do-handle';
+import runMiddleware from './run-middleware';
 
 export type { SimpleJsonServerPluginOptions, MockHandler, MockFunction, LogLevel };
 
@@ -41,7 +41,7 @@ const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugi
 
       devServer.middlewares.use(async (req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         try {
-          if (!(await doHandle(req, res, dataRoot, options, logger))) {
+          if (!(await runMiddleware(req, res, dataRoot, options, logger))) {
             next();
           }
         } catch (err: any) {

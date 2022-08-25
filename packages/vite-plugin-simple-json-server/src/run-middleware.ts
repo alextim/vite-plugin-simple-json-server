@@ -27,20 +27,20 @@ const removePrefix = (url: string, urlPrefixes: string[]) => {
 // build url matcher
 const matcher = new AntPathMatcher();
 
-const doHandle = async (
+const runMiddleware = async (
   req: Connect.IncomingMessage,
   res: ServerResponse,
   dataRoot: string,
-  options: SimpleJsonServerPluginOptions,
+  { urlPrefixes, handlers, limit, noHandlerResponse404 }: SimpleJsonServerPluginOptions,
   logger: ILogger,
 ) => {
-  if (!isOurApi(req?.url, options.urlPrefixes)) {
+  if (!isOurApi(req?.url, urlPrefixes)) {
     return false;
   }
   let urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
 
-  if (options.handlers) {
-    for (const handler of options.handlers) {
+  if (handlers) {
+    for (const handler of handlers) {
       const urlVars: Record<string, string> = {};
       if (matcher.doMatch(handler.pattern, urlPath, true, urlVars)) {
         const handlerInfo = [`handler = ${JSON.stringify(handler, null, '  ')}`];
@@ -62,9 +62,9 @@ const doHandle = async (
     }
   }
 
-  urlPath = removePrefix(urlPath, options.urlPrefixes!);
+  urlPath = removePrefix(urlPath, urlPrefixes!);
   if (urlPath) {
-    if (handleJson(req, res, dataRoot, urlPath, options.limit!, logger)) {
+    if (handleJson(req, res, dataRoot, urlPath, limit!, logger)) {
       return true;
     }
     if (handleHtml(req, res, dataRoot, urlPath, logger)) {
@@ -75,7 +75,7 @@ const doHandle = async (
     }
   }
 
-  if (options.noHandlerResponse404) {
+  if (noHandlerResponse404) {
     const msg = '404 No handler or file found';
     logger.info(msg, `${req.method} ${req.url}`);
     res.statusCode = 404;
@@ -86,4 +86,4 @@ const doHandle = async (
   return false;
 };
 
-export default doHandle;
+export default runMiddleware;
