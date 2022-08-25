@@ -63,6 +63,9 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 
 ## Usage
 
+The `vite-plugin-simple-json-server` injects own middleware into development and preview servers.
+By default it is invoked only for `serve` mode.
+
 The plugin serves handlers routes first, then json API, static files at the end.  
 
 Query parameters are ignored for static files.
@@ -175,6 +178,31 @@ export default defineConfig({
   })]
 });
 ```
+
+<details>
+  <summary><strong>disable</strong></summary>
+
+|  Type     | Required | Default value |
+| :-------: | :------: | :-----------: |
+| `Boolean` |    No    |  `false`      |
+
+If `true` the plugin won't run its middleware while dev or preview.
+
+**`vite.config.ts`**
+
+```js
+import jsonServer from 'vite-plugin-simple-json-server';
+
+export default {
+  plugins: [
+    jsonServer({
+      disable: true,
+    }),
+  ],
+};
+```
+
+</details>
 
 <details>
   <summary><strong>mockRootDir</strong></summary>

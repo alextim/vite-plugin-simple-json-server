@@ -12,6 +12,7 @@ export type MockHandler = {
 };
 
 export type SimpleJsonServerPluginOptions = {
+  disable?: boolean;
   logLevel?: LogLevel;
   urlPrefixes?: string[];
   handlers?: MockHandler[];

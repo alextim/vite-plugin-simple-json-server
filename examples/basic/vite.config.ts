@@ -24,9 +24,9 @@ export default defineConfig({
           pattern: '/api/lines',
           handle: (req, res) => {
             const data = {
-              e: 3,
-              f: 4,
-              g: 'g',
+              d: 4,
+              f: 'f',
+              g: 6,
             };
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(data));

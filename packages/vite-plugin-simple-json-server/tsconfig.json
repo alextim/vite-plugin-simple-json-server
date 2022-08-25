@@ -16,7 +16,7 @@
     "paths": {
       "@/utils/*": ["src/utils/*"],
       "@/helpers/*": ["src/helpers/*"],
-      "@/handlers/*": ["src/handlers/*"]
+      "@/handlers/*": ["src/middleware/handlers/*"]
     }
   }
 }
