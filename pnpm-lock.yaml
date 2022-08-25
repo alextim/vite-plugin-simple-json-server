@@ -45,7 +45,11 @@ importers:
   examples/basic:
     specifiers:
       vite: ^3.0.9
+<<<<<<< HEAD
       vite-plugin-simple-json-server: workspace:*
+=======
+      vite-plugin-simple-json-server: ^0.2.2
+>>>>>>> 417b6892c3310f702bd003a89c13db087970e00c
     dependencies:
       vite-plugin-simple-json-server: link:../../packages/vite-plugin-simple-json-server
     devDependencies:
