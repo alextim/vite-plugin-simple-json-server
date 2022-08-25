@@ -1,5 +1,5 @@
 import { Connect } from 'vite';
-import { ServerResponse } from 'node:http';
+import http from 'node:http';
 import AntPathMatcher from '@howiefh/ant-path-matcher';
 
 import { removeTrailingSlash } from '@/utils/misc';
@@ -29,7 +29,7 @@ const matcher = new AntPathMatcher();
 
 const runMiddleware = async (
   req: Connect.IncomingMessage,
-  res: ServerResponse,
+  res: http.ServerResponse,
   dataRoot: string,
   { urlPrefixes, handlers, limit, noHandlerResponse404 }: SimpleJsonServerPluginOptions,
   logger: ILogger,
@@ -49,7 +49,7 @@ const runMiddleware = async (
         }
         const msg = ['matched'];
         if (handler.method && handler.method !== req.method) {
-          msg.push('405 Not Allowed', `supported method = ${handler.method}`);
+          msg.push(`405 ${http.STATUS_CODES[405]}`, `supported method = ${handler.method}`);
           logger.info(...msg, ...handlerInfo);
           res.statusCode = 405;
           res.end(formatResMsg(req, ...msg));
@@ -76,7 +76,7 @@ const runMiddleware = async (
   }
 
   if (noHandlerResponse404) {
-    const msg = '404 No handler or file found';
+    const msg = `404 ${http.STATUS_CODES[404]}`;
     logger.info(msg, `${req.method} ${req.url}`);
     res.statusCode = 404;
     res.end(formatResMsg(req, msg));

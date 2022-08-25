@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import querystring from 'node:querystring';
-import type { ServerResponse } from 'node:http';
+import http, { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 
 import { ILogger } from '@/utils/logger';
@@ -89,7 +89,7 @@ export function handleJson(
   }
 
   if (!Array.isArray(data) && (offset !== undefined || sort || isCount || hasParam(q))) {
-    const msg = ['405 Not Allowed', 'Json is not array'];
+    const msg = [`405 ${http.STATUS_CODES[405]}`, 'Json is not array'];
     logger.info(...msg, ...msgSuffix);
     res.statusCode = 405;
     res.end(formatResMsg(req, ...msg));
