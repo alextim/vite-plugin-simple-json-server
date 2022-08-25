@@ -1,5 +1,12 @@
 # vite-plugin-simple-json-server
 
+## 0.2.2
+
+### Patch Changes
+
+- 80ccdf7: - better error handling
+  - refactor core code
+
 ## 0.2.1
 
 ### Patch Changes
