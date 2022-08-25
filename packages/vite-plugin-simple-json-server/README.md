@@ -303,7 +303,7 @@ export default {
 | :-------------: | :------: | :-------------------------------: |
 | `MockHandler[]` |    No    | `undefined`                       |
 
-Array of mock handlers.
+For the custom routes. Array of mock handlers.
 
 The `MockHandler` type consists of `pattern`, `method` and `handle` fields.
 
@@ -311,7 +311,7 @@ The `MockHandler` type consists of `pattern`, `method` and `handle` fields.
 
 `String`, required.  
 
-Apache Ant-style path pattern.  It's done with [@howiefh/ant-path-matcher](https://www.npmjs.com/package/@howiefh/ant-path-matcher).;
+Apache Ant-style path pattern.  It's done with [@howiefh/ant-path-matcher](https://www.npmjs.com/package/@howiefh/ant-path-matcher).
 
 The mapping matches URLs using the following rules:  
 
@@ -386,7 +386,7 @@ export default {
 | :--------: | :------: | :-----------: |
 |  `Number`  |    No    |    10         |
 
-Number of items to return.  
+Number of items to return while paging.  
 
 Usage:
 
