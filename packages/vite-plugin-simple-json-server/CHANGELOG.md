@@ -1,5 +1,13 @@
 # vite-plugin-simple-json-server
 
+## 0.2.3
+
+### Patch Changes
+
+- 74c478e: - By default the plugin is invoked only in `serve` mode.
+  - It also works in preview mode.
+  - Added `disable` option.
+
 ## 0.2.2
 
 ### Patch Changes
