@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getFilteredCount } from '../../../../handlers/handle-json/helpers/get-filtered-count';
+import { getFilteredCount } from '@/handlers/handle-json/helpers/get-filtered-count';
 
 const data = [
   {

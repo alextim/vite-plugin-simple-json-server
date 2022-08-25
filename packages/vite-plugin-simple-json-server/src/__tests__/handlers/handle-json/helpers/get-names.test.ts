@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getNames } from '../../../../handlers/handle-json/helpers/get-names';
+import { getNames } from '@/handlers/handle-json/helpers/get-names';
 
 const item = {
   id: 1,

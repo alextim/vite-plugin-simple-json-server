@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@/utils/*": ["src/utils/*"],
-      "@/helpers/*": ["src/helpers/*"]
+      "@/helpers/*": ["src/helpers/*"],
+      "@/handlers/*": ["src/handlers/*"]
     }
   }
 }

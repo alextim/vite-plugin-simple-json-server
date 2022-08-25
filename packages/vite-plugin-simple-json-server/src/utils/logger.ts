@@ -52,10 +52,10 @@ export default class Logger implements ILogger {
     if (this.logLevel === 'error') {
       return;
     }
-    this.log([...msg], this.colors.fg.yellow);
+    this.log(msg, this.colors.fg.yellow);
   }
 
   error(...msg: string[]) {
-    this.log(['Failed!', ...msg], this.colors.fg.red);
+    this.log(msg, this.colors.fg.red);
   }
 }

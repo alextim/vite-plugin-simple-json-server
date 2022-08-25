@@ -52,6 +52,7 @@ function fetchApi(url, method = 'GET', formatOutput = undefined) {
     `);
     })
     .catch((err) => {
+      console.error(err.toString());
       updateView(`
       <p>${format(url, method)}</p>
       ${err.toString()}
@@ -60,5 +61,5 @@ function fetchApi(url, method = 'GET', formatOutput = undefined) {
 }
 
 function updateView(s) {
-  return (document.querySelector('#app').innerHTML += s);
+  document.querySelector('#app').innerHTML += s;
 }

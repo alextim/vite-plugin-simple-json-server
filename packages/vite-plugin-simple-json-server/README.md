@@ -63,13 +63,13 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 
 ## Usage
 
-Pagination and count is only available for array-based json.  
+Plugin serves handlers routes first, then json API, static files at the end. Query parameters are ignored for static files.
 
+Pagination, count and counting is only available for array-based json.
+For sorting and filtering the json must be an array of objects.  
 Otherwise, the server responds with 405.  
 
-For sorting and filtering the json must be an array of objects.  
-
-If filter or sort query parameter name is missing in the json then such parameter will be ignored.  
+If a filter or sort request has a parameter that is not among the json fields, that parameter will be ignored.
 
 Let's have the `products.json` in the `mock` folder.
 
@@ -109,25 +109,35 @@ curl http://localhost:5173/products?offset=0
 
 
 curl http://localhost:5173/products?offset=20
+```
 
+For custom limit pass it value to query:
 
+```sh
 curl http://localhost:5173/products?offset=200&limit=100
 ```
 
 ### Sorting
+
+Sorting by only one field is supported.  
 
 Default sort order is `asc`.
 
 ```sh
 curl http://localhost:5173/products?sort=name
 
+```
 
+For reverse order pass `order` parameter:
+
+```sh
 curl http://localhost:5173/products?sort=name&order=desc
 ```
 
-Only one field sorting is supported.
-
 ### Filtering
+
+The plugin supports only `eq`.
+
 
 ```sh
 curl  http://localhost:5173/products?id=2
@@ -135,8 +145,6 @@ curl  http://localhost:5173/products?id=2
 
 curl  http://localhost:5173/products?price=2&weight=1
 ```
-
-The plugin supports only `eq`.
 
 ### Count
 
@@ -146,6 +154,7 @@ curl  http://localhost:5173/products/count
 
 curl  http://localhost:5173/products/count?price=2
 ```
+
 ## Configuration
 
 To configure this plugin, pass an object to the `jsonServer()` function call in `vite.config.ts`.
@@ -171,8 +180,6 @@ export default defineConfig({
 It's a subfolder under the Vite root. Place all your static files here.  
 
 If the file name is `index.*` then its route will be the parent directory path.  
-
-Html files are served first. 
 
 |   Type                     | Supported methods |
 | :------------------------: | :------------: |

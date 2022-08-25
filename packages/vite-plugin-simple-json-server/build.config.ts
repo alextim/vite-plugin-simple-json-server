@@ -1,4 +1,5 @@
 import { defineBuildConfig } from 'unbuild';
+import { alias } from './alias';
 
 export default defineBuildConfig({
   entries: ['src/index'],
@@ -9,4 +10,5 @@ export default defineBuildConfig({
     emitCJS: true,
     inlineDependencies: true,
   },
+  alias,
 });

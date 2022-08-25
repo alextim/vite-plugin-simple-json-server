@@ -5,8 +5,8 @@ import fs from 'node:fs';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../utils/logger';
-import { handleJson } from '../../../handlers/handle-json';
+import Logger from '@/utils/logger';
+import { handleJson } from '@/handlers/handle-json';
 
 const logger = new Logger('test');
 
@@ -28,7 +28,7 @@ const reset = () => {
   res = { ...defRes };
 };
 
-import { dataRoot } from '../data-root';
+import { dataRoot } from '../../data-root';
 
 const defaultLimit = 10;
 
