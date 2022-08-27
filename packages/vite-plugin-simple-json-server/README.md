@@ -153,13 +153,13 @@ curl  http://localhost:5173/products?price=2&weight=1
 ### Count
 
 ```sh
-curl  http://localhost:5173/products/count
+curl  http://localhost:5173/products--count
 ```
 
 You can filter as well while count.
 
 ```sh
-curl  http://localhost:5173/products/count?price=2
+curl  http://localhost:5173/products--count?price=2
 ```
 
 :bulb: The pagination is available with sort and filter.

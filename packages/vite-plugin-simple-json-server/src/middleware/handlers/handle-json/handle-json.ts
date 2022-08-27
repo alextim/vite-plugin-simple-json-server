@@ -16,7 +16,7 @@ import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
 import { getNames, hasParam } from './helpers/get-names';
 
-const COUNT_API_SUFFIX = '/count';
+const COUNT_API_SUFFIX = '--count';
 const isCountApi = (url: string) => url.endsWith(COUNT_API_SUFFIX);
 const stripCountSuffix = (url: string) => url.substring(0, url.length - COUNT_API_SUFFIX.length);
 

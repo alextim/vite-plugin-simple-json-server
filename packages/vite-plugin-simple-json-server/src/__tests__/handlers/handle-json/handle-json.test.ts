@@ -65,24 +65,24 @@ describe('test handleOther', () => {
     expect(res.end).toBeCalledWith(contentSrc);
   });
 
-  it('/test/count exists, json, should return true', () => {
-    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test/count', defaultLimit, logger);
+  it('/test--count exists, json, should return true', () => {
+    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test--count', defaultLimit, logger);
     const itemsCount = jsonSrc.length;
     expect(result).toBeTruthy();
     expect(res.end).toBeCalledWith(JSON.stringify({ count: itemsCount }));
   });
 
-  it('/test/count?color=stringer exists, json, should return true', () => {
-    req.url = '/test/count?color=stringer';
-    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test/count', defaultLimit, logger);
+  it('/test--count?color=stringer exists, json, should return true', () => {
+    req.url = '/test--count?color=stringer';
+    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test--count', defaultLimit, logger);
     const itemsCount = jsonSrc.filter(({ color }) => color === 'stringer').length;
     expect(result).toBeTruthy();
     expect(res.end).toBeCalledWith(JSON.stringify({ count: itemsCount }));
   });
 
-  it('/test/count?color=xxx exists, json, should return true', () => {
-    req.url = '/test/count?color=xxx';
-    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test/count', defaultLimit, logger);
+  it('/test--count?color=xxx exists, json, should return true', () => {
+    req.url = '/test--count?color=xxx';
+    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/test--count', defaultLimit, logger);
     expect(result).toBeTruthy();
     expect(res.end).toBeCalledWith(JSON.stringify({ count: 0 }));
   });
@@ -109,9 +109,9 @@ describe('test handleOther', () => {
     expect(res.end).toBeCalledWith(JSON.stringify([]));
   });
 
-  it('/c/d/d1/count exists, json, should return true, 405', () => {
-    req.url = '/c/d/d1/count';
-    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/c/d/d1/count', defaultLimit, logger);
+  it('/c/d/d1--count exists, json, should return true, 405', () => {
+    req.url = '/c/d/d1--count';
+    const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/c/d/d1--count', defaultLimit, logger);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(405);
     expect(res.end).toBeCalled();
