@@ -6,15 +6,19 @@ fetchApi('/api/home');
 
 fetchApi('/api/test?color=stringer', formatList);
 
-fetchApi('/api/test?offset=5&limit=5&sort=color&order=desc', formatList);
+fetchApi('/api/test?offset=5&limit=5&sort=-color', formatList);
 
 fetchApi('/api/test?count');
 
 fetchApi('/api/test/?count&color=stringer');
 
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=desc', formatList);
+fetchApi('/api/test/?id=3&id=8&id=9&color=stringer', formatList);
 
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=asc', formatList);
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=-id', formatList);
+
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id', formatList);
+
+fetchApi('/api/test?limit=5&sort=color,-id', formatList);
 
 function formatList(data) {
   if (!data || !Array.isArray(data)) {

@@ -1,16 +1,20 @@
-import { getNames } from './get-names';
+import { getParamNames } from './get-param-names';
 
 export const filter = (data: any[], q: Record<string, any>) => {
-  if (data.length === 0) {
-    return data;
-  }
-  const names = getNames(q, data[0]);
+  const names = getParamNames(q);
   if (!names.length) {
     return data;
   }
   return data.filter((item) => {
     for (const name of names) {
-      if (item[name] !== q[name]) {
+      if (!item.hasOwnProperty(name)) {
+        return false;
+      }
+      if (Array.isArray(q[name])) {
+        if (!q[name].some((val: any) => val == item[name])) {
+          return false;
+        }
+      } else if (item[name] != q[name]) {
         return false;
       }
     }

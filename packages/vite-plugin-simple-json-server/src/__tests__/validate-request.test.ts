@@ -11,6 +11,7 @@ const defReq = {
 
 const defRes = {
   statusCode: 0,
+  setHeader: vi.fn(),
   end: vi.fn(),
 };
 let req;

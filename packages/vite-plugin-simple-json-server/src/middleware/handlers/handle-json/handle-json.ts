@@ -5,17 +5,18 @@ import http, { ServerResponse } from 'node:http';
 
 import { Connect } from 'vite';
 
-import { ILogger } from '@/utils/logger';
-import { JSON_MIME_TYPE } from '@/utils/mime-types';
+import { ILogger } from '../../../utils/logger';
+import { JSON_MIME_TYPE } from '../../../utils/mime-types';
+import { sort } from '../../../utils/comp-properties-of';
 
-import { validateReq } from '@/helpers/validate-request';
-import { sendFileContent } from '@/helpers/send-file-content';
-import formatResMsg from '@/helpers/format-res-msg';
-import checkPathname from '@/helpers/check-pathname';
+import { validateReq } from '../../../helpers/validate-request';
+import { notFound, sendFileContent, sendJson } from '../../../helpers/send';
+import formatResMsg from '../../../helpers/format-res-msg';
+import getFilepath from '../../../helpers/get-filepath';
 
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
-import { getNames, hasParam } from './helpers/get-names';
+import { getParamNames, hasParams } from './helpers/get-param-names';
 import { getLink, getTemplate, setLinkHeader } from './helpers/link-header';
 
 export function handleJson(
@@ -27,11 +28,24 @@ export function handleJson(
   urlPath: string,
   defaultLimit: number,
 ) {
-  const pathname = path.join(dataRoot, purePath);
+  let idParam = '';
+  let resourceName = purePath;
 
-  const filePath = checkPathname(pathname, JSON_MIME_TYPE);
+  let pathname = path.join(dataRoot, purePath);
+
+  let filePath = getFilepath(pathname, JSON_MIME_TYPE);
   if (!filePath) {
-    return false;
+    const index = purePath.indexOf('/');
+    if (index === -1) {
+      return false;
+    }
+    resourceName = purePath.substring(0, index);
+    pathname = path.join(dataRoot, resourceName);
+    filePath = getFilepath(pathname, JSON_MIME_TYPE);
+    if (!filePath) {
+      return false;
+    }
+    idParam = purePath.substring(index + 1);
   }
 
   if (!validateReq(req, res, 405, ['GET'])) {
@@ -40,7 +54,7 @@ export function handleJson(
 
   const [, qs] = req.url!.split('?');
 
-  if (!qs) {
+  if (!qs && !idParam) {
     sendFileContent(req, res, filePath, JSON_MIME_TYPE, logger);
     return true;
   }
@@ -50,31 +64,39 @@ export function handleJson(
   const isCount = Object.keys(q).some((key) => key === 'count');
 
   let offset: number | undefined = undefined;
-  let limit = 0;
-  let sort = '';
-  let order = 'asc';
+  let limit: number | undefined = undefined;
+  const sortParams: string[] = [];
 
   if (q['offset']) {
     offset = Math.max(0, parseInt(q['offset'] as string));
   }
+
   if (q['limit']) {
     limit = Math.max(0, parseInt(q['limit'] as string));
-    if (limit === 0) {
+  }
+
+  if (offset !== undefined || limit !== undefined) {
+    if (offset === undefined) {
+      offset = 0;
+    }
+    if (limit === undefined || limit === 0) {
       limit = defaultLimit;
     }
   }
-  if (q['sort']) {
-    sort = q['sort'] as string;
-  }
 
-  if (q['order']) {
-    order = q['order'] as string;
-    if (order !== 'asc' && order !== 'desc') {
-      order = 'asc';
+  if (q['sort']) {
+    const parseSortParam = (value: string) =>
+      value
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+    if (Array.isArray(q['sort'])) {
+      sortParams.push(...q['sort'].map(parseSortParam).flat());
+    } else {
+      sortParams.push(...parseSortParam(q['sort']));
     }
   }
 
-  res.setHeader('Content-Type', JSON_MIME_TYPE);
   const content = fs.readFileSync(filePath, 'utf-8');
 
   const msgSuffix = [`${req.method} ${req.url}`, `file: ${filePath}`];
@@ -82,56 +104,58 @@ export function handleJson(
 
   let data = JSON.parse(content);
 
-  if (offset === undefined && !sort && !isCount && Array.isArray(data) && data.length > 0 && getNames(q, data[0]).length === 0) {
-    logger.info(...msgMatched);
-    res.end(content);
-    return true;
+  if (
+    offset === undefined &&
+    limit === undefined &&
+    sortParams.length === 0 &&
+    !isCount &&
+    !idParam &&
+    Array.isArray(data) &&
+    (data.length === 0 || (data.length > 0 && getParamNames(q).length === 0))
+  ) {
+    return sendJson(res, content, msgMatched, logger);
   }
 
-  if (!Array.isArray(data) && (offset !== undefined || sort || isCount || hasParam(q))) {
+  if (
+    !Array.isArray(data) &&
+    (offset !== undefined || limit !== undefined || sortParams.length > 0 || isCount || idParam || hasParams(q))
+  ) {
     const msg = [`405 ${http.STATUS_CODES[405]}`, 'Json is not array'];
-    logger.info(...msg, ...msgSuffix);
-    res.statusCode = 405;
-    res.end(formatResMsg(req, ...msg));
-    return true;
+    return sendJson(res, { message: formatResMsg(req, ...msg) }, [...msg, ...msgSuffix], logger, 405);
+  }
+
+  if (idParam) {
+    data = data.filter((item: any) => item.id == idParam);
+    if (data.length === 0) {
+      return notFound(res, `${resourceName} with id ${idParam} not found`, logger);
+    }
+    return sendJson(res, data, msgMatched, logger);
   }
 
   if (isCount) {
     const filteredCount = getFilteredCount(data, q);
-    logger.info(...msgMatched);
-    res.end(JSON.stringify({ count: filteredCount }));
-    return true;
+    return sendJson(res, { count: filteredCount }, msgMatched, logger);
   }
 
   data = filter(data, q);
 
-  if (data.length > 0) {
-    if (sort && data[0].hasOwnProperty(sort)) {
-      const dir = order === 'asc' ? 1 : -1;
-      data = data.sort((a: any, b: any) => {
-        if (a[sort] > b[sort]) {
-          return 1 * dir;
-        }
-        if (a[sort] < b[sort]) {
-          return -1 * dir;
-        }
-        return 0;
-      });
-    }
-
-    if (offset !== undefined) {
-      const length = data.length;
-
-      data = data.slice(offset, offset + limit);
-
-      const template = getTemplate(req, urlPath, q);
-      const link = getLink(template, offset, limit, length);
-      setLinkHeader(res, link);
-    }
+  if (data.length === 0) {
+    return notFound(res, `${resourceName} with q = ${querystring.stringify(q)} not found`, logger);
   }
 
-  logger.info(...msgMatched);
-  res.end(JSON.stringify(data));
+  if (sortParams.length > 0) {
+    sort(data, ...sortParams);
+  }
 
-  return true;
+  if (offset !== undefined && limit !== undefined) {
+    const length = data.length;
+
+    data = data.slice(offset, offset + limit);
+
+    const template = getTemplate(req, urlPath, q);
+    const link = getLink(template, offset, limit, length);
+    setLinkHeader(res, link);
+  }
+
+  return sendJson(res, data, msgMatched, logger);
 }

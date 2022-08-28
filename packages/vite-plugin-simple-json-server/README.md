@@ -125,31 +125,45 @@ The server sets the `Links` response header with URLs for the **first**, **previ
 
 ### Sorting
 
-Sorting by only one field is supported.  
-
-Default sort order is `asc`.
+Default sort order is ascending.
 
 ```sh
 curl http://localhost:5173/products?sort=name
 
 ```
 
-For the reverse order pass the `order=desc` parameter:
+For the descending order prefix a field name with `-`:
 
 ```sh
-curl http://localhost:5173/products?sort=name&order=desc
+curl http://localhost:5173/products?sort=-name
+```
+
+Multiply field sorting is supported.  
+
+
+```sh
+curl http://localhost:5173/products?sort=name,-price
 ```
 
 ### Filtering
 
 The plugin supports only `eq`.
 
-
 ```sh
 curl  http://localhost:5173/products?id=2
 
 
+curl  http://localhost:5173/products?id=2&id=3
+
+
 curl  http://localhost:5173/products?price=2&weight=1
+```
+
+If the requested resource has an `id` property, you can append the `id` value to the URL.
+
+```sh
+curl  http://localhost:5173/products/2
+
 ```
 
 ### Count
@@ -362,7 +376,7 @@ Any HTTP method: `GET` | `POST` etc;
 
 - `req`: `Connect.IncomingMessage` from [Vite](https://github.com/vitejs/vite/blob/main/packages/vite/types/connect.d.ts);
 - `res`: `ServerResponse` from [Node http](https://nodejs.org/api/http.html);
-- `urlVars`: key-value pairs from parsed url.
+- `urlVars`: key-value pairs from parsed URL.
 
 **`vite.config.ts`**
 

@@ -20,3 +20,5 @@ export type SimpleJsonServerPluginOptions = {
   noHandlerResponse404?: boolean;
   limit?: number;
 };
+
+export type SortOrder = 1 | -1;

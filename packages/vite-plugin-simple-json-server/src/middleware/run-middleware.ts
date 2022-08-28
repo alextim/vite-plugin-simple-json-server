@@ -6,12 +6,13 @@ import { removeTrailingSlash } from '@/utils/misc';
 import { ILogger } from '@/utils/logger';
 
 import formatResMsg from '@/helpers/format-res-msg';
+import { sendJson } from '@/helpers/send';
+
+import { SimpleJsonServerPluginOptions } from '../types';
 
 import { handleHtml } from './handlers/handle-html';
 import { handleJson } from './handlers/handle-json';
 import { handleOther } from './handlers/handle-other';
-
-import { SimpleJsonServerPluginOptions } from '../types';
 
 const isOurApi = (url: string | undefined, urlPrefixes: string[] | undefined) =>
   url && urlPrefixes && urlPrefixes.some((prefix) => url.startsWith(prefix));
@@ -50,10 +51,7 @@ const runMiddleware = async (
         const msg = ['matched'];
         if (handler.method && handler.method !== req.method) {
           msg.push(`405 ${http.STATUS_CODES[405]}`, `supported method = ${handler.method}`);
-          logger.info(...msg, ...handlerInfo);
-          res.statusCode = 405;
-          res.end(formatResMsg(req, ...msg));
-          return true;
+          return sendJson(res, { message: formatResMsg(req, ...msg) }, [...msg, ...handlerInfo], logger, 405);
         }
         logger.info(...msg, ...handlerInfo);
         handler.handle(req, res, { ...urlVars });
@@ -77,10 +75,7 @@ const runMiddleware = async (
 
   if (noHandlerResponse404) {
     const msg = `404 ${http.STATUS_CODES[404]}`;
-    logger.info(msg, `${req.method} ${req.url}`);
-    res.statusCode = 404;
-    res.end(formatResMsg(req, msg));
-    return true;
+    return sendJson(res, { message: formatResMsg(req, msg) }, [msg, `${req.method} ${req.url}`], logger, 404);
   }
 
   return false;

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getFilteredCount } from '@/handlers/handle-json/helpers/get-filtered-count';
+import { getFilteredCount } from '../../../../../middleware/handlers/handle-json/helpers/get-filtered-count';
 
 const data = [
   {
@@ -25,7 +25,8 @@ describe('getFilteredCount', () => {
     const q = {
       qqq: 2,
     };
-    expect(getFilteredCount(data, q)).toEqual(3);
+    const count = getFilteredCount(data, q);
+    expect(count === 0).toBeTruthy();
   });
   it('should has all', () => {
     const q = {};

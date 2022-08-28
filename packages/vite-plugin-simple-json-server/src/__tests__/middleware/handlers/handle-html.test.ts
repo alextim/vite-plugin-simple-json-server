@@ -3,8 +3,8 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '@/utils/logger';
-import { handleHtml } from '@/handlers/handle-html';
+import Logger from '../../../utils/logger';
+import { handleHtml } from '../../../middleware/handlers/handle-html';
 
 import { dataRoot } from '../../data-root';
 

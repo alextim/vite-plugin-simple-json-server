@@ -5,8 +5,8 @@ import fs from 'node:fs';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '@/utils/logger';
-import { handleJson } from '@/handlers/handle-json';
+import Logger from '../../../../utils/logger';
+import { handleJson } from '../../../../middleware/handlers/handle-json';
 
 const logger = new Logger('test');
 
@@ -124,7 +124,7 @@ describe('test handleOther', () => {
     req.url = '/test?color=xxx';
     const result = handleJson(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, 'test', logger, '/test', defaultLimit);
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify([]));
+    expect(res.end).toBeCalledWith('{"message":"test with q = color=xxx not found"}');
   });
 
   it('/c/d/d1?count exists, json, should return true, 405', () => {
