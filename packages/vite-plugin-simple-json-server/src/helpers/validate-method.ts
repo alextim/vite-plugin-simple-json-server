@@ -4,7 +4,7 @@ import { Connect } from 'vite';
 import { JSON_MIME_TYPE } from '../utils/mime-types';
 import formatResMsg from './format-res-msg';
 
-export function validateReq(req: Connect.IncomingMessage, res: ServerResponse, code = 403, allowedMethods = ['GET']) {
+export function validateMethod(req: Connect.IncomingMessage, res: ServerResponse, code = 403, allowedMethods = ['GET']) {
   if (!req.method || allowedMethods?.some((m) => m === req.method)) {
     return true;
   }

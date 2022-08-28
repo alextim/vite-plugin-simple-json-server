@@ -9,7 +9,7 @@ import { ILogger } from '../../../utils/logger';
 import { JSON_MIME_TYPE } from '../../../utils/mime-types';
 import { sort } from '../../../utils/comp-properties-of';
 
-import { validateReq } from '../../../helpers/validate-request';
+import { validateMethod } from '../../../helpers/validate-method';
 import { notFound, sendFileContent, sendJson } from '../../../helpers/send';
 import formatResMsg from '../../../helpers/format-res-msg';
 import getFilepath from '../../../helpers/get-filepath';
@@ -48,7 +48,7 @@ export function handleJson(
     idParam = purePath.substring(index + 1);
   }
 
-  if (!validateReq(req, res, 405, ['GET'])) {
+  if (!validateMethod(req, res, 405, ['GET'])) {
     return true;
   }
 

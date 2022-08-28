@@ -2,7 +2,7 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import { validateReq } from '../helpers/validate-request';
+import { validateMethod } from '../helpers/validate-method';
 
 const defReq = {
   url: '',
@@ -24,21 +24,21 @@ const reset = () => {
 
 reset();
 
-describe('test validateReq', () => {
+describe('test validateMethod', () => {
   beforeEach(reset);
   afterEach(() => {
     vi.clearAllMocks();
   });
   it('not valid method, should return false', () => {
     req = { ...req, method: 'PUT' };
-    const result = validateReq(req as Connect.IncomingMessage, res as ServerResponse, 401);
+    const result = validateMethod(req as Connect.IncomingMessage, res as ServerResponse, 401);
     expect(result).toBeFalsy();
     expect(res.statusCode).toBe(401);
     expect(res.end).toBeCalledTimes(1);
   });
   it('valid method, should return true', () => {
     req = { ...req, method: 'POST' };
-    const result = validateReq(req as Connect.IncomingMessage, res as ServerResponse, 401, ['POST']);
+    const result = validateMethod(req as Connect.IncomingMessage, res as ServerResponse, 401, ['POST']);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(0);
     expect(res.end).not.toBeCalled();

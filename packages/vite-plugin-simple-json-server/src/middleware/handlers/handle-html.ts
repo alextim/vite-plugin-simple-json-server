@@ -5,7 +5,7 @@ import { Connect } from 'vite';
 import { ILogger } from '@/utils/logger';
 import { HTML_MIME_TYPE } from '@/utils/mime-types';
 
-import { validateReq } from '@/helpers/validate-request';
+import { validateMethod } from '@/helpers/validate-method';
 import { sendFileContent } from '@/helpers/send';
 import getFilepath from '@/helpers/get-filepath';
 
@@ -17,7 +17,7 @@ export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, da
     return false;
   }
 
-  if (validateReq(req, res)) {
+  if (validateMethod(req, res)) {
     sendFileContent(req, res, filePath, HTML_MIME_TYPE, logger);
   }
   return true;

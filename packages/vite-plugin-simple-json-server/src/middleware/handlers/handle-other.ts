@@ -6,7 +6,7 @@ import { isFileExists } from '@/utils/files';
 import { ILogger } from '@/utils/logger';
 import getMime from '@/utils/mime-types';
 
-import { validateReq } from '@/helpers/validate-request';
+import { validateMethod } from '@/helpers/validate-method';
 import { sendFileContent } from '@/helpers/send';
 
 export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
@@ -21,7 +21,7 @@ export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, d
   if (!mime) {
     return false;
   }
-  if (validateReq(req, res)) {
+  if (validateMethod(req, res)) {
     sendFileContent(req, res, pathname, mime, logger);
   }
   return true;
