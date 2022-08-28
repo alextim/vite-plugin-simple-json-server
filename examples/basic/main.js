@@ -4,16 +4,17 @@ updateView('<h1>Hello, Json Server</h1>');
 
 fetchApi('/api/home');
 
-fetchApi('/api/test?color=stringer', 'GET', formatList);
+fetchApi('/api/test?color=stringer', formatList);
 
-fetchApi('/api/test?offset=5&limit=5&sort=color&order=desc', 'GET', formatList);
+fetchApi('/api/test?offset=5&limit=5&sort=color&order=desc', formatList);
 
-fetchApi('/api/test--count');
+fetchApi('/api/test?count');
 
-fetchApi('/api/test--count?color=stringer');
+fetchApi('/api/test/?count&color=stringer');
 
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=desc', 'GET', formatList);
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=asc', 'GET', formatList);
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=desc', formatList);
+
+fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id&order=asc', formatList);
 
 function formatList(data) {
   if (!data || !Array.isArray(data)) {
@@ -35,7 +36,7 @@ function format(url, method) {
   return `${method || 'GET'} ${url}`;
 }
 
-function fetchApi(url, method = 'GET', formatOutput = undefined) {
+function fetchApi(url, formatOutput = undefined, method = 'GET') {
   fetch(url, { method })
     .then(handleErrors)
     .then((resp) => {

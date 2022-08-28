@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import querystring from 'node:querystring';
 import http, { ServerResponse } from 'node:http';
+
 import { Connect } from 'vite';
 
 import { ILogger } from '@/utils/logger';
@@ -15,39 +16,38 @@ import checkPathname from '@/helpers/check-pathname';
 import { filter } from './helpers/filter';
 import { getFilteredCount } from './helpers/get-filtered-count';
 import { getNames, hasParam } from './helpers/get-names';
-
-const COUNT_API_SUFFIX = '--count';
-const isCountApi = (url: string) => url.endsWith(COUNT_API_SUFFIX);
-const stripCountSuffix = (url: string) => url.substring(0, url.length - COUNT_API_SUFFIX.length);
+import { getLink, getTemplate, setLinkHeader } from './helpers/link-header';
 
 export function handleJson(
   req: Connect.IncomingMessage,
   res: ServerResponse,
   dataRoot: string,
+  purePath: string,
+  logger: ILogger,
   urlPath: string,
   defaultLimit: number,
-  logger: ILogger,
 ) {
-  const isCount = isCountApi(urlPath);
-
-  const pathname = path.join(dataRoot, isCount ? stripCountSuffix(urlPath) : urlPath);
+  const pathname = path.join(dataRoot, purePath);
 
   const filePath = checkPathname(pathname, JSON_MIME_TYPE);
   if (!filePath) {
     return false;
   }
 
-  if (!validateReq(req, res, 405, ['GET', 'POST'])) {
+  if (!validateReq(req, res, 405, ['GET'])) {
     return true;
   }
 
   const [, qs] = req.url!.split('?');
-  if (!isCount && !qs) {
+
+  if (!qs) {
     sendFileContent(req, res, filePath, JSON_MIME_TYPE, logger);
     return true;
   }
 
   const q = querystring.parse(qs);
+
+  const isCount = Object.keys(q).some((key) => key === 'count');
 
   let offset: number | undefined = undefined;
   let limit = 0;
@@ -120,8 +120,13 @@ export function handleJson(
     }
 
     if (offset !== undefined) {
-      limit = limit ? limit : 10;
+      const length = data.length;
+
       data = data.slice(offset, offset + limit);
+
+      const template = getTemplate(req, urlPath, q);
+      const link = getLink(template, offset, limit, length);
+      setLinkHeader(res, link);
     }
   }
 

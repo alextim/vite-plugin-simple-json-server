@@ -9,8 +9,8 @@ import getMime from '@/utils/mime-types';
 import { validateReq } from '@/helpers/validate-request';
 import { sendFileContent } from '@/helpers/send-file-content';
 
-export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, urlPath: string, logger: ILogger) {
-  const pathname = path.join(dataRoot, urlPath);
+export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
+  const pathname = path.join(dataRoot, purePath);
 
   if (!isFileExists(pathname)) {
     return false;

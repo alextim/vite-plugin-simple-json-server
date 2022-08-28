@@ -37,7 +37,7 @@ const runMiddleware = async (
   if (!isOurApi(req?.url, urlPrefixes)) {
     return false;
   }
-  let urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
+  const urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
 
   if (handlers) {
     for (const handler of handlers) {
@@ -62,15 +62,15 @@ const runMiddleware = async (
     }
   }
 
-  urlPath = removePrefix(urlPath, urlPrefixes!);
-  if (urlPath) {
-    if (handleJson(req, res, dataRoot, urlPath, limit!, logger)) {
+  const purePath = removePrefix(urlPath, urlPrefixes!);
+  if (purePath) {
+    if (handleJson(req, res, dataRoot, purePath, logger, urlPath, limit!)) {
       return true;
     }
-    if (handleHtml(req, res, dataRoot, urlPath, logger)) {
+    if (handleHtml(req, res, dataRoot, purePath, logger)) {
       return true;
     }
-    if (handleOther(req, res, dataRoot, urlPath, logger)) {
+    if (handleOther(req, res, dataRoot, purePath, logger)) {
       return true;
     }
   }

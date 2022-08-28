@@ -9,8 +9,8 @@ import { validateReq } from '@/helpers/validate-request';
 import { sendFileContent } from '@/helpers/send-file-content';
 import checkPathname from '@/helpers/check-pathname';
 
-export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, urlPath: string, logger: ILogger) {
-  const pathname = path.join(dataRoot, urlPath);
+export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
+  const pathname = path.join(dataRoot, purePath);
 
   const filePath = checkPathname(pathname, HTML_MIME_TYPE);
   if (!filePath) {

@@ -121,6 +121,8 @@ For the custom limit, pass it to the query:
 curl http://localhost:5173/products?offset=200&limit=100
 ```
 
+The server sets the `Links` response header with URLs for the **first**, **previous**, **next** and **last** pages according to the current `limit`.
+
 ### Sorting
 
 Sorting by only one field is supported.  
@@ -153,13 +155,13 @@ curl  http://localhost:5173/products?price=2&weight=1
 ### Count
 
 ```sh
-curl  http://localhost:5173/products--count
+curl  http://localhost:5173/products?count
 ```
 
 You can filter as well while count.
 
 ```sh
-curl  http://localhost:5173/products--count?price=2
+curl  http://localhost:5173/products?count&price=2
 ```
 
 :bulb: The pagination is available with sort and filter.
@@ -217,7 +219,7 @@ If the file name is `index.*` then its route will be the parent directory path.
 
 |   Type                     | Supported methods |
 | :------------------------: | :------------: |
-| `json`                     | `GET`, `POST`  |
+| `json`                     | `GET`          |
 | `html` \| `htm` \| `shtml` | `GET`          |
 | `js` \| `mjs`              | `GET`          |
 | `css`                      | `GET`          |

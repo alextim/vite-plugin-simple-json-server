@@ -26,7 +26,7 @@ const reset = () => {
   res = { ...defRes };
 };
 
-import { dataRoot } from '../data-root';
+import { dataRoot } from '../../data-root';
 
 reset();
 describe('test handleOther', () => {

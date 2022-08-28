@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Logger from '@/utils/logger';
 import { handleHtml } from '@/handlers/handle-html';
 
-import { dataRoot } from '../data-root';
+import { dataRoot } from '../../data-root';
 
 const logger = new Logger('test');
 

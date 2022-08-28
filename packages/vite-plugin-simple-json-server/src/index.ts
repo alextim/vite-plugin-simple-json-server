@@ -45,6 +45,7 @@ const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugi
       if (options.disable) {
         return;
       }
+
       logger.info('server started.', `options = ${JSON.stringify(options, null, '  ')}`);
       server.middlewares.use(async (req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         try {

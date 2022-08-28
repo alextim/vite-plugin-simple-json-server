@@ -1,10 +1,15 @@
 import { defineConfig } from 'vite';
 import jsonServer from 'vite-plugin-simple-json-server';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: 'aaaa',
+  base: '/aaaa/',
+  server: {
+    https: true,
+  },
   plugins: [
+    basicSsl(),
     jsonServer({
       handlers: [
         {
