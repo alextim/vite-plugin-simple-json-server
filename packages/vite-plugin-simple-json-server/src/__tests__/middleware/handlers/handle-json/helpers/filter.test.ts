@@ -20,7 +20,7 @@ const data = [
   },
 ];
 
-describe.only('filter', () => {
+describe('filter', () => {
   it('should be 0', () => {
     const q = {
       qqq: 2,
