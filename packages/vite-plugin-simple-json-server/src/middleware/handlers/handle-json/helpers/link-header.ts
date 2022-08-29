@@ -12,7 +12,7 @@ export function getTemplate(req: any, urlPath: string, q: querystring.ParsedUrlQ
   return `<http${protocol}://${req.headers.host}${urlPath}?${qs}&offset=%d>;rel="%s"`;
 }
 
-export function getLink(template: string, offset: number, limit: number, length: number) {
+export function getLink(template: string, offset: number, limit: number, count: number) {
   const linkItems: string[] = [];
 
   // not is First
@@ -21,17 +21,17 @@ export function getLink(template: string, offset: number, limit: number, length:
   }
 
   // not is last
-  if (offset < length - limit) {
+  if (offset < count - limit) {
     linkItems.push(util.format(template, offset + limit, 'next'));
   }
 
   linkItems.push(util.format(template, 0, 'first'));
-  linkItems.push(util.format(template, Math.floor(length / limit) * limit, 'last'));
+  linkItems.push(util.format(template, Math.floor(count / limit) * limit, 'last'));
 
   return linkItems.join(',');
 }
 
-export function setLinkHeader(res: http.ServerResponse, link: string) {
+export function setLinkHeader(res: http.ServerResponse, link: string, count: number) {
   if (res.hasHeader('Link')) {
     const prevLinkHeader = res.getHeader('Link');
 
@@ -46,5 +46,6 @@ export function setLinkHeader(res: http.ServerResponse, link: string) {
     }
   }
 
+  res.setHeader('X-Total-Count', count);
   res.setHeader('Link', link);
 }

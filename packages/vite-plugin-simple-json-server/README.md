@@ -121,7 +121,7 @@ For the custom limit, pass it to the query:
 curl http://localhost:5173/products?offset=200&limit=100
 ```
 
-The server sets the `Links` response header with URLs for the **first**, **previous**, **next** and **last** pages according to the current `limit`.
+The server sets the `Link` response header with URLs for the **first**, **previous**, **next** and **last** pages according to the current `limit`. Also it sets the `X-Total-Count` header.
 
 ### Sorting
 

@@ -147,13 +147,13 @@ export function handleJson(
   }
 
   if (offset !== undefined && limit !== undefined) {
-    const length = data.length;
+    const count = data.length;
 
     data = data.slice(offset, offset + limit);
 
     const template = getTemplate(req, urlPath, q);
-    const link = getLink(template, offset, limit, length);
-    setLinkHeader(res, link);
+    const link = getLink(template, offset, limit, count);
+    setLinkHeader(res, link, count);
   }
 
   return sendJson(res, data, msgMatched, logger);
