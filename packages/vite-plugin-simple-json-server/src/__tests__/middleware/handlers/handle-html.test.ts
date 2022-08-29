@@ -6,7 +6,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Logger from '../../../utils/logger';
 import { handleHtml } from '../../../middleware/handlers/handle-html';
 
-import { dataRoot } from '../../data-root';
+import { dataRoot } from '../../data-root-2';
 
 const logger = new Logger('test');
 
@@ -39,18 +39,23 @@ describe('test handleHtml', () => {
     expect(result).toBeFalsy();
     expect(res.end).not.toBeCalled();
   });
-  it('/ exists, html, should return true', () => {
-    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/', logger);
+  it('"/", index.html exists, html, should return true', () => {
+    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '', logger);
     expect(result).toBeTruthy();
     expect(res.end).toBeCalled();
   });
-  it('/c exists, html, should return true', () => {
-    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/c', logger);
+  it('"/second", second.html exists, html, should return true', () => {
+    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, 'second', logger);
     expect(result).toBeTruthy();
     expect(res.end).toBeCalled();
   });
-  it('/c/d/dd exists, html, should return true', () => {
-    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, '/c/dd', logger);
+  it('"/subfoder", index.shtml" exists, shtml, should return true', () => {
+    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, 'subfolder', logger);
+    expect(result).toBeTruthy();
+    expect(res.end).toBeCalled();
+  });
+  it('/subfolder/third, third.htm exists, htm, should return true', () => {
+    const result = handleHtml(req as Connect.IncomingMessage, res as ServerResponse, dataRoot, 'subfolder/third', logger);
     expect(result).toBeTruthy();
     expect(res.end).toBeCalled();
   });

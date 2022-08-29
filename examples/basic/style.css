@@ -13,7 +13,6 @@
 
 p {
   font-weight: bold;
-  margin-top: 40px;
 }
 
 ul {
@@ -21,3 +20,8 @@ ul {
   padding: 0;
   list-style: none;
 }
+#examples {
+  display: grid;
+  gap: 1rem;
+}
+

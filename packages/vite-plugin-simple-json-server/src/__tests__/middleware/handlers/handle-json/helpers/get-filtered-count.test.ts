@@ -6,17 +6,17 @@ const data = [
   {
     id: 1,
     name: 'a',
-    desc: 'a',
+    description: 'a',
   },
   {
     id: 2,
     name: 'b',
-    desc: 'b',
+    description: 'b',
   },
   {
     id: 3,
     name: 'b',
-    desc: 'c',
+    description: 'c',
   },
 ];
 
@@ -48,7 +48,7 @@ describe('getFilteredCount', () => {
   it('should has item #2', () => {
     const q = {
       name: 'b',
-      desc: 'b',
+      description: 'b',
     };
     expect(getFilteredCount(data, q)).toEqual(1);
   });

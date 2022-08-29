@@ -2,12 +2,12 @@ import type { ServerResponse } from 'node:http';
 import path from 'node:path';
 import { Connect } from 'vite';
 
-import { ILogger } from '@/utils/logger';
-import { HTML_MIME_TYPE } from '@/utils/mime-types';
+import { ILogger } from '../../utils/logger';
+import { HTML_MIME_TYPE } from '../../utils/mime-types';
 
-import { validateMethod } from '@/helpers/validate-method';
-import { sendFileContent } from '@/helpers/send';
-import getFilepath from '@/helpers/get-filepath';
+import { validateMethod } from '../../helpers/validate-method';
+import { sendFileContent } from '../../helpers/send';
+import getFilepath from '../../helpers/get-filepath';
 
 export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
   const pathname = path.join(dataRoot, purePath);

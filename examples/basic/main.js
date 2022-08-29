@@ -1,6 +1,6 @@
 import './style.css';
 
-updateView('<h1>Hello, Json Server</h1>');
+updateView('<h1>Hello, Json Server</h1><ul id="examples"></ul>', '#app');
 
 fetchApi('/api/home');
 
@@ -11,6 +11,8 @@ fetchApi('/api/test?offset=5&limit=5&sort=-color', formatList);
 fetchApi('/api/test?count');
 
 fetchApi('/api/test/?count&color=stringer');
+
+fetchApi('/api/test/3');
 
 fetchApi('/api/test/?id=3&id=8&id=9&color=stringer', formatList);
 
@@ -52,19 +54,23 @@ function fetchApi(url, formatOutput = undefined, method = 'GET') {
     })
     .then((data) => {
       updateView(`
+      <li>
       <p>${format(url, method)}</p>
       ${formatOutput ? formatOutput(data) : JSON.stringify(data, null, '  ')}
+      </li>
     `);
     })
     .catch((err) => {
       console.error(err.toString());
       updateView(`
+      <li>
       <p>${format(url, method)}</p>
       ${err.toString()}
+      </li>
     `);
     });
 }
 
-function updateView(s) {
-  document.querySelector('#app').innerHTML += s;
+function updateView(s, id = '#examples') {
+  document.querySelector(id).innerHTML += s;
 }

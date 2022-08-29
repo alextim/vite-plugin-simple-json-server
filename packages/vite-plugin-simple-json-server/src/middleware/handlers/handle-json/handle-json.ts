@@ -35,7 +35,7 @@ export function handleJson(
 
   let filePath = getFilepath(pathname, JSON_MIME_TYPE);
   if (!filePath) {
-    const index = purePath.indexOf('/');
+    const index = purePath.lastIndexOf('/');
     if (index === -1) {
       return false;
     }
@@ -55,8 +55,7 @@ export function handleJson(
   const [, qs] = req.url!.split('?');
 
   if (!qs && !idParam) {
-    sendFileContent(req, res, filePath, JSON_MIME_TYPE, logger);
-    return true;
+    return sendFileContent(req, res, filePath, JSON_MIME_TYPE, logger);
   }
 
   const q = querystring.parse(qs);
@@ -129,7 +128,7 @@ export function handleJson(
     if (data.length === 0) {
       return notFound(res, `${resourceName} with id ${idParam} not found`, logger);
     }
-    return sendJson(res, data, msgMatched, logger);
+    return sendJson(res, data[0], msgMatched, logger);
   }
 
   if (isCount) {
