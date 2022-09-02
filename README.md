@@ -12,7 +12,7 @@ Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | [vite-plugin-simple-json-server](packages/vite-plugin-simple-json-server)   | [![vite-plugin-simple-json-server version](https://img.shields.io/npm/v/vite-plugin-simple-json-server.svg?label=%20)](packages/vite-plugin-simple-json-server/CHANGELOG.md)    |
 
-# Examples
+## Examples
 
 | Example | Source                                                                                 | Playground                                                                                                  |
 | ------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |

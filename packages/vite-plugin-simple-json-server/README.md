@@ -19,7 +19,7 @@ Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 
 ## Why vite-plugin-simple-json-server?
 
-This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting and filter.  
+This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting, filter and **CRUD** operations.  
 
 Additionally the plugin serves static files such as `html`, `js`, `css`, `txt`.  
 
@@ -471,9 +471,10 @@ export default {
 
 ## Examples
 
-| Example  | Source                                                                                | Playground                                                                                                 |
-| -------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| basic    | [GitHub](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/basic)    | [Play Online](https://stackblitz.com/fork/github/alextim/vite-plugin-simple-json-server/tree/main/examples/basic)    |
+| Example | Source                                                                                | Playground                                                                                                 |
+| ------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| basic   | [GitHub](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/basic) | [Play Online](https://stackblitz.com/fork/github/alextim/vite-plugin-simple-json-server/tree/main/examples/basic) |
+| CRUD    | [GitHub](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/crud)  | [Play Online](https://stackblitz.com/fork/github/alextim/vite-plugin-simple-json-server/tree/main/examples/crud)  |
 
 ## Contributing
 
