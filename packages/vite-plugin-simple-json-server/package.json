@@ -31,6 +31,7 @@
     "build": "rimraf dist && unbuild",
     "typecheck": "tsc --noEmit --pretty",
     "test": "vitest run",
+    "test:v":    "vitest --run --reporter verbose",
     "coverage": "vitest run --coverage",
     "test:pub": "pnpm publish --dry-run --no-git-checks"
   },
@@ -38,9 +39,11 @@
     "@howiefh/ant-path-matcher": "^0.0.4"
   },
   "devDependencies": {
-    "@types/node": "^18.7.13",
+    "@types/mock-fs": "^4.13.1",
+    "@types/node": "^18.7.14",
+    "mock-fs": "^5.1.4",
     "typescript": "^4.8.2",
-    "unbuild": "^0.8.9",
+    "unbuild": "^0.8.10",
     "vite": "^3.0.9",
     "vite-node": "0.22.1",
     "vitest": "^0.22.1"

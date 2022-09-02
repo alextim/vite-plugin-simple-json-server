@@ -16,7 +16,7 @@ export default defineConfig({
               b: 2,
               c: 'c',
             };
-            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(data));
           },
         },
@@ -28,7 +28,7 @@ export default defineConfig({
               f: 'f',
               g: 6,
             };
-            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(data));
           },
         },

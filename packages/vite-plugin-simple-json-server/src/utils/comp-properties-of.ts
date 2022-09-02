@@ -54,5 +54,5 @@ export function compPropertiesOf<T extends object>(sortBy: Array<sortArg<T>>) {
  *                 Prefix any name with `-` to sort it in descending order.
  */
 export function sort<T extends object>(arr: T[], ...sortBy: Array<sortArg<T>>) {
-  arr.sort(compPropertiesOf<T>(sortBy));
+  return arr.sort(compPropertiesOf<T>(sortBy));
 }

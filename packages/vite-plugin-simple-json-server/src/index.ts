@@ -3,7 +3,7 @@ import { Plugin, Connect } from 'vite';
 import path from 'node:path';
 import type { ServerResponse } from 'node:http';
 
-import Logger, { ILogger } from '@/utils/logger';
+import Logger, { ILogger } from '@/services/logger';
 import { isDirExists } from '@/utils/files';
 
 import type { SimpleJsonServerPluginOptions, MockHandler, MockFunction } from './types';

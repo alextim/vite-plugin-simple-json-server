@@ -1,4 +1,4 @@
-[![Help Ukraine now!](https://raw.githubusercontent.com/alextim/help-ukraine-win-flag/master/stop-russian-agressian-help-ukraine-now-link.svg 'Help Ukraine now!')](https://bank.gov.ua/en/about/support-the-armed-forces)
+[![Help Ukraine now!](https://raw.githubusercontent.com/alextim/help-ukraine-win-flag/master/stop-russian-agressian-help-ukraine-now-link.svg 'Help Ukraine now!')](https://war.ukraine.ua/support-ukraine/)
 
 # vite-plugin-simple-json-server
 
@@ -180,6 +180,20 @@ curl  http://localhost:5173/products?count&price=2
 
 :bulb: The pagination is available with sort and filter.
 
+## CRUD
+
+Full CRUD operations are only available for array-like JSON with a numeric `id` property.
+
+| HTTP Verb | CRUD           | Entire Collection (e.g. /products)                                              | Specific Item (e.g. /products/:id)                                                                                  |
+| :-------: |:-------------: | :------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------ |
+| GET       | Read           | 200 (OK), list of products.<br>Use pagination, sorting and filtering to navigate large lists. |  200 (OK), single product.<br>404 (Not Found), if ID not found.                                       |
+| POST      | Create         | 201 (Created), 'Location' header with link to /products/{id} containing new ID. | 200 (OK).<br>409 (Conflict) if resource already exists.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
+| PUT       | Update/Replace | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
+| PATCH     | Update/Modify  | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
+| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 204 (No Content).<br>404 (Not Found), if ID not found.<br>                                                           |\
+
+Check CRUD example in this [repo](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/crud).
+
 ## Configuration
 
 To configure this plugin, pass an object to the `jsonServer()` function call in `vite.config.ts`.
@@ -233,13 +247,13 @@ If the file name is `index.*` then its route will be the parent directory path.
 
 |   Type                     | Supported methods |
 | :------------------------: | :------------: |
-| `json`                     | `GET`          |
+| `json` (object)            | `GET`          |
+| `json` (array-like)        | `GET`, `POST`, `PUT`, `PATCH`, `DELETE` |
 | `html` \| `htm` \| `shtml` | `GET`          |
 | `js` \| `mjs`              | `GET`          |
 | `css`                      | `GET`          |
 | `txt` \| `text`            | `GET`          |
 
-The server will respond with the 403 error for unsupported methods.
 
 **`vite.config.ts`**
 
@@ -409,7 +423,7 @@ export default {
                 urlVars
               },
             ];
-            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(data));
           },
         },

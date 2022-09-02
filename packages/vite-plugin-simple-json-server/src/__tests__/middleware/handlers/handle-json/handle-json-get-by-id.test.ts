@@ -3,7 +3,7 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../../utils/logger';
+import Logger from '../../../../services/logger';
 import { handleJson } from '../../../../middleware/handlers/handle-json';
 
 const logger = new Logger('test');
@@ -24,19 +24,19 @@ let res: any;
 
 const reset = () => {
   req = { ...defReq };
-  res = { ...defRes };
+  res = { ...defRes, req };
 };
 
-import { dataRoot } from '../../../data-root-2';
+import { dataRoot } from '../../../data-root';
 
 const defaultLimit = 2;
 
-describe('test handleOther get by id', () => {
+describe('test handleJson get by id', () => {
   beforeEach(reset);
   afterEach(() => void vi.clearAllMocks());
-  it('/array-empty/1 exists, json, should return true, 404', () => {
+  it('/array-empty/1 resource not exist, json, should return true, 404', async () => {
     req.url = '/array-empty/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -49,9 +49,9 @@ describe('test handleOther get by id', () => {
     expect(res.statusCode).toBe(404);
     expect(res.end).toBeCalled();
   });
-  it('/array-empty/1?count exists, json, count is ignored, should return true, 404', () => {
+  it('/array-empty/1?count resource not exist, json, count is ignored, should return true, 404', async () => {
     req.url = '/array-empty/1?count';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -65,9 +65,9 @@ describe('test handleOther get by id', () => {
     expect(res.end).toBeCalled();
   });
 
-  it('/subfolder/array-empty/1 exists, json, should return true, 404', () => {
+  it('/subfolder/array-empty/1 resource not exist, json, should return true, 404', async () => {
     req.url = '/subfolder/array-empty/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -80,9 +80,9 @@ describe('test handleOther get by id', () => {
     expect(res.statusCode).toBe(404);
     expect(res.end).toBeCalled();
   });
-  it('/subfolder/array-empty/1?count exists, json, count is ignored, should return true, 404', () => {
+  it('/subfolder/array-empty/1?count resource not exist, json, count is ignored, should return true, 404', async () => {
     req.url = '/subfolder/array-empty/1?count';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -96,9 +96,9 @@ describe('test handleOther get by id', () => {
     expect(res.end).toBeCalled();
   });
 
-  it('/array-has-id/1 exists, json, should return true', () => {
+  it('/array-has-id/1 exists, json, should return true', async () => {
     req.url = '/array-has-id/2';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -108,26 +108,26 @@ describe('test handleOther get by id', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ id: 2, name: 'b' }));
+    expect(res.end).toBeCalledWith(JSON.stringify({ id: 2, name: 'b', description: 'b' }));
   });
-  it('/subfolder/array-has-id/1 exists, json, should return true', () => {
+  it('/subfolder/array-has-id/2 exists, json, should return true', async () => {
     req.url = '/subfolder/array-has-id/2';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
       'subfolder/array-has-id/2',
       logger,
-      '/asubfolder/rray-has-id/2',
+      '/subfolder/array-has-id/2',
       defaultLimit,
     );
     expect(result).toBeTruthy();
     expect(res.end).toBeCalledWith(JSON.stringify({ id: 2, name: 'b' }));
   });
 
-  it('/array-has-id/33 not exists, json, should return true, 404', () => {
+  it('/array-has-id/33 not exists, json, should return true, 404', async () => {
     req.url = '/array-has-id/33';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -140,9 +140,9 @@ describe('test handleOther get by id', () => {
     expect(res.statusCode).toBe(404);
     expect(res.end).toBeCalled();
   });
-  it('/subfolder/array-has-id/33 not exists, json, should return true, 404', () => {
+  it('/subfolder/array-has-id/33 not exists, json, should return true, 404', async () => {
     req.url = '/subfolder/array-has-id/33';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -156,9 +156,9 @@ describe('test handleOther get by id', () => {
     expect(res.end).toBeCalled();
   });
 
-  it('/object/1 exists, json, should return true, 405', () => {
+  it('/object/1 exists, json, should return true, 405', async () => {
     req.url = '/object/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -171,9 +171,9 @@ describe('test handleOther get by id', () => {
     expect(res.statusCode).toBe(405);
     expect(res.end).toBeCalled();
   });
-  it('/subfolder/object/1 exists, json, should return true, 405', () => {
+  it('/subfolder/object/1 exists, json, should return true, 405', async () => {
     req.url = '/subfolder/object/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -187,9 +187,9 @@ describe('test handleOther get by id', () => {
     expect(res.end).toBeCalled();
   });
 
-  it('/not-exist/1 not exists, json, should return false', () => {
+  it('/not-exist/1 not exists, json, should return false', async () => {
     req.url = '/not-exist/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,
@@ -202,9 +202,9 @@ describe('test handleOther get by id', () => {
     expect(res.end).not.toBeCalled();
   });
 
-  it('/subfolder/not-exist/1 not exists, json, should return false', () => {
+  it('/subfolder/not-exist/1 not exists, json, should return false', async () => {
     req.url = '/subfolder/not-exist/1';
-    const result = handleJson(
+    const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
       dataRoot,

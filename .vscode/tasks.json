@@ -26,6 +26,14 @@
         "isDefault": true
       },
       "label": "tsc: build - packages/imp/tsconfig.json"
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "examples/crud",
+      "problemMatcher": [],
+      "label": "npm: dev - examples/crud",
+      "detail": "vite --port 3000"
     }
   ]
 }

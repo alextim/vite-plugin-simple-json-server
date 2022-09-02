@@ -15,37 +15,34 @@ export function getTemplate(req: any, urlPath: string, q: querystring.ParsedUrlQ
 export function getLink(template: string, offset: number, limit: number, count: number) {
   const linkItems: string[] = [];
 
-  // not is First
+  // not First
   if (offset !== 0) {
-    linkItems.push(util.format(template, 0, 'prev'));
+    linkItems.push(util.format(template, Math.max(0, offset - limit), 'prev'));
   }
 
-  // not is last
+  // not last
   if (offset < count - limit) {
     linkItems.push(util.format(template, offset + limit, 'next'));
   }
 
   linkItems.push(util.format(template, 0, 'first'));
-  linkItems.push(util.format(template, Math.floor(count / limit) * limit, 'last'));
+  linkItems.push(util.format(template, offset + (Math.ceil((count - offset) / limit) - 1) * limit, 'last'));
 
   return linkItems.join(',');
 }
 
 export function setLinkHeader(res: http.ServerResponse, link: string, count: number) {
+  let value: string | string[] = link;
   if (res.hasHeader('Link')) {
     const prevLinkHeader = res.getHeader('Link');
 
     if (Array.isArray(prevLinkHeader)) {
-      res.setHeader('Link', [...prevLinkHeader, link]);
-      return;
-    }
-
-    if (prevLinkHeader !== undefined && prevLinkHeader !== '') {
-      res.setHeader('Link', `${prevLinkHeader},${link}`);
-      return;
+      value = [...prevLinkHeader, link];
+    } else if (prevLinkHeader !== undefined && prevLinkHeader !== '') {
+      value = `${prevLinkHeader},${link}`;
     }
   }
 
   res.setHeader('X-Total-Count', count);
-  res.setHeader('Link', link);
+  res.setHeader('Link', value);
 }

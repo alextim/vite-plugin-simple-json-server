@@ -1,6 +1,5 @@
 {
   "include": ["src"],
-  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "outDir": "dist",
     "target": "esnext",
@@ -16,7 +15,7 @@
     "paths": {
       "@/utils/*": ["src/utils/*"],
       "@/helpers/*": ["src/helpers/*"],
-      "@/handlers/*": ["src/middleware/handlers/*"]
+      "@/services/*": ["src/services/*"]
     }
   }
 }

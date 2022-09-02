@@ -3,7 +3,7 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../utils/logger';
+import Logger from '../../../services/logger';
 import { handleOther } from '../../../middleware/handlers/handle-other';
 
 const logger = new Logger('test');
@@ -23,10 +23,10 @@ let res: any;
 
 const reset = () => {
   req = { ...defReq };
-  res = { ...defRes };
+  res = { ...defRes, req };
 };
 
-import { dataRoot } from '../../data-root-2';
+import { dataRoot } from '../../data-root';
 
 reset();
 describe('test handleOther', () => {

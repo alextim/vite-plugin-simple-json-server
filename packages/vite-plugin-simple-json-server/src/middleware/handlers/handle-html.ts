@@ -2,12 +2,11 @@ import type { ServerResponse } from 'node:http';
 import path from 'node:path';
 import { Connect } from 'vite';
 
-import { ILogger } from '../../utils/logger';
-import { HTML_MIME_TYPE } from '../../utils/mime-types';
+import { ILogger } from '@/services/logger';
+import { HTML_MIME_TYPE } from '@/utils/mime-types';
 
-import { validateMethod } from '../../helpers/validate-method';
-import { sendFileContent } from '../../helpers/send';
-import getFilepath from '../../helpers/get-filepath';
+import { send403, sendFileContent } from '@/helpers/send';
+import getFilepath from '@/helpers/get-filepath';
 
 export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
   const pathname = path.join(dataRoot, purePath);
@@ -17,8 +16,8 @@ export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, da
     return false;
   }
 
-  if (validateMethod(req, res)) {
-    sendFileContent(req, res, filePath, HTML_MIME_TYPE, logger);
+  if (req.method !== 'GET') {
+    return send403(res, [`Received: ${req.method}`, filePath], logger);
   }
-  return true;
+  return sendFileContent(res, filePath, HTML_MIME_TYPE, logger);
 }

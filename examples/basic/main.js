@@ -4,23 +4,23 @@ updateView('<h1>Hello, Json Server</h1><ul id="examples"></ul>', '#app');
 
 fetchApi('/api/home');
 
-fetchApi('/api/test?color=stringer', formatList);
+fetchApi('/api/json?color=stringer', formatList);
 
-fetchApi('/api/test?offset=5&limit=5&sort=-color', formatList);
+fetchApi('/api/json?offset=5&limit=5&sort=-color', formatList);
 
-fetchApi('/api/test?count');
+fetchApi('/api/json?count');
 
-fetchApi('/api/test/?count&color=stringer');
+fetchApi('/api/json/?count&color=stringer');
 
-fetchApi('/api/test/3');
+fetchApi('/api/json/3');
 
-fetchApi('/api/test/?id=3&id=8&id=9&color=stringer', formatList);
+fetchApi('/api/json/?id=3&id=8&id=9&color=stringer', formatList);
 
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=-id', formatList);
+fetchApi('/api/json?offset=2&limit=3&color=stringer&sort=-id', formatList);
 
-fetchApi('/api/test?offset=2&limit=3&color=stringer&sort=id', formatList);
+fetchApi('/api/json?offset=2&limit=3&color=stringer&sort=id', formatList);
 
-fetchApi('/api/test?limit=5&sort=color,-id', formatList);
+fetchApi('/api/json?limit=5&sort=color,-id', formatList);
 
 function formatList(data) {
   if (!data || !Array.isArray(data)) {
