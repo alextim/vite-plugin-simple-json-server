@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-simple-json-server",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Provide a file-based mock API for Vite in dev mode",
   "keywords": [
     "vite",
@@ -31,7 +31,7 @@
     "build": "rimraf dist && unbuild",
     "typecheck": "tsc --noEmit --pretty",
     "test": "vitest run",
-    "test:v":    "vitest --run --reporter verbose",
+    "test:v": "vitest --run --reporter verbose",
     "coverage": "vitest run --coverage",
     "test:pub": "pnpm publish --dry-run --no-git-checks"
   },
