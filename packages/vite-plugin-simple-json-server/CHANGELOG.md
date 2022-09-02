@@ -1,5 +1,17 @@
 # vite-plugin-simple-json-server
 
+## 0.4.0
+
+### Minor Changes
+
+- 1869675: ## Breaking
+
+  CRUD (POST, PUT, PATCH, DELETE) operations for array-like JSON.
+
+  ## Feature
+
+  - `X-Total-Count` header in pagination
+
 ## 0.3.0
 
 ### Minor Changes
