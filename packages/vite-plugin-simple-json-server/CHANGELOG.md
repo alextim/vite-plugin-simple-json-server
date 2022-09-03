@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.4.1
+
+### Patch Changes
+
+- c2e7b61: refactor: 204 status handling
+
 ## 0.4.0
 
 ### Minor Changes
