@@ -53,6 +53,10 @@ export function sendData(res: ServerResponse, data: any, msg: string[], logger: 
 
   res.setHeader('content-type', mime);
   res.statusCode = statusCode;
-  res.end(typeof data === 'string' ? data : JSON.stringify(data));
+  if (statusCode === 204) {
+    res.end();
+  } else {
+    res.end(typeof data === 'string' ? data : JSON.stringify(data));
+  }
   return true;
 }
