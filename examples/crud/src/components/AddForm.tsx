@@ -1,6 +1,8 @@
-import React from 'react';
+import { memo } from 'react';
+
 import useNameInput from '../hooks/useNameInput';
 import type { Item } from '../types';
+import NameInput from './NameInput';
 
 type Props = {
   onAdd: (item: Item) => Promise<boolean>;
@@ -9,7 +11,7 @@ type Props = {
 const AddForm = ({ onAdd }: Props) => {
   const { name, reset, onChange } = useNameInput('');
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (await onAdd({ id: -1, name })) {
       reset();
@@ -17,20 +19,12 @@ const AddForm = ({ onAdd }: Props) => {
   };
 
   return (
-    <form className="card card-body" onSubmit={onSubmit}>
+    <form className="card card-body" onSubmit={handleSubmit}>
       <div className="form-control w-full max-w-xs">
         <label htmlFor="name" className="label">
           <span className="label-text">Name</span>
         </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="input input-bordered w-full max-w-xs"
-          required
-          value={name}
-          onChange={onChange}
-        />
+        <NameInput value={name} onChange={onChange} />
       </div>
       <button className="btn btn-primary w-fit" disabled={!name} type="submit">
         Add new
@@ -39,4 +33,4 @@ const AddForm = ({ onAdd }: Props) => {
   );
 };
 
-export default AddForm;
+export default memo(AddForm);

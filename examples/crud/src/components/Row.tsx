@@ -1,7 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, memo } from 'react';
+
 import useClickOutside from '../hooks/useClickOutside';
 import useNameInput from '../hooks/useNameInput';
+
 import type { Item } from '../types';
+
+import NameInput from './NameInput';
 
 type Props = {
   item: Item;
@@ -50,21 +54,7 @@ const Row = ({ item, onDelete, onUpdate }: Props) => {
   return (
     <tr ref={wrapperRef}>
       <td>{item.id}</td>
-      <td>
-        {edit ? (
-          <input
-            id="name"
-            name="name"
-            type="text"
-            placeholder="name"
-            className="input input-bordered w-full max-w-xs"
-            value={name}
-            onChange={onChange}
-          />
-        ) : (
-          <div onDoubleClick={dblClickHandler}>{item.name}</div>
-        )}
-      </td>
+      <td>{edit ? <NameInput value={name} onChange={onChange} /> : <div onDoubleClick={dblClickHandler}>{item.name}</div>}</td>
       <td className="grid grid-cols-[50%_50%] gap-2">
         {edit ? (
           <>
@@ -95,4 +85,4 @@ const Row = ({ item, onDelete, onUpdate }: Props) => {
   );
 };
 
-export default Row;
+export default memo(Row, (prev, next) => prev.item.id === next.item.id && prev.item.name === next.item.name);

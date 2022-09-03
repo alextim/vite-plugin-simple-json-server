@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import Spinner from './Spinner';
 
 type Props = {
@@ -26,4 +28,4 @@ const Loading = ({ open, onCancel }: Props) => {
   );
 };
 
-export default Loading;
+export default memo(Loading);

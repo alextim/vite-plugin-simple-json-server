@@ -1,13 +1,10 @@
-import type { Item } from '../types';
-import Row from './Row';
+import { memo } from 'react';
 
 type Props = {
-  items: Item[];
-  onUpdate: (item: Item) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  children: React.ReactNode;
 };
 
-const Table = ({ items, onDelete, onUpdate }: Props) => {
+const Table = ({ children }: Props) => {
   return (
     <table className="table w-full">
       <thead>
@@ -17,13 +14,9 @@ const Table = ({ items, onDelete, onUpdate }: Props) => {
           <th className="w-40">Actions</th>
         </tr>
       </thead>
-      <tbody>
-        {items.map((item) => (
-          <Row key={item.id} item={item} onDelete={onDelete} onUpdate={onUpdate} />
-        ))}
-      </tbody>
+      <tbody>{children}</tbody>
     </table>
   );
 };
 
-export default Table;
+export default memo(Table);
