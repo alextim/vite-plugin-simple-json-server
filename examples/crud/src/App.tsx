@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
 // import LocalStorage from './services/local-storage';
-import RemoteStorage, { FetchError } from './services/remote-storage';
+import { FetchError } from './helpers/fetch-api';
+import RemoteStorage from './services/remote-storage';
 
 import type { Item } from './types';
 
@@ -9,6 +10,7 @@ import Table from './components/Table';
 import AddForm from './components/AddForm';
 import Layout from './components/Layout';
 import Loading from './components/Loading';
+import ErrorMsg from './components/ErrorMsg';
 
 // const storage = new LocalStorage('@example/crud');
 
@@ -25,7 +27,7 @@ function formatErrorMessage(err: any) {
 
 const App = () => {
   const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const onError = (err: any) => {
@@ -37,10 +39,9 @@ const App = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    setError('');
-
     const loadAsync = async () => {
+      setLoading(true);
+      setError('');
       try {
         const data = await storage.getAll();
         setItems(data);
@@ -60,8 +61,7 @@ const App = () => {
     setLoading(true);
 
     try {
-      const success = storage.delete(id);
-      if (!success) {
+      if (!(await storage.delete(id))) {
         throw new Error(`delete: id=${id} not found in storage`);
       }
       setItems((prev) => {
@@ -130,22 +130,20 @@ const App = () => {
     setLoading(false);
   };
 
+  const clearError = () => {
+    setError('');
+  };
+
   return (
     <>
       <Layout>
         <AddForm onAdd={onAdd} />
         <Table items={items} onDelete={onDelete} onUpdate={onUpdate} />
-        {error && (
-          <div className="alert alert-error shadow-lg mt-6">
-            <div>
-              <span>{error}</span>
-            </div>
-          </div>
-        )}
       </Layout>
+      <ErrorMsg open={!!error} error={error} onClose={clearError} />
       <Loading open={loading} onCancel={abort} />
     </>
   );
 };
-// https://stackoverflow.com/questions/31061838/how-do-i-cancel-an-http-fetch-request
+
 export default App;

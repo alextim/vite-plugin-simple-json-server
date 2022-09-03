@@ -50,7 +50,9 @@ function sendError(res: ServerResponse, msg: string[] | string, logger: ILogger,
 
 export function sendData(res: ServerResponse, data: any, msg: string[], logger: ILogger, statusCode = 200, mime = JSON_MIME_TYPE) {
   logger.info(...msg);
-
+  if (!mime) {
+    throw new Error('Please, provide `mime');
+  }
   res.setHeader('content-type', mime);
   res.statusCode = statusCode;
   if (statusCode === 204) {
