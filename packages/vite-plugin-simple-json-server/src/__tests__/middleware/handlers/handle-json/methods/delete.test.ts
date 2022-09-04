@@ -69,7 +69,7 @@ describe('onDelete', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  it('success, return true, 201', async () => {
+  it('success, return true, 200', async () => {
     const id = 2;
 
     mock({
@@ -78,7 +78,7 @@ describe('onDelete', () => {
 
     const result = await onDelete(res, srcFilePath, logger, id);
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(204);
+    expect(res.statusCode).toBe(200);
 
     const content = fs.readFileSync(srcFilePath, 'utf8');
     const data = JSON.parse(content);
