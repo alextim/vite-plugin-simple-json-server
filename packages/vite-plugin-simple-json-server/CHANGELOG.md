@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.4.2
+
+### Patch Changes
+
+- ce91a1a: refactor logging
+
 ## 0.4.1
 
 ### Patch Changes
