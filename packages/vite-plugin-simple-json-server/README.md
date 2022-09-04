@@ -184,13 +184,14 @@ curl  http://localhost:5173/products?count&price=2
 
 Full CRUD operations are only available for array-like JSON with a numeric `id` property.
 
-| HTTP Verb | CRUD           | Entire Collection (e.g. /products)                                              | Specific Item (e.g. /products/:id)                                                                                  |
+| HTTP Verb | CRUD           | Entire Collection (e.g. `/products`)                                              | Specific Item (e.g. `/products/:id`)                                                                                  |
 | :-------: |:-------------: | :------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------ |
-| GET       | Read           | 200 (OK), list of products.<br>Use pagination, sorting and filtering to navigate large lists. |  200 (OK), single product.<br>404 (Not Found), if ID not found.                                       |
-| POST      | Create         | 201 (Created), 'Location' header with link to /products/{id} containing new ID. | 200 (OK).<br>409 (Conflict) if resource already exists.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
-| PUT       | Update/Replace | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
-| PATCH     | Update/Modify  | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
-| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>                                                           |\
+| GET       | Read           | 200 (OK), list of items.<br>Use pagination, sorting and filtering to navigate large lists. |  200 (OK), single item.<br>404 (Not Found), if ID not found.                                       |
+| POST      | Create         | 201 (Created), `Location` header with link to `/products/{id}` containing new ID. | 200 (OK), created item.<br>409 (Conflict) if resource already exists.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
+| PUT       | Update/Replace | 405 (Method Not Allowed)                                                        | 200 (OK), modified item.<br>404 (Not Found), if ID not found.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
+| PATCH     | Update/Modify  | 405 (Method Not Allowed)                                                        | 200 (OK), modified item.<br>404 (Not Found), if ID not found.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
+| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 200 (OK), empty object `{}`.<br>404 (Not Found), if ID not found.                                                    |
+
 
 Check CRUD example in this [repo](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/crud).
 
