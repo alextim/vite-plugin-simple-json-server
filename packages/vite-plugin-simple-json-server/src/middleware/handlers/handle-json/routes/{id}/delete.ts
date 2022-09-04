@@ -15,5 +15,5 @@ export const onDelete = async (res: ServerResponse, filePath: string, logger: IL
     return send404(res, [`id=${id}`, filePath], logger);
   }
 
-  return sendData(res, '', [`entry with id=${id} deleted`, filePath], logger, 204);
+  return sendData(res, '{}', [`entry with id=${id} deleted`, filePath], logger, 200);
 };

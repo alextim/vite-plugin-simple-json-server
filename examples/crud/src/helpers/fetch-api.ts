@@ -39,9 +39,6 @@ class FetchApi {
         const json = await resp.json();
         throw new FetchError(json.message, resp.status);
       }
-      if (resp.status === 204) {
-        return true;
-      }
       const json = await resp.json();
       return json;
     } catch (err) {

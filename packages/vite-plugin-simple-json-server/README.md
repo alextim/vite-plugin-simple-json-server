@@ -190,7 +190,7 @@ Full CRUD operations are only available for array-like JSON with a numeric `id` 
 | POST      | Create         | 201 (Created), 'Location' header with link to /products/{id} containing new ID. | 200 (OK).<br>409 (Conflict) if resource already exists.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
 | PUT       | Update/Replace | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
 | PATCH     | Update/Modify  | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>400 (Bad Request), empty body, not valid JSON, too big body (>1e6) |
-| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 204 (No Content).<br>404 (Not Found), if ID not found.<br>                                                           |\
+| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 200 (OK).<br>404 (Not Found), if ID not found.<br>                                                           |\
 
 Check CRUD example in this [repo](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/crud).
 
