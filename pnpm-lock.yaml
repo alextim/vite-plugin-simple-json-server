@@ -77,7 +77,7 @@ importers:
       tailwindcss: 3.1.8_postcss@8.4.16
       typescript: 4.8.2
       vite: 3.0.9
-      vite-plugin-simple-json-server: 0.4.2_vite@3.0.9
+      vite-plugin-simple-json-server: link:../../packages/vite-plugin-simple-json-server
 
   packages/vite-plugin-simple-json-server:
     specifiers:
@@ -763,6 +763,7 @@ packages:
 
   /@howiefh/ant-path-matcher/0.0.4:
     resolution: {integrity: sha512-283cW09cKcrBy7TFMo4JgZoM+jBZIlqUMCtU7TDlZG+F+vgzpP3+/ZK0PrvZKluv02U906cqgufFn5fj6xJafA==}
+    dev: false
 
   /@humanwhocodes/config-array/0.10.4:
     resolution: {integrity: sha512-mXAIHxZT3Vcpg83opl1wGlVZ9xydbfZO3r5YfRSH6Gpp2J/PfdBP0wbDa2sO6/qRbcalpoevVyW6A/fI6LfeMw==}
@@ -5136,15 +5137,6 @@ packages:
     dependencies:
       spdx-correct: 3.1.1
       spdx-expression-parse: 3.0.1
-    dev: true
-
-  /vite-plugin-simple-json-server/0.4.2_vite@3.0.9:
-    resolution: {integrity: sha512-TDmPuWs9f+e4zzzymsyVIghAV/FpI6TI5AW2iZN2uRf/CWluuT1KNsui+NHEAYNsRDomdTUEdbGc8cVYrXI5Tg==}
-    peerDependencies:
-      vite: ^3.0.0
-    dependencies:
-      '@howiefh/ant-path-matcher': 0.0.4
-      vite: 3.0.9
     dev: true
 
   /vite/3.0.9:

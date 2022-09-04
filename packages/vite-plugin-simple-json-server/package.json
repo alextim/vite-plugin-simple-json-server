@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-simple-json-server",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Provide a file-based mock API for Vite in dev mode",
   "keywords": [
     "vite",

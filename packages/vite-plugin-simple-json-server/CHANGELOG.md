@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.4.3
+
+### Patch Changes
+
+- aa0e90c: `Content-Type` header is removed for `204`
+
 ## 0.4.2
 
 ### Patch Changes
