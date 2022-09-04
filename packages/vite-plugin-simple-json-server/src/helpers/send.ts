@@ -50,14 +50,15 @@ function sendError(res: ServerResponse, msg: string[] | string, logger: ILogger,
 
 export function sendData(res: ServerResponse, data: any, msg: string[], logger: ILogger, statusCode = 200, mime = JSON_MIME_TYPE) {
   logger.info(...msg);
-  if (!mime) {
-    throw new Error("Please, provide 'mime'");
-  }
-  res.setHeader('content-type', mime);
+
   res.statusCode = statusCode;
   if (statusCode === 204) {
     res.end();
   } else {
+    if (!mime) {
+      throw new Error("Please, provide 'mime'");
+    }
+    res.setHeader('content-type', mime);
     res.end(typeof data === 'string' ? data : JSON.stringify(data));
   }
   logger.info(`Response code: ${statusCode}`, `content-type: ${mime}`, `data: ${data ? typeof data : 'empty'}`);
