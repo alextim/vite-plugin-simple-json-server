@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.4.4
+
+### Patch Changes
+
+- 2d0df2a: delete 204 -> 200
+
 ## 0.4.3
 
 ### Patch Changes
