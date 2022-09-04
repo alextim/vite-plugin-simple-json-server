@@ -21,7 +21,7 @@ importers:
       typescript: ^4.8.2
       unbuild: ^0.8.10
       vite: ^3.0.9
-      vitest: ^0.22.1
+      vitest: ^0.23.0
     devDependencies:
       '@changesets/cli': 2.24.4
       '@types/node': 18.7.14
@@ -40,7 +40,7 @@ importers:
       typescript: 4.8.2
       unbuild: 0.8.10
       vite: 3.0.9
-      vitest: 0.22.1
+      vitest: 0.23.0
 
   examples/basic:
     specifiers:
@@ -78,7 +78,7 @@ importers:
       tailwindcss: 3.1.8_postcss@8.4.16
       typescript: 4.8.2
       vite: 3.0.9
-      vite-plugin-simple-json-server: 0.4.1_vite@3.0.9
+      vite-plugin-simple-json-server: link:../../packages/vite-plugin-simple-json-server
       vite-plugin-svgr: 2.2.1_vite@3.0.9
 
   packages/vite-plugin-simple-json-server:
@@ -90,8 +90,7 @@ importers:
       typescript: ^4.8.2
       unbuild: ^0.8.10
       vite: ^3.0.9
-      vite-node: 0.22.1
-      vitest: ^0.22.1
+      vitest: ^0.23.0
     dependencies:
       '@howiefh/ant-path-matcher': 0.0.4
     devDependencies:
@@ -101,8 +100,7 @@ importers:
       typescript: 4.8.2
       unbuild: 0.8.10
       vite: 3.0.9
-      vite-node: 0.22.1
-      vitest: 0.22.1
+      vitest: 0.23.0
 
 packages:
 
@@ -767,6 +765,7 @@ packages:
 
   /@howiefh/ant-path-matcher/0.0.4:
     resolution: {integrity: sha512-283cW09cKcrBy7TFMo4JgZoM+jBZIlqUMCtU7TDlZG+F+vgzpP3+/ZK0PrvZKluv02U906cqgufFn5fj6xJafA==}
+    dev: false
 
   /@humanwhocodes/config-array/0.10.4:
     resolution: {integrity: sha512-mXAIHxZT3Vcpg83opl1wGlVZ9xydbfZO3r5YfRSH6Gpp2J/PfdBP0wbDa2sO6/qRbcalpoevVyW6A/fI6LfeMw==}
@@ -4799,6 +4798,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /strip-literal/0.4.0:
+    resolution: {integrity: sha512-ql/sBDoJOybTKSIOWrrh8kgUEMjXMwRAkZTD0EwiwxQH/6tTPkZvMIEjp0CRlpi6V5FMiJyvxeRkEi1KrGISoA==}
+    dependencies:
+      acorn: 8.8.0
+    dev: true
+
   /supports-color/5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
@@ -4877,6 +4882,11 @@ packages:
     resolution: {integrity: sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==}
     dependencies:
       readable-stream: 3.6.0
+    dev: true
+
+  /tinybench/2.1.4:
+    resolution: {integrity: sha512-NFWIw2Gg7EUPdeE8nL1Dc7AMVlk7sOr2PmSNKVuQrZ0YwTOFoshPQ+hcLrgnhK8dTP3FWMCJaf4N+/hXp6lKPw==}
+    engines: {node: '>=16.0.0'}
     dev: true
 
   /tinypool/0.2.4:
@@ -5268,32 +5278,6 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vite-node/0.22.1:
-    resolution: {integrity: sha512-odNMaOD4N62qESLvFSqoNf2t60ftIFHKgHNupa2cojbF2u2yB1ssluOfq5X0lZcTPx2HBzFbwa6h9m78ujEbUw==}
-    engines: {node: '>=v14.16.0'}
-    hasBin: true
-    dependencies:
-      debug: 4.3.4
-      mlly: 0.5.14
-      pathe: 0.2.0
-      vite: 3.0.9
-    transitivePeerDependencies:
-      - less
-      - sass
-      - stylus
-      - supports-color
-      - terser
-    dev: true
-
-  /vite-plugin-simple-json-server/0.4.1_vite@3.0.9:
-    resolution: {integrity: sha512-A9RjEOVC0BzmSQrnxVoRx9TYB4CMsbQc60hgghvh8jC+L/jCCcXbXKQltGZgDvyXJ/vId0wa6ei+a4ito1Xlhg==}
-    peerDependencies:
-      vite: ^3.0.0
-    dependencies:
-      '@howiefh/ant-path-matcher': 0.0.4
-      vite: 3.0.9
-    dev: true
-
   /vite-plugin-svgr/2.2.1_vite@3.0.9:
     resolution: {integrity: sha512-+EqwahbwjETJH/ssA/66dNYyKN1cO0AStq96MuXmq5maU7AePBMf2lDKfQna49tJZAjtRz+R899BWCsUUP45Fg==}
     peerDependencies:
@@ -5333,8 +5317,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.22.1:
-    resolution: {integrity: sha512-+x28YTnSLth4KbXg7MCzoDAzPJlJex7YgiZbUh6YLp0/4PqVZ7q7/zyfdL0OaPtKTpNiQFPpMC8Y2MSzk8F7dw==}
+  /vitest/0.23.0:
+    resolution: {integrity: sha512-I3ctlfiXYprA2tID1qP+m6pmgmKx3HYfRe66MetGOHKCHLY7hz74ihiwIEtN7LReJgF3U5cM735iYPkn/Go1iQ==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:
@@ -5361,6 +5345,8 @@ packages:
       chai: 4.3.6
       debug: 4.3.4
       local-pkg: 0.4.2
+      strip-literal: 0.4.0
+      tinybench: 2.1.4
       tinypool: 0.2.4
       tinyspy: 1.0.2
       vite: 3.0.9
