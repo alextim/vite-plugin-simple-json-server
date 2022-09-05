@@ -199,7 +199,7 @@ Full CRUD operations are only available for array-like JSON with a numeric `id` 
 | HTTP Verb | CRUD           | Entire Collection (e.g. `/profile`)                       | Specific Item (e.g. `/profile/{id}`)   |
 | :-------: |:-------------: | :------------------------------------------------------   | :------------------------------------- |
 | GET       | Read           | 200 (OK), object.                                         | 404 (Not Found).                       |
-| POST      | Create         | <ul><li>201 (Created), replaced object, `Location` header with link to `/profile`.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> | 405 (Method Not Allowed). |
+| POST      | Create         | <ul><li>201 (Created), replaced object, `Location` header with link to `/profile`.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> | 404 (Not Found). |
 | PUT       | Update/Replace | 200 (OK), replaced object.                                | 404 (Not Found).              |
 | PATCH     | Update/Modify  | 200 (OK), modified object.                                | 404 (Not Found).              |
 | DELETE    | Delete         | 405 (Method Not Allowed).                                 | 404 (Not Found).              |
