@@ -17,7 +17,8 @@ let logger: ILogger;
 
 const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugin => {
   let config: ResolvedConfig;
-  let dataRoot: string;
+  let mockRoot: string;
+  let staticRoot: string;
   let options: SimpleJsonServerPluginOptions;
 
   return {
@@ -35,9 +36,14 @@ const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugi
         return;
       }
 
-      dataRoot = path.join(config.root, options.mockRootDir!);
-      if (!isDirExists(dataRoot)) {
-        logger.warn("Mock directory doesn't exist", dataRoot);
+      mockRoot = path.join(config.root, options.mockDir!);
+      if (!isDirExists(mockRoot)) {
+        logger.warn("Mock directory doesn't exist", mockRoot);
+      }
+
+      staticRoot = path.join(config.root, options.staticDir!);
+      if (!isDirExists(staticRoot) && options.mockDir !== options.staticDir) {
+        logger.warn("Static directory doesn't exist", staticRoot);
       }
     },
 
@@ -49,7 +55,7 @@ const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugi
       logger.info('server started.', `options = ${JSON.stringify(options, null, '  ')}`);
       server.middlewares.use(async (req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         try {
-          if (!(await runMiddleware(req, res, dataRoot, options, logger))) {
+          if (!(await runMiddleware(req, res, mockRoot, staticRoot, options, logger))) {
             next();
           }
         } catch (err: any) {
@@ -67,7 +73,7 @@ const simpleJsonServerPlugin = (opts: SimpleJsonServerPluginOptions = {}): Plugi
       logger.info('server started.', `options = ${JSON.stringify(options, null, '  ')}`);
       server.middlewares.use(async (req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
         try {
-          if (!(await runMiddleware(req, res, dataRoot, options, logger))) {
+          if (!(await runMiddleware(req, res, mockRoot, staticRoot, options, logger))) {
             next();
           }
         } catch (err: any) {

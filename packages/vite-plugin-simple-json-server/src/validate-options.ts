@@ -10,7 +10,8 @@ export const validateOptions = (options: SimpleJsonServerPluginOptions) => {
   const urlPrefixes = Array.isArray(options.urlPrefixes) ? options.urlPrefixes.filter(Boolean).map(addSlashes) : [];
   opts.urlPrefixes = urlPrefixes.length ? urlPrefixes : SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.urlPrefixes;
 
-  opts.mockRootDir = options.mockRootDir || SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.mockRootDir;
+  opts.mockDir = options.mockDir || SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.mockDir;
+  opts.staticDir = options.staticDir || opts.mockDir;
   opts.noHandlerResponse404 = options.noHandlerResponse404 ?? SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.noHandlerResponse404;
   opts.limit = options.limit || SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.limit;
   opts.handlers = options?.handlers?.filter(({ pattern, handle }) => pattern && handle);

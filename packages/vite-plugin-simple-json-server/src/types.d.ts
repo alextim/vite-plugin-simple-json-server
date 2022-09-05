@@ -16,7 +16,8 @@ export type SimpleJsonServerPluginOptions = {
   logLevel?: LogLevel;
   urlPrefixes?: string[];
   handlers?: MockHandler[];
-  mockRootDir?: string;
+  mockDir?: string;
+  staticDir?: string;
   noHandlerResponse404?: boolean;
   limit?: number;
 };

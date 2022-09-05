@@ -9,8 +9,9 @@ import { JsonTable } from '../../../../../services/json-table/json-table';
 
 import { send404, sendFileContent, sendData } from '../../../../../helpers/send';
 
-import { getLink, getTemplate, setLinkHeader } from '../../helpers/link-header';
+import { getLinks, getLinkTemplate } from '../../helpers/link-header';
 import { getParams } from '../../helpers/get-params';
+import { modifyHeader } from '../../helpers/modify-header';
 
 export async function onGetAll(
   req: Connect.IncomingMessage,
@@ -57,13 +58,16 @@ export async function onGetAll(
   }
 
   if (offset !== undefined && limit !== undefined) {
-    const count = table.count();
+    const totalCount = table.count();
 
     table.slice(offset, limit);
 
-    const template = getTemplate(req, urlPath, q);
-    const link = getLink(template, offset, limit, count);
-    setLinkHeader(res, link, count);
+    const template = getLinkTemplate(req, urlPath, q);
+    const links = getLinks(template, offset, limit, totalCount);
+
+    res.setHeader('X-Total-Count', totalCount);
+    modifyHeader(res, 'Link', links);
+    modifyHeader(res, 'Access-Control-Expose-Headers', 'X-Total-Count,Link');
   }
 
   return sendData(res, table.serialize(), msgMatched, logger);

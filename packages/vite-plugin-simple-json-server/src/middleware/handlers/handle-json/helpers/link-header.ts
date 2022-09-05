@@ -1,8 +1,7 @@
 import util from 'node:util';
 import querystring from 'node:querystring';
-import http from 'node:http';
 
-export function getTemplate(req: any, urlPath: string, q: querystring.ParsedUrlQuery) {
+export function getLinkTemplate(req: any, urlPath: string, q: querystring.ParsedUrlQuery) {
   const protocol = req.socket?.encrypted ? 's' : '';
 
   delete q.offset;
@@ -12,7 +11,7 @@ export function getTemplate(req: any, urlPath: string, q: querystring.ParsedUrlQ
   return `<http${protocol}://${req.headers.host}${urlPath}?${qs}&offset=%d>;rel="%s"`;
 }
 
-export function getLink(template: string, offset: number, limit: number, count: number) {
+export function getLinks(template: string, offset: number, limit: number, count: number) {
   const linkItems: string[] = [];
 
   // not First
@@ -29,20 +28,4 @@ export function getLink(template: string, offset: number, limit: number, count: 
   linkItems.push(util.format(template, offset + (Math.ceil((count - offset) / limit) - 1) * limit, 'last'));
 
   return linkItems.join(',');
-}
-
-export function setLinkHeader(res: http.ServerResponse, link: string, count: number) {
-  let value: string | string[] = link;
-  if (res.hasHeader('Link')) {
-    const prevLinkHeader = res.getHeader('Link');
-
-    if (Array.isArray(prevLinkHeader)) {
-      value = [...prevLinkHeader, link];
-    } else if (prevLinkHeader !== undefined && prevLinkHeader !== '') {
-      value = `${prevLinkHeader},${link}`;
-    }
-  }
-
-  res.setHeader('X-Total-Count', count);
-  res.setHeader('Link', value);
 }

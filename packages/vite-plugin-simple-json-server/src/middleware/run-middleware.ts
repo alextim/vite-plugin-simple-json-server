@@ -30,7 +30,8 @@ const matcher = new AntPathMatcher();
 const runMiddleware = async (
   req: Connect.IncomingMessage,
   res: http.ServerResponse,
-  dataRoot: string,
+  mockRoot: string,
+  staticRoot: string,
   { urlPrefixes, handlers, limit, noHandlerResponse404 }: SimpleJsonServerPluginOptions,
   logger: ILogger,
 ) => {
@@ -59,13 +60,13 @@ const runMiddleware = async (
 
   const purePath = removePrefix(urlPath, urlPrefixes!);
   if (purePath) {
-    if (await handleJson(req, res, dataRoot, purePath, logger, urlPath, limit!)) {
+    if (await handleJson(req, res, mockRoot, purePath, logger, urlPath, limit!)) {
       return true;
     }
-    if (handleHtml(req, res, dataRoot, purePath, logger)) {
+    if (handleHtml(req, res, staticRoot, purePath, logger)) {
       return true;
     }
-    if (handleOther(req, res, dataRoot, purePath, logger)) {
+    if (handleOther(req, res, staticRoot, purePath, logger)) {
       return true;
     }
   }

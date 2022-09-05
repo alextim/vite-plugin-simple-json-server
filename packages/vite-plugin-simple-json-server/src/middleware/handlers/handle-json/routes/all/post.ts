@@ -7,6 +7,7 @@ import { sendData, send400, send405, send409, send415 } from '../../../../../hel
 
 import { BodyParseError, parseBody } from '../../helpers/parse-body';
 import { isJson } from '../../helpers/is-json';
+import { modifyHeader } from '../../helpers/modify-header';
 
 export const onPost = async (res: ServerResponse, filePath: string, logger: ILogger) => {
   if (!isJson(res.req)) {
@@ -33,5 +34,7 @@ export const onPost = async (res: ServerResponse, filePath: string, logger: ILog
   }
 
   res.setHeader('Location', `${res.req.url}/${item.id}`);
+  modifyHeader(res, 'Access-Control-Expose-Headers', 'Location');
+
   return sendData(res, item, [`item with id=${item.id} created`, filePath], logger, 201);
 };

@@ -236,13 +236,13 @@ export default {
 </details>
 
 <details>
-  <summary><strong>mockRootDir</strong></summary>
+  <summary><strong>mockDir</strong></summary>
 
 |   Type     | Required | Default value |
 | :--------: | :------: | :-----------: |
 |  `String`  |    No    |    `mock`     |
 
-It's a subfolder under the Vite root. Place all your static files here.  
+It's a subfolder under the Vite root. Place all your JSON files here.  
 
 If the file name is `index.*` then its route will be the parent directory path.  
 
@@ -265,14 +265,41 @@ export default {
 
   plugins: [
     jsonServer({
-      mockRootDir: 'json-api',
+      mockDir: 'json-mock-api',
     }),
   ],
 };
 ```
 
 </details>
-  
+
+<details>
+  <summary><strong>staticDir</strong></summary>
+
+|   Type     | Required | Default value        |
+| :--------: | :------: | :------------------: |
+|  `String`  |    No    | **options.mockDir**  |
+
+It's a subfolder under the Vite root. An alternative to the `mockDir` folder for static files such as `html`, `css` and `js`.  
+
+
+**`vite.config.ts`**
+
+```js
+import jsonServer from 'vite-plugin-simple-json-server';
+
+export default {
+
+  plugins: [
+    jsonServer({
+      staticDir: 'public',
+    }),
+  ],
+};
+```
+
+</details>
+
 <details>
   <summary><strong>urlPrefixes</strong></summary>
 
