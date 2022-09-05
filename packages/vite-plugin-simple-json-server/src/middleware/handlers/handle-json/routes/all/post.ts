@@ -3,12 +3,18 @@ import { ServerResponse } from 'node:http';
 import { ILogger } from '../../../../../services/logger';
 import { JsonTable } from '../../../../../services/json-table/json-table';
 
-import { sendData, send400, send405, send409, send415 } from '../../../../../helpers/send';
+import { sendData, send400, send409, send415 } from '../../../../../helpers/send';
 
 import { BodyParseError, parseBody } from '../../helpers/parse-body';
 import { isJson } from '../../helpers/is-json';
 import { modifyHeader } from '../../helpers/modify-header';
+import { getFullUrl } from '../../helpers/get-full-url';
 
+/**
+ *
+ * POST  /resource
+ *
+ */
 export const onPost = async (res: ServerResponse, filePath: string, logger: ILogger) => {
   if (!isJson(res.req)) {
     return send415(res, '', logger);
@@ -25,15 +31,20 @@ export const onPost = async (res: ServerResponse, filePath: string, logger: ILog
 
   const table = new JsonTable(filePath);
 
-  if (!(await table.load())) {
-    return send405(res, ['Not array', filePath], logger);
+  await table.load();
+
+  let location = getFullUrl(res.req, res.req.url!);
+  if (table.isTable()) {
+    const success = await table.push(item);
+    if (!success) {
+      return send409(res, [`item with id=${item.id} already exists`, filePath], logger);
+    }
+    location += `/${item.id}`;
+  } else {
+    await table.updateObject(item, true);
   }
 
-  if (!(await table.push(item))) {
-    return send409(res, [`item with id=${item.id} already exists`, filePath], logger);
-  }
-
-  res.setHeader('Location', `${res.req.url}/${item.id}`);
+  res.setHeader('Location', location);
   modifyHeader(res, 'Access-Control-Expose-Headers', 'Location');
 
   return sendData(res, item, [`item with id=${item.id} created`, filePath], logger, 201);

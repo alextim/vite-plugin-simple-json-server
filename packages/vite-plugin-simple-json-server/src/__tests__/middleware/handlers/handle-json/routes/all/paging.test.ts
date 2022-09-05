@@ -4,11 +4,11 @@ import fs from 'node:fs';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../../services/logger';
-import { handleJson } from '../../../../middleware/handlers/handle-json';
+import Logger from '../../../../../../services/logger';
+import { handleJson } from '../../../../../../middleware/handlers/handle-json';
 
 const logger = new Logger('test');
-vi.mock('../../../../utils/logger');
+vi.mock('../../../../../../utils/logger');
 
 let req: any;
 let res: any;
@@ -39,7 +39,7 @@ const reset = () => {
   };
 };
 
-import { dataRoot } from '../../../data-root';
+import { dataRoot } from '../../../../../data-root';
 import path from 'node:path';
 
 const contentSrc = fs.readFileSync(path.join(dataRoot, 'array-has-id.json'), 'utf-8');

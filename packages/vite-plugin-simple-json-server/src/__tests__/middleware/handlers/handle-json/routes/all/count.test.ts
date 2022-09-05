@@ -3,11 +3,11 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../../services/logger';
-import { handleJson } from '../../../../middleware/handlers/handle-json';
+import Logger from '../../../../../../services/logger';
+import { handleJson } from '../../../../../../middleware/handlers/handle-json';
 
 const logger = new Logger('test');
-vi.mock('../../../../utils/logger');
+vi.mock('../../../../../../utils/logger');
 
 const defReq = {
   url: '',
@@ -27,7 +27,7 @@ const reset = () => {
   res = { ...defRes, req };
 };
 
-import { dataRoot } from '../../../data-root';
+import { dataRoot } from '../../../../../data-root';
 
 const defaultLimit = 2;
 

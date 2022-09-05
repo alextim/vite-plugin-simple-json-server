@@ -1,31 +1,8 @@
-import fs from 'node:fs';
-
 import { sort } from '../../utils/comp-properties-of';
 import { searchProp } from '../../utils/search-prop';
+import { JsonDb } from './json-db';
 
-export class JsonTable {
-  private readonly pathname: string;
-  private data: any;
-  rawContent = '';
-
-  constructor(pathname: string) {
-    this.pathname = pathname;
-  }
-
-  async load() {
-    this.rawContent = await fs.promises.readFile(this.pathname, { encoding: 'utf-8' });
-    this.data = JSON.parse(this.rawContent);
-    return this.isTable();
-  }
-
-  isTable() {
-    return Array.isArray(this.data);
-  }
-
-  private async write() {
-    await fs.promises.writeFile(this.pathname, JSON.stringify(this.data), { encoding: 'utf-8' });
-  }
-
+export class JsonTable extends JsonDb {
   private getIndexById(id: number) {
     return (this.data as any[]).findIndex((item: any) => item.id == id);
   }

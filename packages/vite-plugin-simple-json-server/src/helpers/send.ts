@@ -5,7 +5,7 @@ import { ILogger } from '../services/logger';
 import { JSON_MIME_TYPE } from '../utils/mime-types';
 
 export function sendFileContent(res: ServerResponse, filePath: string, mime: string, logger: ILogger) {
-  const msg = ['matched', `${res.req.method} ${res.req.url}`, filePath];
+  const msg = [filePath];
   const data = fs.readFileSync(filePath, 'utf-8');
   return sendData(res, data, msg, logger, 200, mime);
 }
@@ -42,14 +42,14 @@ function sendError(res: ServerResponse, msg: string[] | string, logger: ILogger,
   return sendData(
     res,
     { message: `${http.STATUS_CODES[statusCode]}${customMsg}` },
-    [`${statusCode} ${http.STATUS_CODES[statusCode]}`, `${res.req.method} ${res.req.url}`, ...(Array.isArray(msg) ? msg : [msg])],
+    [`${statusCode} ${http.STATUS_CODES[statusCode]}`, ...(Array.isArray(msg) ? msg : [msg])],
     logger,
     statusCode,
   );
 }
 
 export function sendData(res: ServerResponse, data: any, msg: string[], logger: ILogger, statusCode = 200, mime = JSON_MIME_TYPE) {
-  logger.info(...msg);
+  logger.info(`${res.req.method} ${res.req.url}`, ...msg.filter(Boolean));
 
   res.statusCode = statusCode;
   if (statusCode === 204) {
@@ -61,6 +61,5 @@ export function sendData(res: ServerResponse, data: any, msg: string[], logger: 
     res.setHeader('content-type', mime);
     res.end(typeof data === 'string' ? data : JSON.stringify(data));
   }
-  logger.info(`Response code: ${statusCode}`, `content-type: ${mime}`, `data: ${data ? typeof data : 'empty'}`);
   return true;
 }

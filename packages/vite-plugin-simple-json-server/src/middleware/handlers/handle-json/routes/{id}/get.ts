@@ -3,13 +3,20 @@ import { ServerResponse } from 'node:http';
 import { ILogger } from '../../../../../services/logger';
 import { JsonTable } from '../../../../../services/json-table/json-table';
 
-import { sendData, send404, send405 } from '../../../../../helpers/send';
+import { sendData, send404 } from '../../../../../helpers/send';
 
+/**
+ *
+ * GET /resource/{id}
+ *
+ */
 export const onGet = async (res: ServerResponse, filePath: string, logger: ILogger, id: number) => {
   const table = new JsonTable(filePath);
 
-  if (!(await table.load())) {
-    return send405(res, ['Not array', filePath], logger);
+  await table.load();
+
+  if (!table.isTable()) {
+    return send404(res, ['Not array', filePath], logger);
   }
 
   const item = table.getById(id);

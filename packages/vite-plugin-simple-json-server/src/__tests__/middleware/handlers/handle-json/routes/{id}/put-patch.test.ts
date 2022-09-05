@@ -5,10 +5,10 @@ import fs from 'node:fs';
 
 import mock from 'mock-fs';
 
-import Logger from '../../../../../services/logger';
-import { onPutPatch } from '../../../../../middleware/handlers/handle-json/routes/{id}/put-patch';
-import { dataRoot } from '../../../../data-root';
-import { IterableObject } from './IterableObject';
+import Logger from '../../../../../../services/logger';
+import { onPutPatch } from '../../../../../../middleware/handlers/handle-json/routes/{id}/put-patch';
+import { dataRoot } from '../../../../../data-root';
+import { IterableObject } from '../IterableObject';
 
 const srcFilePath = path.join(dataRoot, 'array-has-id.json');
 const srcContent = fs.readFileSync(srcFilePath, 'utf8');
@@ -51,7 +51,7 @@ describe('onPutPatch', () => {
   it('empty header, return true, 415', async () => {
     const filePath = path.join(dataRoot, 'array-empty.json');
     res.req.headers = {};
-    const result = await onPutPatch(res, filePath, logger, 2);
+    const result = await onPutPatch(res, filePath, logger, 2, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(415);
     expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[415] }));
@@ -60,25 +60,25 @@ describe('onPutPatch', () => {
   it('wrong content-type, return true, 415', async () => {
     const filePath = path.join(dataRoot, 'array-empty.json');
     res.req.headers = { 'content-type': 'application/text' };
-    const result = await onPutPatch(res, filePath, logger, 2);
+    const result = await onPutPatch(res, filePath, logger, 2, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(415);
     expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[415] }));
   });
 
-  it('not array, return true, 405', async () => {
+  it('not array, return true, 404', async () => {
     const filePath = path.join(dataRoot, 'object-empty.json');
     res.req = new MockedRequest('{"id":1}');
-    const result = await onPutPatch(res, filePath, logger, 2);
+    const result = await onPutPatch(res, filePath, logger, 2, res.req.method);
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(405);
-    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[405] + ', Not array' }));
+    expect(res.statusCode).toBe(404);
+    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[404] + ', Not array' }));
   });
 
   it('empty data, return true, 404', async () => {
     const filePath = path.join(dataRoot, 'array-empty.json');
     res.req = new MockedRequest('{"id":1}');
-    const result = await onPutPatch(res, filePath, logger, 2);
+    const result = await onPutPatch(res, filePath, logger, 2, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(404);
   });
@@ -86,7 +86,7 @@ describe('onPutPatch', () => {
   it('no id in data, return true, 404', async () => {
     const filePath = path.join(dataRoot, 'array-no-id.json');
     res.req = new MockedRequest('{"id":2}');
-    const result = await onPutPatch(res, filePath, logger, 2);
+    const result = await onPutPatch(res, filePath, logger, 2, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(404);
   });
@@ -94,7 +94,7 @@ describe('onPutPatch', () => {
   it('not found in data, return true, 404', async () => {
     const filePath = path.join(dataRoot, 'array-has-id.json');
     res.req = new MockedRequest('{"id":9}');
-    const result = await onPutPatch(res, filePath, logger, 9);
+    const result = await onPutPatch(res, filePath, logger, 9, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(404);
   });
@@ -102,7 +102,7 @@ describe('onPutPatch', () => {
   it('empty body, return true, 400', async () => {
     const filePath = path.join(dataRoot, 'array-has-id.json');
     res.req = new MockedRequest('');
-    const result = await onPutPatch(res, filePath, logger, 1);
+    const result = await onPutPatch(res, filePath, logger, 1, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(400);
     expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[400] + ', Empty body' }));
@@ -111,7 +111,7 @@ describe('onPutPatch', () => {
   it('large body, return true, 400', async () => {
     const filePath = path.join(dataRoot, 'array-has-id.json');
     res.req = new MockedRequest('a'.repeat(1e6 + 10));
-    const result = await onPutPatch(res, filePath, logger, 1);
+    const result = await onPutPatch(res, filePath, logger, 1, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(400);
     expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[400] + ', Request body exceeds 1e6' }));
@@ -120,7 +120,7 @@ describe('onPutPatch', () => {
   it('Not valid json in body, return true, 400', async () => {
     const filePath = path.join(dataRoot, 'array-has-id.json');
     res.req = new MockedRequest('a'.repeat(10));
-    const result = await onPutPatch(res, filePath, logger, 1);
+    const result = await onPutPatch(res, filePath, logger, 1, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(400);
     expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[400] + ', Not valid json in body' }));
@@ -133,7 +133,7 @@ describe('onPutPatch', () => {
       [srcFilePath]: srcContent,
     });
 
-    const result = await onPutPatch(res, srcFilePath, logger, id);
+    const result = await onPutPatch(res, srcFilePath, logger, id, res.req.method);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(200);
 

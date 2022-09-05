@@ -19,7 +19,7 @@ Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 
 ## Why vite-plugin-simple-json-server?
 
-This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting, filter and **CRUD** operations.  
+This plugin is for lazy developers to create a mock API quickly. Simply place some json files into the `mock` folder and your file based API is ready. Out of the box you have pagination, sorting, filter and basic **CRUD** operations.  
 
 Additionally the plugin serves static files such as `html`, `js`, `css`, `txt`.  
 
@@ -184,16 +184,27 @@ curl  http://localhost:5173/products?count&price=2
 
 Full CRUD operations are only available for array-like JSON with a numeric `id` property.
 
-| HTTP Verb | CRUD           | Entire Collection (e.g. `/products`)                                              | Specific Item (e.g. `/products/:id`)                                                                                  |
+### Array-like
+
+| HTTP Verb | CRUD           | Entire Collection (e.g. `/products`)                                              | Specific Item (e.g. `/products/{id}`)                                                                                  |
 | :-------: |:-------------: | :------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------ |
-| GET       | Read           | 200 (OK), list of items.<br>Use pagination, sorting and filtering to navigate large lists. |  200 (OK), single item.<br>404 (Not Found), if ID not found.                                       |
-| POST      | Create         | 201 (Created), `Location` header with link to `/products/{id}` containing new ID. | 200 (OK), created item.<br>409 (Conflict) if resource already exists.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
-| PUT       | Update/Replace | 405 (Method Not Allowed)                                                        | 200 (OK), modified item.<br>404 (Not Found), if ID not found.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
-| PATCH     | Update/Modify  | 405 (Method Not Allowed)                                                        | 200 (OK), modified item.<br>404 (Not Found), if ID not found.<br>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6) |
-| DELETE    | Delete         | 405 (Method Not Allowed)                                                        | 200 (OK), empty object `{}`.<br>404 (Not Found), if ID not found.                                                    |
+| GET       | Read           | 200 (OK), list of items.<br>Use pagination, sorting and filtering to navigate large lists. |  <ul><li>200 (OK), single item.</li><li>404 (Not Found), if ID not found.</li></ul>                   |
+| POST      | Create         | <ul><li>201 (Created), created item, `Location` header with link to `/products/{id}` containing new ID.</li><li>409 (Conflict) if resource already exists.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> | 405 (Method Not Allowed).              |
+| PUT       | Update/Replace | 405 (Method Not Allowed). | <ul><li>200 (OK), replaced item.</li><li>404 (Not Found), if ID not found.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> |
+| PATCH     | Update/Modify  | 405 (Method Not Allowed). | <ul><li>200 (OK), modified item.</li><li>404 (Not Found), if ID not found.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> |
+| DELETE    | Delete         | 405 (Method Not Allowed). | <ul><li>200 (OK), empty object `{}`.</li><li>404 (Not Found), if ID not found.</li></ul>                                                    |
+
+### Object
+
+| HTTP Verb | CRUD           | Entire Collection (e.g. `/profile`)                       | Specific Item (e.g. `/profile/{id}`)   |
+| :-------: |:-------------: | :------------------------------------------------------   | :------------------------------------- |
+| GET       | Read           | 200 (OK), object.                                         | 404 (Not Found).                       |
+| POST      | Create         | <ul><li>201 (Created), replaced object, `Location` header with link to `/profile`.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> | 405 (Method Not Allowed). |
+| PUT       | Update/Replace | 200 (OK), replaced object.                                | 404 (Not Found).              |
+| PATCH     | Update/Modify  | 200 (OK), modified object.                                | 404 (Not Found).              |
+| DELETE    | Delete         | 405 (Method Not Allowed).                                 | 404 (Not Found).              |
 
 
-Check CRUD example in this [repo](https://github.com/alextim/vite-plugin-simple-json-server/tree/main/examples/crud).
 
 ## Configuration
 

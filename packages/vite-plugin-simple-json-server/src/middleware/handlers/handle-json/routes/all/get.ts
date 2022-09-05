@@ -9,10 +9,16 @@ import { JsonTable } from '../../../../../services/json-table/json-table';
 
 import { send404, sendFileContent, sendData } from '../../../../../helpers/send';
 
-import { getLinks, getLinkTemplate } from '../../helpers/link-header';
+import { getLinks } from '../../helpers/link-header';
 import { getParams } from '../../helpers/get-params';
 import { modifyHeader } from '../../helpers/modify-header';
+import { getFullUrl } from '../../helpers/get-full-url';
 
+/**
+ *
+ * GET /resource
+ *
+ */
 export async function onGetAll(
   req: Connect.IncomingMessage,
   res: ServerResponse,
@@ -27,7 +33,7 @@ export async function onGetAll(
     return sendFileContent(res, filePath, JSON_MIME_TYPE, logger);
   }
 
-  const msgMatched = ['matched', `${req.method} ${req.url}`, filePath];
+  const msgMatched = [filePath];
 
   const table = new JsonTable(filePath);
 
@@ -62,7 +68,10 @@ export async function onGetAll(
 
     table.slice(offset, limit);
 
-    const template = getLinkTemplate(req, urlPath, q);
+    delete q.offset;
+    const qs = querystring.stringify(q);
+    const template = `<${getFullUrl(req, urlPath)}?${qs}&offset=%d>;rel="%s"`;
+
     const links = getLinks(template, offset, limit, totalCount);
 
     res.setHeader('X-Total-Count', totalCount);

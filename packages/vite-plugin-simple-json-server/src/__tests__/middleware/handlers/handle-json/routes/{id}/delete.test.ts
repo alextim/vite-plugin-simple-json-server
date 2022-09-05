@@ -5,9 +5,9 @@ import fs from 'node:fs';
 
 import mock from 'mock-fs';
 
-import Logger from '../../../../../services/logger';
-import { onDelete } from '../../../../../middleware/handlers/handle-json/routes/{id}/delete';
-import { dataRoot } from '../../../../data-root';
+import Logger from '../../../../../../services/logger';
+import { onDelete } from '../../../../../../middleware/handlers/handle-json/routes/{id}/delete';
+import { dataRoot } from '../../../../../data-root';
 
 const srcFilePath = path.join(dataRoot, 'array-has-id.json');
 const srcContent = fs.readFileSync(srcFilePath, 'utf8');
@@ -37,12 +37,12 @@ describe('onDelete', () => {
     mock.restore();
   });
 
-  it('not array, return true, 405', async () => {
+  it('not array, return true, 404', async () => {
     const filePath = path.join(dataRoot, 'object-empty.json');
     const result = await onDelete(res, filePath, logger, 2);
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(405);
-    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[405] + ', Not array' }));
+    expect(res.statusCode).toBe(404);
+    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[404] + ', Not array' }));
   });
 
   it('empty data, return true, 404', async () => {

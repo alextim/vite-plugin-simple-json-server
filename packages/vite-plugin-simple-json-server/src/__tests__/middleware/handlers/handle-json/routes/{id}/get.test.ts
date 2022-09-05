@@ -3,8 +3,8 @@ import { ServerResponse } from 'node:http';
 import { Connect } from 'vite';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-import Logger from '../../../../services/logger';
-import { handleJson } from '../../../../middleware/handlers/handle-json';
+import Logger from '../../../../../../services/logger';
+import { handleJson } from '../../../../../../middleware/handlers/handle-json';
 
 const logger = new Logger('test');
 vi.mock('../../../../utils/logger');
@@ -27,7 +27,7 @@ const reset = () => {
   res = { ...defRes, req };
 };
 
-import { dataRoot } from '../../../data-root';
+import { dataRoot } from '../../../../../data-root';
 
 const defaultLimit = 2;
 
@@ -156,7 +156,7 @@ describe('test handleJson get by id', () => {
     expect(res.end).toBeCalled();
   });
 
-  it('/object/1 exists, json, should return true, 405', async () => {
+  it('/object/1 not exists, json, should return true, 404', async () => {
     req.url = '/object/1';
     const result = await handleJson(
       req as Connect.IncomingMessage,
@@ -168,10 +168,10 @@ describe('test handleJson get by id', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(405);
+    expect(res.statusCode).toBe(404);
     expect(res.end).toBeCalled();
   });
-  it('/subfolder/object/1 exists, json, should return true, 405', async () => {
+  it('/subfolder/object/1 not exists, json, should return true, 404', async () => {
     req.url = '/subfolder/object/1';
     const result = await handleJson(
       req as Connect.IncomingMessage,
@@ -183,7 +183,7 @@ describe('test handleJson get by id', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(405);
+    expect(res.statusCode).toBe(404);
     expect(res.end).toBeCalled();
   });
 

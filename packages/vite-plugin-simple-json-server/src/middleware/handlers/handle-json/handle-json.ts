@@ -4,13 +4,16 @@ import { Connect } from 'vite';
 
 import { ILogger } from '../../../services/logger';
 
-import { send405 } from '../../../helpers/send';
+import { send404, send405 } from '../../../helpers/send';
 
 import { parsePathname } from './helpers/parse-pathname';
 
-import { onID } from './routes/{id}';
 import { onPost } from './routes/all/post';
-import { onGetAll } from './routes/all/get-all';
+import { onGetAll } from './routes/all/get';
+import { onPutPatchAll } from './routes/all/put-patch';
+import { onDelete } from './routes/{id}/delete';
+import { onPutPatch } from './routes/{id}/put-patch';
+import { onGet } from './routes/{id}/get';
 
 export async function handleJson(
   req: Connect.IncomingMessage,
@@ -28,28 +31,37 @@ export async function handleJson(
   const { idParam, filePath } = parsed;
 
   /**
-   *  Route: /{resource-name}/:id
-   *  Methods: GET, PUT, PATCH, DELETE
+   *  Route: /resource/{id}
    */
   if (idParam) {
-    return await onID(req, res, logger, filePath, idParam);
+    const id = parseInt(idParam);
+    switch (req.method) {
+      case 'GET':
+        return await onGet(res, filePath, logger, id);
+      case 'PUT':
+      case 'PATCH':
+        return await onPutPatch(res, filePath, logger, id, req.method);
+      case 'DELETE':
+        return await onDelete(res, filePath, logger, id);
+      case 'POST':
+        return send404(res, ['', filePath], logger);
+      default:
+        return send405(res, ['', filePath], logger);
+    }
   }
 
   /**
-   *  Route: /{resource-name}/*
-   *  Method: POST
+   *  Route: /resource/*
    */
-  if (req.method === 'POST') {
-    return await onPost(res, filePath, logger);
+  switch (req.method) {
+    case 'GET':
+      return await onGetAll(req, res, logger, filePath, urlPath, defaultLimit);
+    case 'PUT':
+    case 'PATCH':
+      return await onPutPatchAll(res, filePath, logger, req.method);
+    case 'POST':
+      return await onPost(res, filePath, logger);
+    default:
+      return send405(res, ['', filePath], logger);
   }
-
-  if (req.method !== 'GET') {
-    return send405(res, [`Received: ${req.method}`, filePath], logger);
-  }
-
-  /**
-   *  Route: /{resource-name}/*
-   *  Method: GET
-   */
-  return await onGetAll(req, res, logger, filePath, urlPath, defaultLimit);
 }
