@@ -1,5 +1,19 @@
 # vite-plugin-simple-json-server
 
+## 0.5.0
+
+### Minor Changes
+
+- a45cdc0: ## Breaking
+
+  - `POST`, `PUT` and `PATCH` for non-array JSON
+  - `mockRootDir` option is changed to `mockDir`
+
+  ## Features
+
+  - `Access-Control-Expose-Headers`
+  - `staticDir` option added
+
 ## 0.4.4
 
 ### Patch Changes
