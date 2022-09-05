@@ -66,13 +66,12 @@ This configuration assumes that all json files are in the `mock` folder under Vi
 The `vite-plugin-simple-json-server` injects own middleware into development and preview servers.
 By default it is invoked only for `serve` mode.
 
-The plugin serves handlers routes first, then json API, static files at the end.  
+The plugin first serves the handler routes, then the json API and at the very end, the static files.
 
-Query parameters are ignored for static files.
+Any query parameters are ignored for static files.
 
 Pagination and count is only available for array-based json.
 For sorting and filtering the json must be an array of objects.  
-Otherwise, the server will respond with 405.  
 
 If there is a parameter in the filter or sort request that is not among the json fields, that parameter will be ignored.  
 
