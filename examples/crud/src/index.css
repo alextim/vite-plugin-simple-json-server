@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tb {
+  position: relative;
+  text-align: left;
+  text-indent: 0;
+  border-color: inherit;
+  border-collapse: collapse;
+}
+
+.tb :where(li > div, .tb-head > div) {
+  white-space: nowrap;
+  padding: 1rem;
+  vertical-align: middle;
+}
+
+.tb :where(.tb-head) {
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tb :where(.tb-head, .tb-body, .tb-foot) :where(li:not(:last-child)) {
+  border-bottom-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b2, var(--b1)) / var(--tw-border-opacity));
+}
+
+.tb-head,
+.tb-body > li {
+  @apply grid gap-4 items-center;
+}
+
+.tb-head,
+.tb-body > li {
+  @apply grid-cols-[6rem_1fr_15rem];
+}

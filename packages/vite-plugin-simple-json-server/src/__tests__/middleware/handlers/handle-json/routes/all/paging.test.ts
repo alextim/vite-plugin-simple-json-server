@@ -96,29 +96,7 @@ describe('test handleJson paging', () => {
     );
   });
 
-  it('0 10, should return true', async () => {
-    const offset = 0;
-    const defaultLimit = 10;
-    req.url = getUrl(offset, defaultLimit);
-
-    const result = await handleJson(
-      req as Connect.IncomingMessage,
-      res as ServerResponse,
-      dataRoot,
-      'array-has-id',
-      logger,
-      '/array-has-id',
-      defaultLimit,
-    );
-    const paged = (jsonSrc as any[]).slice(offset, offset + defaultLimit);
-    expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify(paged));
-    expect(mockHeaders.Link).toBe(
-      'abc,<http://h/array-has-id?limit=10&offset=0>;rel="first",<http://h/array-has-id?limit=10&offset=0>;rel="last"',
-    );
-  });
-
-  it('3 10 exists, json, should return true', async () => {
+  it('limit(10) > totalCount(6), json, should return true', async () => {
     const offset = 3;
     const defaultLimit = 10;
     req.url = getUrl(offset, defaultLimit);
@@ -135,8 +113,6 @@ describe('test handleJson paging', () => {
     const paged = (jsonSrc as any[]).slice(offset, offset + defaultLimit);
     expect(result).toBeTruthy();
     expect(res.end).toBeCalledWith(JSON.stringify(paged));
-    expect(mockHeaders.Link).toBe(
-      'abc,<http://h/array-has-id?limit=10&offset=0>;rel="prev",<http://h/array-has-id?limit=10&offset=0>;rel="first",<http://h/array-has-id?limit=10&offset=3>;rel="last"',
-    );
+    expect(mockHeaders.Link).toBe('abc');
   });
 });

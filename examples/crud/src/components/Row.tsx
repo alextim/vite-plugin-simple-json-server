@@ -16,7 +16,7 @@ type Props = {
 const Row = ({ item, onDelete, onUpdate }: Props) => {
   const [edit, setEdit] = useState(false);
   const { name, reset: resetName, onChange } = useNameInput(item.name);
-  const wrapperRef = useRef<HTMLTableRowElement>(null);
+  const wrapperRef = useRef<HTMLLIElement>(null);
 
   useClickOutside(wrapperRef, () => void reset());
 
@@ -52,10 +52,10 @@ const Row = ({ item, onDelete, onUpdate }: Props) => {
   };
 
   return (
-    <tr ref={wrapperRef}>
-      <td>{item.id}</td>
-      <td>{edit ? <NameInput value={name} onChange={onChange} /> : <div onDoubleClick={dblClickHandler}>{item.name}</div>}</td>
-      <td className="grid grid-cols-[50%_50%] gap-2">
+    <li ref={wrapperRef}>
+      <div>{item.id}</div>
+      <div>{edit ? <NameInput value={name} onChange={onChange} /> : <div onDoubleClick={dblClickHandler}>{item.name}</div>}</div>
+      <div className="grid grid-cols-[50%_50%] gap-2">
         {edit ? (
           <>
             <button
@@ -80,9 +80,12 @@ const Row = ({ item, onDelete, onUpdate }: Props) => {
             </button>
           </>
         )}
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 };
 
-export default memo(Row, (prev, next) => prev.item.id === next.item.id && prev.item.name === next.item.name);
+export default memo(
+  Row,
+  (prev, next) => prev.item.id === next.item.id && prev.item.name === next.item.name && prev.onDelete === next.onDelete,
+);

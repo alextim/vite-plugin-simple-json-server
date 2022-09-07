@@ -4,8 +4,8 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   return (
-    <div className="p-8 bg-slate-50">
-      <div className="container mx-auto">
+    <div className="bg-slate-50 h-screen">
+      <div className="grid grid-rows-[auto_1fr] container py-8 mx-auto min-h-full">
         <h1 className="text-center font-bold text-4xl">JSON Simple Server (CRUD)</h1>
         {children}
       </div>

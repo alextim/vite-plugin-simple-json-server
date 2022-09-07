@@ -1,6 +1,6 @@
 [
   { "id": 0, "name": "defective" },
-  { "name": "tets ", "id": 1 },
+  { "name": "tests ", "id": 1 },
   { "id": 3, "name": "stringer" },
   { "id": 4, "name": "orange" },
   { "id": 5, "name": "active" },

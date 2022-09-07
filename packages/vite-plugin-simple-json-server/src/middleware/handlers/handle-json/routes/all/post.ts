@@ -37,7 +37,7 @@ export const onPost = async (res: ServerResponse, filePath: string, logger: ILog
   if (table.isTable()) {
     const success = await table.push(item);
     if (!success) {
-      return send409(res, [`item with id=${item.id} already exists`, filePath], logger);
+      return send409(res, [`resource with id=${item.id} already exists`, filePath], logger);
     }
     location += `/${item.id}`;
   } else {
@@ -47,5 +47,5 @@ export const onPost = async (res: ServerResponse, filePath: string, logger: ILog
   res.setHeader('Location', location);
   modifyHeader(res, 'Access-Control-Expose-Headers', 'Location');
 
-  return sendData(res, item, [`item with id=${item.id} created`, filePath], logger, 201);
+  return sendData(res, item, [`resource with id=${item.id} created`, filePath], logger, 201);
 };

@@ -4,9 +4,9 @@ import RemoteStorage from './services/remote-storage';
 import Layout from './components/Layout';
 import Crud from './components/Crud';
 
-const API_URL = 'api/json';
+import { API_URL } from './constants';
 
-const storage = new RemoteStorage(window.location + API_URL);
+const storage = new RemoteStorage(API_URL);
 // const storage = new LocalStorage('@example/crud');
 
 const App = () => {

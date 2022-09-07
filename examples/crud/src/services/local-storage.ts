@@ -18,6 +18,8 @@ class LocalStorage implements IStorage<Item, number> {
     window.localStorage.setItem(this.name, JSON.stringify(items));
   }
 
+  abort() {}
+
   async getOne(id: number) {
     const items = await this.getAll();
     if (!items) {
@@ -29,6 +31,12 @@ class LocalStorage implements IStorage<Item, number> {
   async getAll(): Promise<Item[]> {
     const data = localStorage.getItem(this.name);
     return data ? JSON.parse(data) : [];
+  }
+
+  async slice(offset: number, limit: number): Promise<{ items: Item[]; totalCount: number }> {
+    const result = await this.getAll();
+    const items = result.slice(offset, offset + limit);
+    return { items, totalCount: items.length };
   }
 
   async delete(id: number) {

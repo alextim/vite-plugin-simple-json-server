@@ -115,7 +115,7 @@ describe('onPost', () => {
     const result = await onPost(res, filePath, logger);
     expect(result).toBeTruthy();
     expect(res.statusCode).toBe(409);
-    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[409] + ', ' + `item with id=${id} already exists` }));
+    expect(res.end).toBeCalledWith(JSON.stringify({ message: http.STATUS_CODES[409] + ', ' + `resource with id=${id} already exists` }));
   });
 
   it('success, id not exists, return true, 201', async () => {

@@ -1,19 +1,22 @@
+import { linkKeys } from './constants';
+
 export type Item = {
   id: number;
   name: string;
 };
 
 export interface IStorage<T, U> {
+  abort(): void;
   getOne(id: U): Promise<T | undefined>;
   getAll(): Promise<T[]>;
   delete(id: U): Promise<boolean>;
   add(item: T): Promise<T | undefined>;
   update(item: T): Promise<boolean>;
+  slice(offset: number, limit: number): Promise<{ items: T[]; totalCount: number }>;
 }
 
-declare module '*.svg' {
-  import React = require('react');
-  export const ReactComponent: React.SFC<React.SVGProps<SVGSVGElement>>;
-  const src: string;
-  export default src;
-}
+export type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {
+  [K in T extends ReadonlyArray<infer U> ? U : never]: V;
+};
+
+export type Links = ObjectFromList<typeof linkKeys, string>;

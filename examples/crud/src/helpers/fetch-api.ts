@@ -26,7 +26,7 @@ class FetchApi {
     return this.abortController?.signal.aborted;
   }
 
-  private async fetchApi(url: string, opts: RequestInit = {}) {
+  private async fetchApi(url: string, opts: RequestInit = {}, headers: Record<string, string> = {}) {
     try {
       this.abortController = new AbortController();
       const resp = await fetch(url, {
@@ -40,15 +40,24 @@ class FetchApi {
         throw new FetchError(json.message, resp.status);
       }
       const json = await resp.json();
-      return json;
+      const result: Record<string, any> = {
+        json,
+      };
+      Object.entries(headers).forEach(([varKey, headerKey]) => {
+        const val = resp.headers.get(headerKey);
+        if (val !== undefined && val !== '') {
+          result[varKey] = val;
+        }
+      });
+      return result;
     } catch (err) {
       throw err;
     }
   }
 
-  async get(url: string, opts: RequestInit = {}) {
+  async get(url: string, opts: RequestInit = {}, headers: Record<string, string> = {}) {
     opts.method = 'GET';
-    return await this.fetchApi(url, opts);
+    return await this.fetchApi(url, opts, headers);
   }
 
   async post(url: string, opts: RequestInit = {}) {
