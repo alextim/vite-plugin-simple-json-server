@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.5.1
+
+### Patch Changes
+
+- 0c7c8ca: fix: if limit >= totalCount then 'Link' should be empty
+
 ## 0.5.0
 
 ### Minor Changes
