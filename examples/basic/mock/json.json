@@ -1,13 +1,12 @@
 [
-  { "id": 0, "pos": [4.2, 0, 1], "color": "defective" },
-  { "id": 1, "pos": [4.2, 1, 1], "color": "stringer" },
-  { "id": 2, "pos": [4.2, 2, 1], "color": "stringer" },
-  { "id": 3, "pos": [4.2, 3, 1], "color": "stringer" },
-  { "id": 4, "pos": [4.2, 4, 1], "color": "orange" },
-  { "id": 5, "pos": [4.2, 5, 1], "color": "active" },
-  { "id": 6, "pos": [4.2, 6, 1], "color": "stringer" },
-  { "id": 7, "pos": [4.2, 7, 1], "color": "stringer" },
-  { "id": 8, "pos": [4.2, 8, 1], "color": "active" },
-  { "id": 9, "pos": [4.2, 9, 1], "color": "stringer" },
-  { "id": 10, "pos": [4.2, 10, 1], "color": "aquamarine" }
-  ]
+  { "id": 0, "title": "iphone 10", "rating": { "rate": 4.5, "count": 100 }, "color": "black" },
+  { "id": 1, "title": "iphone 10", "rating": { "rate": 4.2, "count": 100 }, "color": "silver" },
+  { "id": 2, "title": "iphone 13", "rating": { "rate": 4.3, "count": 200 }, "color": "black" },
+  { "id": 3, "title": "iphone 10", "rating": { "rate": 4.5, "count": 100 }, "color": "white" },
+  { "id": 4, "title": "samsung s21", "rating": { "rate": 4.1, "count": 400 }, "color": "black" },
+  { "id": 5, "title": "samsung s22", "rating": { "rate": 4.5, "count": 300 }, "color": "black" },
+  { "id": 6, "title": "meizu 5", "rating": { "rate": 4.9, "count": 100 }, "color": "black" },
+  { "id": 7, "title": "meizu 5", "rating": { "rate": 4.5, "count": 100 }, "color": "red" },
+  { "id": 8, "title": "iphone 11", "rating": { "rate": 4.6, "count": 400 }, "color": "black" },
+  { "id": 9, "title": "iphone 12", "rating": { "rate": 4.5, "count": 500 }, "color": "black" }
+]
