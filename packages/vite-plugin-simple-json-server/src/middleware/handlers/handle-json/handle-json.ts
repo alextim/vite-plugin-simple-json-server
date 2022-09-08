@@ -4,7 +4,7 @@ import { Connect } from 'vite';
 
 import { ILogger } from '../../../services/logger';
 
-import { send404, send405 } from '../../../helpers/send';
+import { send404, send405, sendOptions } from '../../../helpers/send';
 
 import { parsePathname } from './helpers/parse-pathname';
 
@@ -36,6 +36,8 @@ export async function handleJson(
   if (idParam) {
     const id = parseInt(idParam);
     switch (req.method) {
+      case 'OPTIONS':
+        return sendOptions(res, ['GET', 'PUT', 'PATCH', 'DELETE'], logger);
       case 'GET':
         return await onGet(res, filePath, logger, id);
       case 'PUT':
@@ -54,6 +56,8 @@ export async function handleJson(
    *  Route: /resource/*
    */
   switch (req.method) {
+    case 'OPTIONS':
+      return sendOptions(res, ['GET', 'PUT', 'PATCH', 'POST'], logger);
     case 'GET':
       return await onGetAll(req, res, logger, filePath, urlPath, defaultLimit);
     case 'PUT':

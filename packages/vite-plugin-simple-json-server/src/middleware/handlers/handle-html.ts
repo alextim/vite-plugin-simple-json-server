@@ -5,7 +5,7 @@ import { Connect } from 'vite';
 import { ILogger } from '@/services/logger';
 import { HTML_MIME_TYPE } from '@/utils/mime-types';
 
-import { send403, sendFileContent } from '@/helpers/send';
+import { send403, sendFileContent, sendOptions } from '@/helpers/send';
 import getFilepath from '@/helpers/get-filepath';
 
 export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
@@ -16,8 +16,12 @@ export function handleHtml(req: Connect.IncomingMessage, res: ServerResponse, da
     return false;
   }
 
-  if (req.method !== 'GET') {
-    return send403(res, [`Received: ${req.method}`, filePath], logger);
+  switch (req.method) {
+    case 'OPTIONS':
+      return sendOptions(res, ['GET'], logger);
+    case 'GET':
+      return sendFileContent(res, filePath, HTML_MIME_TYPE, logger);
+    default:
+      return send403(res, [`Received: ${req.method}`, filePath], logger);
   }
-  return sendFileContent(res, filePath, HTML_MIME_TYPE, logger);
 }

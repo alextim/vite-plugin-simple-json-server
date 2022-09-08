@@ -63,3 +63,11 @@ export function sendData(res: ServerResponse, data: any, msg: string[], logger: 
   }
   return true;
 }
+
+export function sendOptions(res: ServerResponse, options: string[], logger: ILogger) {
+  logger.info(`${res.req.method} ${res.req.url}`);
+  res.setHeader('Allow', options.join(','));
+  res.statusCode = 204;
+  res.end();
+  return true;
+}
