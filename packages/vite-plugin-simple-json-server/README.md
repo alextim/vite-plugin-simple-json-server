@@ -25,7 +25,7 @@ Additionally the plugin serves static files such as `html`, `js`, `css`, `txt`.
 
 As well you can define the custom route's handlers in the plugin config.
 
-The plugin is light, it has only one dependency.
+The plugin is lightweight and has only a few dependencies.  
 
 ---
 
