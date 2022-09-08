@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.5.2
+
+### Patch Changes
+
+- a625763: Feature: sort & filter on deep properties. Use `.` as separator.
+
 ## 0.5.1
 
 ### Patch Changes
