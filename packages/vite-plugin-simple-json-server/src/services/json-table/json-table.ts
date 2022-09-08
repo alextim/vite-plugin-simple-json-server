@@ -1,5 +1,5 @@
-import { sort } from '../../utils/comp-properties-of';
-import { searchProp } from '../../utils/search-prop';
+import { sortDeep as sort } from '../../utils/comp-properties-of-deep';
+import { searchPropDeep as searchProp } from '../../utils/search-prop-deep';
 import { JsonDb } from './json-db';
 
 export class JsonTable extends JsonDb {

@@ -1,6 +1,5 @@
 import querystring from 'node:querystring';
 import { ServerResponse } from 'node:http';
-
 import { Connect } from 'vite';
 
 import { ILogger } from '../../../../../services/logger';
@@ -47,11 +46,13 @@ export async function onGetAll(
 
   const { isCount, offset, limit, sortParams, filterParams } = getParams(q, defaultLimit);
 
+  // GET /resource/?count
   if (isCount) {
     const count = table.count(filterParams);
     return sendData(res, { count }, msgMatched, logger);
   }
 
+  // GET /resource/?prop1={value1}&prop2={value2}...
   if (filterParams) {
     table.filter(filterParams);
     if (table.count() === 0) {
@@ -59,10 +60,12 @@ export async function onGetAll(
     }
   }
 
+  // GET /resource/?order={prop1,prop2...}
   if (sortParams) {
     table.sort(sortParams);
   }
 
+  // GET /resource/?offset={value1}&limit={value2}
   if (offset !== undefined && limit !== undefined) {
     const totalCount = table.count();
 

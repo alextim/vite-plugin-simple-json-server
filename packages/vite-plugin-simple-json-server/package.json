@@ -36,9 +36,11 @@
     "test:pub": "pnpm publish --dry-run --no-git-checks"
   },
   "dependencies": {
-    "@howiefh/ant-path-matcher": "^0.0.4"
+    "@howiefh/ant-path-matcher": "^0.0.4",
+    "lodash.get": "^4.4.2"
   },
   "devDependencies": {
+    "@types/lodash.get": "^4.4.7",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.7.16",
     "mock-fs": "^5.1.4",

@@ -83,19 +83,28 @@ Let's have the `products.json` in the `mock` folder.
     "id": 1,
     "name": "Banana",
     "price": 2,
-    "weight": 1
+    "weight": 1,
+    "packing": {
+      "type": "box",
+    }
   },
   {
     "id": 2,
     "name": "Apple",
     "price": 2,
-    "weight": 1
+    "weight": 1,
+    "packing": {
+      "type": "box",
+    }
   },
   {
     "id": 3,
     "name": "Potato",
     "price": 2,
-    "weight": 10
+    "weight": 10,
+    "packing": {
+      "type": "bag",
+    }
   },
 
   ...
@@ -139,9 +148,15 @@ curl http://localhost:5173/products?sort=-name
 
 Multiply field sorting is supported.  
 
-
 ```sh
 curl http://localhost:5173/products?sort=name,-price
+
+```
+
+Use `.` to access deep properties.
+
+```sh
+curl http://localhost:5173/products?sort=packing.type
 ```
 
 ### Filtering
@@ -156,6 +171,13 @@ curl  http://localhost:5173/products?id=2&id=3
 
 
 curl  http://localhost:5173/products?price=2&weight=1
+```
+
+Use `.` to access deep properties.
+
+```sh
+
+curl  http://localhost:5173/products?packing.type=box
 ```
 
 If the requested resource has an `id` property, you can append the `id` value to the URL.
