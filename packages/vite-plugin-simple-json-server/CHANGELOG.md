@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.5.3
+
+### Patch Changes
+
+- 7eaaef6: Feature: handler for `OPTIONS` method
+
 ## 0.5.2
 
 ### Patch Changes
