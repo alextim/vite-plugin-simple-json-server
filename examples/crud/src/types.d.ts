@@ -12,7 +12,7 @@ export interface IStorage<T, U> {
   delete(id: U): Promise<boolean>;
   add(item: T): Promise<T | undefined>;
   update(item: T): Promise<boolean>;
-  slice(offset: number, limit: number): Promise<{ items: T[]; totalCount: number }>;
+  slice(begin: number, end: number): Promise<{ items: T[]; totalCount: number }>;
 }
 
 export type ObjectFromList<T extends ReadonlyArray<string>, V = string> = {

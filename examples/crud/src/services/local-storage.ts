@@ -33,9 +33,9 @@ class LocalStorage implements IStorage<Item, number> {
     return data ? JSON.parse(data) : [];
   }
 
-  async slice(offset: number, limit: number): Promise<{ items: Item[]; totalCount: number }> {
+  async slice(begin: number, end: number): Promise<{ items: Item[]; totalCount: number }> {
     const result = await this.getAll();
-    const items = result.slice(offset, offset + limit);
+    const items = result.slice(begin, end);
     return { items, totalCount: items.length };
   }
 

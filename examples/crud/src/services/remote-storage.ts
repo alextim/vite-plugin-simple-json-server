@@ -39,8 +39,8 @@ class RemoteStorage implements IStorage<Item, number> {
     return json;
   }
 
-  async slice(offset: number, limit: number): Promise<{ items: Item[]; totalCount: number }> {
-    const url = `${this.url}?offset=${offset}&limit=${limit}`;
+  async slice(begin: number, end: number): Promise<{ items: Item[]; totalCount: number }> {
+    const url = `${this.url}?offset=${begin}&limit=${end - begin}`;
     const headers = {
       totalCount: 'X-Total-Count',
     };

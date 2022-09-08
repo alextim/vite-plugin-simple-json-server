@@ -66,7 +66,7 @@ export async function onGetAll(
   if (offset !== undefined && limit !== undefined) {
     const totalCount = table.count();
 
-    table.slice(offset, limit);
+    table.slice(offset, offset + limit);
 
     delete q.offset;
     const qs = querystring.stringify(q);

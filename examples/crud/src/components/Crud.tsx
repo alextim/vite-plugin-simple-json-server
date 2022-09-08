@@ -54,7 +54,7 @@ const Crud = ({ storage }: Props) => {
     setError('');
 
     storage
-      .slice(offset, limit)
+      .slice(offset, offset + limit)
       .then(({ items, totalCount }) => {
         setItems(items);
         setTotalCount(totalCount);
@@ -100,7 +100,7 @@ const Crud = ({ storage }: Props) => {
 
       // it isn't the last page
       // offset stays unchanged, useEffect isn't called
-      const { items: newItems, totalCount: newTotalCount } = await storage.slice(newOffset, limit);
+      const { items: newItems, totalCount: newTotalCount } = await storage.slice(newOffset, newOffset + limit);
       setItems(newItems);
       setTotalCount(newTotalCount);
     } catch (err: any) {

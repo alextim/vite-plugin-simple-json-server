@@ -44,8 +44,8 @@ export class JsonTable extends JsonDb {
     return (this.data as any[]).find((item: any) => item.id == id);
   }
 
-  slice(offset: number, limit: number) {
-    this.data = this.data.slice(offset, offset + limit);
+  slice(begin: number, end: number) {
+    this.data = this.data.slice(begin, end);
   }
 
   serialize(spaces = 0) {
