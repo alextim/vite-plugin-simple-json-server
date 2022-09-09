@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.5.4
+
+### Patch Changes
+
+- 5a99b02: Feature: support `ne`, `lt`, `gt`, `lte`, `gte` and `like` operators
+
 ## 0.5.3
 
 ### Patch Changes
