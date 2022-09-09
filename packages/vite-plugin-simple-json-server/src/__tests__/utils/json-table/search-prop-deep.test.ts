@@ -6,8 +6,10 @@ const item = {
   id: 1,
   name: 'a',
   d: {
+    id: 1,
     b: 'bb',
     n: 11,
+    abc: 'abc',
   },
 };
 
@@ -125,5 +127,72 @@ describe('searchProp', () => {
       'd.x': 'x',
     };
     expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+
+  it('id[ne]=1, should return false', () => {
+    const q = {
+      'id[ne]': 1,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+  it('d.id[ne]=1, should return false', () => {
+    const q = {
+      'd.id[ne]': 1,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+
+  it('id[ne]=0&id[ne]=2, should return true', () => {
+    const q = {
+      'id[ne]': [0, 2],
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeTruthy();
+  });
+  it('id[gt]=0, should return true', () => {
+    const q = {
+      'id[gt]': 0,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeTruthy();
+  });
+  it('d.id[gt]=0, should return true', () => {
+    const q = {
+      'd.id[gt]': 0,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeTruthy();
+  });
+
+  it('id[gt]=1, should return false', () => {
+    const q = {
+      'id[gt]': 1,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+  it('d.id[gt]=1, should return false', () => {
+    const q = {
+      'd.id[gt]': 1,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+
+  it('d.abc[like]=x, should return false', () => {
+    const q = {
+      'd.abc[like]': 'x',
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeFalsy();
+  });
+
+  it('d.abc[like]=bc, should return true', () => {
+    const q = {
+      'd.abc[like]': 'bc',
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeTruthy();
+  });
+
+  it('id[gt]=0&id[lt]=2, should return true', () => {
+    const q = {
+      'id[gt]': 0,
+      'id[lt]': 2,
+    };
+    expect(searchPropDeep(item, q, Object.keys(q))).toBeTruthy();
   });
 });

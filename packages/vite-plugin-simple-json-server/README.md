@@ -161,8 +161,6 @@ curl http://localhost:5173/products?sort=packing.type
 
 ### Filtering
 
-The plugin supports only `eq`.
-
 ```sh
 curl  http://localhost:5173/products?id=2
 
@@ -173,6 +171,15 @@ curl  http://localhost:5173/products?id=2&id=3
 curl  http://localhost:5173/products?price=2&weight=1
 ```
 
+If the requested resource has an `id` property, you can append the `id` value to the URL.
+
+```sh
+curl  http://localhost:5173/products/2
+
+```
+
+#### Deep properties
+
 Use `.` to access deep properties.
 
 ```sh
@@ -180,10 +187,24 @@ Use `.` to access deep properties.
 curl  http://localhost:5173/products?packing.type=box
 ```
 
-If the requested resource has an `id` property, you can append the `id` value to the URL.
+#### Operators
+
+The plugin supports `ne`, `lt`, `gt`, `lte`, `gte` and `like` operators.
 
 ```sh
-curl  http://localhost:5173/products/2
+
+curl  http://localhost:5173/products?id[ne]=2
+
+curl  http://localhost:5173/products?id[gt]=1&id[lt]=10
+
+
+```
+
+`Like` is perfomed via **RegExp**;
+
+```sh
+
+curl  http://localhost:5173/products?name[like]=ota
 
 ```
 
