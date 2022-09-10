@@ -27,32 +27,28 @@ class FetchApi {
   }
 
   private async fetchApi(url: string, opts: RequestInit = {}, headers: Record<string, string> = {}) {
-    try {
-      this.abortController = new AbortController();
-      const resp = await fetch(url, {
-        method: defaultMethod,
-        headers: defaultHeaders,
-        ...opts,
-        signal: this.abortController.signal,
-      });
-      if (!resp.ok) {
-        const json = await resp.json();
-        throw new FetchError(json.message, resp.status);
-      }
+    this.abortController = new AbortController();
+    const resp = await fetch(url, {
+      method: defaultMethod,
+      headers: defaultHeaders,
+      ...opts,
+      signal: this.abortController.signal,
+    });
+    if (!resp.ok) {
       const json = await resp.json();
-      const result: Record<string, any> = {
-        json,
-      };
-      Object.entries(headers).forEach(([varKey, headerKey]) => {
-        const val = resp.headers.get(headerKey);
-        if (val !== undefined && val !== '') {
-          result[varKey] = val;
-        }
-      });
-      return result;
-    } catch (err) {
-      throw err;
+      throw new FetchError(json.message, resp.status);
     }
+    const json = await resp.json();
+    const result: Record<string, any> = {
+      json,
+    };
+    Object.entries(headers).forEach(([varKey, headerKey]) => {
+      const val = resp.headers.get(headerKey);
+      if (val !== undefined && val !== '') {
+        result[varKey] = val;
+      }
+    });
+    return result;
   }
 
   async get(url: string, opts: RequestInit = {}, headers: Record<string, string> = {}) {

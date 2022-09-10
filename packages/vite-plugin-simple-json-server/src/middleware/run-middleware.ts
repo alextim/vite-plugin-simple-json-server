@@ -3,8 +3,9 @@ import http from 'node:http';
 import AntPathMatcher from '@howiefh/ant-path-matcher';
 
 import { removeTrailingSlash } from '@/utils/misc';
-import { ILogger } from '@/services/logger';
+import { timeout } from '@/utils/timeout';
 
+import { ILogger } from '@/services/logger';
 import { send404, send405 } from '@/helpers/send';
 
 import { SimpleJsonServerPluginOptions } from '../types';
@@ -32,12 +33,25 @@ const runMiddleware = async (
   res: http.ServerResponse,
   mockRoot: string,
   staticRoot: string,
-  { urlPrefixes, handlers, limit, noHandlerResponse404 }: SimpleJsonServerPluginOptions,
+  { urlPrefixes, handlers, limit, noHandlerResponse404, delay }: SimpleJsonServerPluginOptions,
   logger: ILogger,
 ) => {
   if (!isOurApi(req?.url, urlPrefixes)) {
     return false;
   }
+
+  if (delay) {
+    let cancelRequest = false;
+    req.on('close', () => {
+      cancelRequest = true;
+    });
+    await timeout(delay);
+    if (cancelRequest) {
+      logger.info(`${res.req.method} ${res.req.url}`, 'cancelled by user');
+      return false;
+    }
+  }
+
   const urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
 
   if (handlers) {

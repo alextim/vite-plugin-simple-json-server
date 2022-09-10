@@ -49,21 +49,34 @@ const Crud = ({ storage }: Props) => {
     console.error(err);
   }, []);
 
+  const updateOffset = useCallback(async (newOffset: number) => {
+    const { items: newItems, totalCount: newTotalCount } = await storage.slice(newOffset, newOffset + limit);
+    setItems(newItems);
+    setTotalCount(newTotalCount);
+    setOffset(newOffset);
+  }, []);
+
+  const updateOffsetWrapped = useCallback(async (newOffset: number) => {
+    setLoading(true);
+    try {
+      await updateOffset(newOffset);
+    } catch (err: any) {
+      onError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  /**
+   * `useEffect` only depends on `limit`, not `offset` and `limit`
+   *
+   * This is done to render correctly after the user has canceled the request.
+   * We can't use `setOffset(newOffset)` for navigation.
+   */
   useEffect(() => {
     setLoading(true);
-    setError('');
-
-    storage
-      .slice(offset, offset + limit)
-      .then(({ items, totalCount }) => {
-        setItems(items);
-        setTotalCount(totalCount);
-      })
-      .catch(onError)
-      .finally(() => void setLoading(false));
-
+    updateOffsetWrapped(0);
     return () => void storage.abort();
-  }, [offset, limit]);
+  }, [limit]);
 
   const onDelete = async (id: number) => {
     setLoading(true);
@@ -75,34 +88,35 @@ const Crud = ({ storage }: Props) => {
 
       const newOffset = isPageEmpty ? Math.max(0, offset - limit) : offset;
 
-      // there is nothing left after deletion
-      // go to the previous page via useEffect
-      if (newOffset !== offset) {
-        setOffset(newOffset);
-        return;
+      if (newOffset === offset) {
+        /**
+         * It's the last page.
+         * Just remove one item from the `items` state to avoid the extra `fetch`.
+         * */
+        const lastPageOffset = (Math.ceil(totalCount / limit) - 1) * limit;
+        if (offset === lastPageOffset) {
+          setItems((prev) => {
+            const index = prev.findIndex((item) => item.id === id);
+            if (index === -1) {
+              console.error(`delete: id=${id} not found in items`);
+              return prev;
+            }
+            const modified = [...prev];
+            modified.splice(index, 1);
+            return modified;
+          });
+          return;
+        }
       }
 
-      // it's the last page
-      // just remove one item from the `items` state to avoid the extra `fetch`
-      if (offset === (Math.ceil(totalCount / limit) - 1) * limit) {
-        setItems((prev) => {
-          const index = prev.findIndex((item) => item.id === id);
-          if (index === -1) {
-            console.error(`delete: id=${id} not found in items`);
-            return prev;
-          }
-          const modified = [...prev];
-          modified.splice(index, 1);
-          return modified;
-        });
-        return;
-      }
-
-      // it isn't the last page
-      // offset stays unchanged, useEffect isn't called
-      const { items: newItems, totalCount: newTotalCount } = await storage.slice(newOffset, newOffset + limit);
-      setItems(newItems);
-      setTotalCount(newTotalCount);
+      /**
+       * It isn't the last page
+       * or
+       * nothing left after deletion on last page.
+       *
+       * Go to the previous page.
+       * */
+      await updateOffset(newOffset);
     } catch (err: any) {
       onError(err);
     } finally {
@@ -149,8 +163,8 @@ const Crud = ({ storage }: Props) => {
         setItems((prev) => [...prev, newItem]);
         setTotalCount(totalCount + 1);
       } else {
-        // go to the last page via useEffect
-        setOffset(lastPageOffset);
+        // go to the last page
+        await updateOffset(lastPageOffset);
       }
 
       success = true;
@@ -188,7 +202,7 @@ const Crud = ({ storage }: Props) => {
         </Table>
 
         <footer className="flex gap-12 items-center mt-8">
-          <Pagination offset={offset} totalCount={totalCount} limit={limit} onClick={setOffset} />
+          <Pagination offset={offset} totalCount={totalCount} limit={limit} updateOffset={updateOffsetWrapped} />
           <div>
             <label htmlFor="limit" className="mr-2">
               Page size:

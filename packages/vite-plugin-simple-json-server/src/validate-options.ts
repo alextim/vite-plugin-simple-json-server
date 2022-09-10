@@ -15,5 +15,6 @@ export const validateOptions = (options: SimpleJsonServerPluginOptions) => {
   opts.noHandlerResponse404 = options.noHandlerResponse404 ?? SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.noHandlerResponse404;
   opts.limit = options.limit || SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.limit;
   opts.handlers = options?.handlers?.filter(({ pattern, handle }) => pattern && handle);
+  opts.delay = Math.max(0, options.delay ?? SIMPLE_JSON_SERVER_CONFIG_DEFAULTS.delay!);
   return opts;
 };

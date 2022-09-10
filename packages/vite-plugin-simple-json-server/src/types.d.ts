@@ -20,6 +20,7 @@ export type SimpleJsonServerPluginOptions = {
   staticDir?: string;
   noHandlerResponse404?: boolean;
   limit?: number;
+  delay?: number;
 };
 
 export type SortOrder = 1 | -1;

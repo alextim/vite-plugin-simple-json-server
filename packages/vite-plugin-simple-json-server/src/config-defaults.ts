@@ -7,4 +7,5 @@ export const SIMPLE_JSON_SERVER_CONFIG_DEFAULTS: SimpleJsonServerPluginOptions =
   noHandlerResponse404: true,
   limit: 10,
   disable: false,
+  delay: 0,
 };

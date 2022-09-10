@@ -329,9 +329,9 @@ export default {
 <details>
   <summary><strong>staticDir</strong></summary>
 
-|   Type     | Required | Default value        |
-| :--------: | :------: | :------------------: |
-|  `String`  |    No    | **options.mockDir**  |
+|   Type     | Required | Default value       |
+| :--------: | :------: | :-----------------: |
+|  `String`  |    No    | **options.mockDir** |
 
 It's a subfolder under the Vite root. An alternative to the `mockDir` folder for static files such as `html`, `css` and `js`.  
 
@@ -356,9 +356,9 @@ export default {
 <details>
   <summary><strong>urlPrefixes</strong></summary>
 
-|   Type     | Required |  Default value  |
-| :--------: | :------: | :-------------: |
-| `String[]` |    No    | `[ '/api/' ]`   |
+|   Type     | Required | Default value |
+| :--------: | :------: | :-----------: |
+| `String[]` |    No    | `[ '/api/' ]` |
 
 Array of non empty strings.  
 
@@ -413,9 +413,9 @@ export default {
 <details>
   <summary><strong>logLevel</strong></summary>
 
-|    Type    | Required |           Default value           |
-| :--------: | :------: | :-------------------------------: |
-| `LogLevel` |    No    | `info`                            |
+|    Type    | Required | Default value |
+| :--------: | :------: | :-----------: |
+| `LogLevel` |    No    | `info`        |
 
 Available values: `'info' | 'warn' | 'error' | 'silent'`;
 
@@ -438,9 +438,9 @@ export default {
 <details>
   <summary><strong>handlers</strong></summary>
 
-|    Type         | Required |           Default value           |
-| :-------------: | :------: | :-------------------------------: |
-| `MockHandler[]` |    No    | `undefined`                       |
+|    Type         | Required | Default value |
+| :-------------: | :------: | :-----------: |
+| `MockHandler[]` |    No    | `undefined`   |
 
 For the custom routes. Array of mock handlers.
 
@@ -459,7 +459,7 @@ The mapping matches URLs using the following rules:
 - `**` matches zero or more directories in a path;
 - `{spring:[a-z]+}` matches the regexp `[a-z]+` as a path variable named `spring`.
   
-**`method`** 
+**`method`**
 
 `String`, optional.  
 
@@ -539,10 +539,34 @@ curl http://localhost:5173/products?offset=300&limit=100
 import jsonServer from 'vite-plugin-simple-json-server';
 
 export default {
-
   plugins: [
     jsonServer({
       limit: 100,
+    }),
+  ],
+};
+```
+
+</details>
+
+<details>
+  <summary><strong>delay</strong></summary>
+
+|   Type     | Required | Default value |
+| :--------: | :------: | :-----------: |
+|  `Number`  |    No    |    0          |
+
+Add delay to responses (ms).  
+
+**`vite.config.ts`**
+
+```js
+import jsonServer from 'vite-plugin-simple-json-server';
+
+export default {
+  plugins: [
+    jsonServer({
+      delay: 1000,
     }),
   ],
 };
