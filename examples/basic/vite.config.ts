@@ -6,6 +6,8 @@ export default defineConfig({
   base: '/aaaa/',
   plugins: [
     jsonServer({
+      urlPrefixes: ['/api/'],
+      staticDir: 'static',
       handlers: [
         {
           pattern: '/api/home',
@@ -15,18 +17,6 @@ export default defineConfig({
               a: 1,
               b: 2,
               c: 'c',
-            };
-            res.setHeader('content-type', 'application/json');
-            res.end(JSON.stringify(data));
-          },
-        },
-        {
-          pattern: '/api/lines',
-          handle: (req, res) => {
-            const data = {
-              d: 4,
-              f: 'f',
-              g: 6,
             };
             res.setHeader('content-type', 'application/json');
             res.end(JSON.stringify(data));

@@ -44,13 +44,7 @@ export async function onGetAll(
 
   const q = querystring.parse(qs);
 
-  const { isCount, offset, limit, sortParams, filterParams } = getParams(q, defaultLimit);
-
-  // GET /resource/?count
-  if (isCount) {
-    const count = table.count(filterParams);
-    return sendData(res, { count }, msgMatched, logger);
-  }
+  const { offset, limit, sortParams, filterParams } = getParams(q, defaultLimit);
 
   // GET /resource/?prop1={value1}&prop2={value2}...
   if (filterParams) {

@@ -64,10 +64,22 @@ export function sendData(res: ServerResponse, data: any, msg: string[], logger: 
   return true;
 }
 
-export function sendOptions(res: ServerResponse, options: string[], logger: ILogger) {
-  logger.info(`${res.req.method} ${res.req.url}`);
-  res.setHeader('Allow', options.join(','));
-  res.statusCode = 204;
+export function sendOptions(res: ServerResponse, options: string[], msg: string[], logger: ILogger) {
+  return sendHeader(res, { Allow: options.join(',') }, msg, logger);
+}
+
+export function sendHeader(
+  res: ServerResponse,
+  header: Record<string, string | number | readonly string[]>,
+  msg: string[],
+  logger: ILogger,
+  statusCode = 204,
+) {
+  logger.info(`${res.req.method} ${res.req.url}`, ...msg.filter(Boolean));
+  Object.entries(header).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+  res.statusCode = statusCode;
   res.end();
   return true;
 }

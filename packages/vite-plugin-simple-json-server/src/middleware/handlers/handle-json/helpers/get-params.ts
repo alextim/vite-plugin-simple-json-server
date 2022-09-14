@@ -1,12 +1,7 @@
 export const getParams = (q: Record<string, string | string[] | undefined>, defaultLimit: number) => {
-  const { count, offset: srcOffset, limit: srcLimit, sort: srcSort, ...srcFilterParams } = q;
+  const { offset: srcOffset, limit: srcLimit, sort: srcSort, ...srcFilterParams } = q;
 
   const filterParams = getFilterParams(srcFilterParams);
-  const isCount = count !== undefined;
-
-  if (isCount) {
-    return { isCount, filterParams };
-  }
 
   let offset: number | undefined = undefined;
   let limit: number | undefined = undefined;
@@ -42,7 +37,7 @@ export const getParams = (q: Record<string, string | string[] | undefined>, defa
     }
   }
 
-  return { isCount, offset, limit, sortParams, filterParams };
+  return { offset, limit, sortParams, filterParams };
 };
 
 function getFilterParams(src: Record<string, string | string[] | undefined>): Record<string, string | string[]> | undefined {

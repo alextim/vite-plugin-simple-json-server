@@ -48,14 +48,14 @@ describe('getFilepath', () => {
     expect(result).toBe(pathname);
   });
 
-  it('source.js, other mime, should return ""', () => {
+  it('source.js, other mime, should return false', () => {
     const pathname = path.join(dataRoot, 'source.js');
     const result = getFilepath(pathname, HTML_MIME_TYPE);
-    expect(result).toBe('');
+    expect(result).toBe(false);
   });
-  it('source.js, other mime, should return ""', () => {
+  it('source.js, other mime, should return false', () => {
     const pathname = path.join(dataRoot, 'subfolder', 'source.js');
     const result = getFilepath(pathname, HTML_MIME_TYPE);
-    expect(result).toBe('');
+    expect(result).toBe(false);
   });
 });

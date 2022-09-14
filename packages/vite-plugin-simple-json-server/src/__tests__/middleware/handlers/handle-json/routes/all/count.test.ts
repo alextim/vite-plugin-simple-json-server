@@ -11,7 +11,7 @@ vi.mock('../../../../../../utils/logger');
 
 const defReq = {
   url: '',
-  method: 'GET',
+  method: 'HEAD',
 };
 
 const defRes = {
@@ -34,8 +34,8 @@ const defaultLimit = 2;
 describe('test handleJson count', () => {
   beforeEach(reset);
   afterEach(() => void vi.clearAllMocks());
-  it('/array-empty?count exists, json, should return true', async () => {
-    req.url = '/array-empty?count';
+  it('/array-empty exists, json, should return true', async () => {
+    req.url = '/array-empty';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -46,11 +46,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 0 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 0);
   });
 
-  it('/array-empty?count&id=2 exists, json, should return true', async () => {
-    req.url = '/array-empty?count&id-2';
+  it('/array-empty?id=2 exists, json, should return true', async () => {
+    req.url = '/array-empty?id=2';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -61,11 +62,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 0 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 0);
   });
 
-  it('/array-has-id?count exists, json, should return true', async () => {
-    req.url = '/array-has-id?count';
+  it('/array-has-id exists, json, should return true', async () => {
+    req.url = '/array-has-id';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -76,11 +78,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 6 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 6);
   });
 
-  it('/array-has-id?count&name=a exists, json, should return true', async () => {
-    req.url = '/array-has-id?count&name=a';
+  it('/array-has-id?name=a exists, json, should return true', async () => {
+    req.url = '/array-has-id?name=a';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -91,11 +94,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 2 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 2);
   });
 
-  it('/array-has-id?count&id=2&id=3&id=100 exists, json, should return true', async () => {
-    req.url = '/array-has-id?count&id=2&id=3&id=100';
+  it('/array-has-id?id=2&id=3&id=100 exists, json, should return true', async () => {
+    req.url = '/array-has-id?id=2&id=3&id=100';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -106,11 +110,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 2 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 2);
   });
 
-  it('/array-has-id?count&name=x exists, json, should return true', async () => {
-    req.url = '/array-has-id?count&name=x';
+  it('/array-has-id?name=x exists, json, should return true', async () => {
+    req.url = '/array-has-id?name=x';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -121,11 +126,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 0 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 0);
   });
 
-  it('/array-has-id?count&absent-prop=1 exists, json, should return true', async () => {
-    req.url = '/array-has-id?count&absent-prop=1';
+  it('/array-has-id?absent-prop=1 exists, json, should return true', async () => {
+    req.url = '/array-has-id?absent-prop=1';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -136,11 +142,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.end).toBeCalledWith(JSON.stringify({ count: 0 }));
+    expect(res.statusCode).toBe(204);
+    expect(res.setHeader).toBeCalledWith('X-Total-Count', 0);
   });
 
-  it('/object?count exists, json, should return true, 200', async () => {
-    req.url = '/object?count';
+  it('/object exists, json, should return true, 405', async () => {
+    req.url = '/object';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,
@@ -151,12 +158,12 @@ describe('test handleJson count', () => {
       defaultLimit,
     );
     expect(result).toBeTruthy();
-    expect(res.statusCode).toBe(200);
+    expect(res.statusCode).toBe(405);
     expect(res.end).toBeCalled();
   });
 
-  it('/not-exist?count not exists, json, should return false', async () => {
-    req.url = '/not-exist?count';
+  it('/not-exist not exists, json, should return false', async () => {
+    req.url = '/not-exist';
     const result = await handleJson(
       req as Connect.IncomingMessage,
       res as ServerResponse,

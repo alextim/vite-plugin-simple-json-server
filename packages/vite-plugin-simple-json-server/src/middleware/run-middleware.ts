@@ -1,5 +1,5 @@
-import { Connect } from 'vite';
 import http from 'node:http';
+import { Connect } from 'vite';
 import AntPathMatcher from '@howiefh/ant-path-matcher';
 
 import { removeTrailingSlash } from '@/utils/misc';
@@ -7,15 +7,12 @@ import { timeout } from '@/utils/timeout';
 
 import { ILogger } from '@/services/logger';
 import { send404, send405 } from '@/helpers/send';
+import { isOurApi } from '@/helpers/is-our-api';
 
 import { SimpleJsonServerPluginOptions } from '../types';
+import { OPEN_API } from '../constants';
 
-import { handleHtml } from './handlers/handle-html';
-import { handleJson } from './handlers/handle-json';
-import { handleOther } from './handlers/handle-other';
-
-const isOurApi = (url: string | undefined, urlPrefixes: string[] | undefined) =>
-  url && urlPrefixes && urlPrefixes.some((prefix) => url.startsWith(prefix));
+import { handleJson, handleOther, handleOpenApiIndex, handleOpenApiJson } from './handlers';
 
 const removePrefix = (url: string, urlPrefixes: string[]) => {
   for (const prefix of urlPrefixes) {
@@ -33,11 +30,22 @@ const runMiddleware = async (
   res: http.ServerResponse,
   mockRoot: string,
   staticRoot: string,
-  { urlPrefixes, handlers, limit, noHandlerResponse404, delay }: SimpleJsonServerPluginOptions,
+  options: SimpleJsonServerPluginOptions,
   logger: ILogger,
 ) => {
+  const { urlPrefixes, handlers, limit, noHandlerResponse404, delay } = options;
+
   if (!isOurApi(req?.url, urlPrefixes)) {
     return false;
+  }
+  const urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
+  const purePath = removePrefix(urlPath, urlPrefixes!) || '/';
+
+  if (matcher.doMatch(`${urlPrefixes![0]}${OPEN_API}.json`, urlPath, true)) {
+    return await handleOpenApiJson(req, res, mockRoot, staticRoot, options, logger);
+  }
+  if (matcher.doMatch(`${urlPrefixes![0]}${OPEN_API}`, urlPath, true)) {
+    return handleOpenApiIndex(req, res, urlPath, logger);
   }
 
   if (delay) {
@@ -51,8 +59,6 @@ const runMiddleware = async (
       return false;
     }
   }
-
-  const urlPath = removeTrailingSlash(req!.url!.split('?')[0]);
 
   if (handlers) {
     for (const handler of handlers) {
@@ -72,12 +78,8 @@ const runMiddleware = async (
     }
   }
 
-  const purePath = removePrefix(urlPath, urlPrefixes!);
   if (purePath) {
     if (await handleJson(req, res, mockRoot, purePath, logger, urlPath, limit!)) {
-      return true;
-    }
-    if (handleHtml(req, res, staticRoot, purePath, logger)) {
       return true;
     }
     if (handleOther(req, res, staticRoot, purePath, logger)) {

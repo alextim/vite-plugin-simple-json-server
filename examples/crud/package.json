@@ -13,18 +13,18 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/react": "^18.0.18",
+    "@types/react": "^18.0.20",
     "@types/react-dom": "^18.0.6",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vitejs/plugin-react": "^2.1.0",
-    "autoprefixer": "^10.4.8",
-    "daisyui": "^2.25.0",
+    "autoprefixer": "^10.4.11",
+    "daisyui": "^2.27.0",
     "jsdom": "^20.0.0",
     "postcss": "^8.4.16",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.8.3",
     "vite": "^3.1.0",
-    "vite-plugin-simple-json-server": "latest",
+    "vite-plugin-simple-json-server": "workspace:*",
     "vitest": "^0.23.2"
   },
   "dependencies": {

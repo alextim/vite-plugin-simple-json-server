@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 
 interface IJsonDb {
   load: () => Promise<void>;
@@ -16,7 +16,7 @@ export class JsonDb implements IJsonDb {
   }
 
   async load() {
-    this.rawContent = await fs.promises.readFile(this.pathname, { encoding: 'utf-8' });
+    this.rawContent = await fs.readFile(this.pathname, { encoding: 'utf-8' });
     this.data = JSON.parse(this.rawContent);
   }
 
@@ -25,7 +25,7 @@ export class JsonDb implements IJsonDb {
   }
 
   protected async write() {
-    await fs.promises.writeFile(this.pathname, JSON.stringify(this.data), { encoding: 'utf-8' });
+    await fs.writeFile(this.pathname, JSON.stringify(this.data), { encoding: 'utf-8' });
   }
 
   async updateObject(data: any, replace = true) {

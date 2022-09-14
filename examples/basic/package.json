@@ -10,6 +10,6 @@
   },
   "devDependencies": {
     "vite": "^3.1.0",
-    "vite-plugin-simple-json-server": "latest"
+    "vite-plugin-simple-json-server": "workspace:*"
   }
 }

@@ -5,14 +5,18 @@ import getMime, { supportedMimes } from '../utils/mime-types';
 const getFilePath = (pathname: string, mime: string) => {
   if (isFileExists(pathname)) {
     const { ext } = path.parse(pathname);
-    return getMime(ext.substring(1)) === mime ? pathname : '';
+    return getMime(ext.substring(1)) === mime ? pathname : false;
   }
 
-  const name = (isDirExists(pathname) ? path.join(pathname, 'index') : pathname) + '.';
+  let name: string;
+  if (isDirExists(pathname)) {
+    name = path.join(pathname, 'index');
+  } else {
+    name = pathname;
+  }
+  name += '.';
 
-  const exts = supportedMimes[mime];
-
-  for (const ext of exts) {
+  for (const ext of supportedMimes[mime]) {
     if (isFileExists(name + ext)) {
       return name + ext;
     }

@@ -40,6 +40,14 @@ export class JsonTable extends JsonDb {
     sort(this.data, ...params);
   }
 
+  getFirst() {
+    if (this.isTable()) {
+      return this.data.length ? this.data[0] : {};
+    } else {
+      return this.data;
+    }
+  }
+
   getById(id: number) {
     return (this.data as any[]).find((item: any) => item.id == id);
   }

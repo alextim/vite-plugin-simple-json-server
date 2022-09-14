@@ -1,28 +1,35 @@
 import './style.css';
 
-updateView('<h1>Hello, Json Server</h1><ul id="examples"></ul>', '#app');
+updateView(
+  `
+<h1>Hello, Json Server</h1>
+<a href='/api/v3/openapi'>OpenAPI (Swagger UI)</a>
+<ul id="examples"></ul>
+`,
+  '#app',
+);
 
 fetchApi('/api/home');
 
-fetchApi('/api/json?count');
+fetchApi('/api/products', undefined, 'HEAD');
 
-fetchApi('/api/json/?count&color=black');
+fetchApi('/api/products/?color=black', undefined, 'HEAD');
 
-fetchApi('/api/json/3');
+fetchApi('/api/products/3');
 
-fetchApi('/api/json?color=black', formatList);
+fetchApi('/api/products?color=black', formatList);
 
-fetchApi('/api/json?offset=5&limit=5&sort=-color', formatList);
+fetchApi('/api/products?offset=5&limit=5&sort=-color', formatList);
 
-fetchApi('/api/json/?id=3&id=8&id=9&color=black', formatList);
+fetchApi('/api/products/?id=3&id=8&id=9&color=black', formatList);
 
-fetchApi('/api/json?offset=2&limit=3&color=black&sort=-id', formatList);
+fetchApi('/api/products?offset=2&limit=3&color=black&sort=-id', formatList);
 
-fetchApi('/api/json?offset=2&limit=3&color=black&sort=id', formatList);
+fetchApi('/api/products?offset=2&limit=3&color=black&sort=id', formatList);
 
-fetchApi('/api/json?limit=5&sort=color,-id', formatList);
+fetchApi('/api/products?limit=5&sort=color,-id', formatList);
 
-fetchApi('/api/json?limit=5&sort=rating.count,title', formatList);
+fetchApi('/api/products?limit=5&sort=rating.count,title', formatList);
 
 function formatList(data) {
   if (!data || !Array.isArray(data)) {
@@ -48,6 +55,9 @@ function fetchApi(url, formatOutput = undefined, method = 'GET') {
   fetch(url, { method })
     .then(handleErrors)
     .then((resp) => {
+      if (method === 'HEAD') {
+        return { 'X-Total-Count': resp.headers.get('X-Total-Count') };
+      }
       const isJson = resp.headers.get('content-type')?.includes('application/json');
       if (isJson) {
         return resp.json();

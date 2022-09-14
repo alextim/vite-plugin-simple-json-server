@@ -8,8 +8,8 @@ import { isFileExists } from '@/utils/files';
 
 import { send403, sendFileContent, sendOptions } from '@/helpers/send';
 
-export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, dataRoot: string, purePath: string, logger: ILogger) {
-  const pathname = path.join(dataRoot, purePath);
+export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, staticRoot: string, purePath: string, logger: ILogger) {
+  const pathname = path.join(staticRoot, purePath);
 
   if (!isFileExists(pathname)) {
     return false;
@@ -23,7 +23,7 @@ export function handleOther(req: Connect.IncomingMessage, res: ServerResponse, d
 
   switch (req.method) {
     case 'OPTIONS':
-      return sendOptions(res, ['GET'], logger);
+      return sendOptions(res, ['GET'], [pathname], logger);
     case 'GET':
       return sendFileContent(res, pathname, mime, logger);
     default:
