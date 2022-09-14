@@ -255,7 +255,7 @@ Full CRUD operations are only available for array-like JSON with a numeric `id` 
 
 ## OpenAPI (Swagger)
 
-The plugin generates a JSON by [OpenAPI Specification v.3](https://swagger.io/specification/).  
+The plugin generates JSON according to the [OpenAPI Specification v3.0](https://swagger.io/specification/).  
 
 It is available on `/{api}/v3/openapi.json` route.
 
