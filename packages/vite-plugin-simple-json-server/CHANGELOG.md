@@ -1,5 +1,17 @@
 # vite-plugin-simple-json-server
 
+## 0.6.0
+
+### Minor Changes
+
+- a8dbd42: ## Breaking
+
+  `count` query parameter is replaced by `HEAD` method.
+
+  ## Features
+
+  OpenAPI 3.0 (Swagger UI) support
+
 ## 0.5.5
 
 ### Patch Changes
