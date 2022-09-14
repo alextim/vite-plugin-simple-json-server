@@ -9,7 +9,7 @@ Provide a file-based mock API for [Vite](https://vitejs.dev/) in dev mode.
 - <strong>[Why vite-plugin-simple-json-server](#why-vite-plugin-simple-json-server)</strong>
 - <strong>[Installation](#installation)</strong>
 - <strong>[Usage](#usage)</strong>
-- <strong>[OpenAPI (Swagger)](#swagger)</strong>
+- <strong>[OpenAPI (Swagger)](#openapi-swagger)</strong>
 - <strong>[Configuration](#configuration)</strong>
 - <strong>[Examples](#examples)</strong>
 - <strong>[Contributing](#contributing)</strong>
