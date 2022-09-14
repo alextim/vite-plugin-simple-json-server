@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.5.5
+
+### Patch Changes
+
+- 3ff8211: Feature: new option - delay to responses
+
 ## 0.5.4
 
 ### Patch Changes
