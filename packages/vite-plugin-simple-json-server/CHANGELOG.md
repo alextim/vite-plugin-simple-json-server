@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.6.1
+
+### Patch Changes
+
+- 9482527: Added the `engines` entry `"node": ">=15.7.0"` to the package.json.
+
 ## 0.6.0
 
 ### Minor Changes
