@@ -62,7 +62,9 @@ export default {
 
 Then, restart the dev server.
 
-This configuration assumes that all json files are in the `mock` folder under Vite root.
+This configuration assumes that all json files are in the `mock` folder under Vite root.  
+
+To work correctly, the plugin requires Node version 15.7.0 or higher.
 
 ## Usage
 

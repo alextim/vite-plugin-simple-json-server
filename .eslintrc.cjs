@@ -26,5 +26,5 @@ module.exports = {
 
     'prettier/prettier': 'error',
   },
-  ignorePatterns: ['.prettierrc.cjs', '.eslintrc.cjs', 'astro.config.mjs'],
+  ignorePatterns: ['.prettierrc.cjs', '.eslintrc.cjs'],
 };
