@@ -28,20 +28,28 @@ class FetchApi {
 
   private async fetchApi(url: string, opts: RequestInit = {}, headers: Record<string, string> = {}) {
     this.abortController = new AbortController();
+
     const resp = await fetch(url, {
       method: defaultMethod,
       headers: defaultHeaders,
       ...opts,
       signal: this.abortController.signal,
     });
+
     if (!resp.ok) {
       const json = await resp.json();
       throw new FetchError(json.message, resp.status);
     }
+
+    if (resp.status === 204) {
+      return {};
+    }
+
     const json = await resp.json();
     const result: Record<string, any> = {
       json,
     };
+
     Object.entries(headers).forEach(([varKey, headerKey]) => {
       const val = resp.headers.get(headerKey);
       if (val !== undefined && val !== '') {
@@ -68,7 +76,7 @@ class FetchApi {
 
   async delete(url: string, opts: RequestInit = {}) {
     opts.method = 'DELETE';
-    return await this.fetchApi(url, opts);
+    await this.fetchApi(url, opts);
   }
 }
 

@@ -21,6 +21,5 @@ export const onDelete = async (res: ServerResponse, filePath: string, logger: IL
   if (!(await table.delete(id))) {
     return send404(res, [`id=${id}`, filePath], logger);
   }
-
-  return sendData(res, '{}', [`resource with id=${id} deleted`, filePath], logger, 200);
+  return sendData(res, undefined, [`resource with id=${id} deleted`, filePath], logger, 204);
 };

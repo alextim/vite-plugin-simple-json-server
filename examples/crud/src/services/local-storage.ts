@@ -42,16 +42,15 @@ class LocalStorage implements IStorage<Item, number> {
   async delete(id: number) {
     const items = await this.getAll();
     if (!items) {
-      return false;
+      throw new Error(`id=${id} not found`);
     }
     const index = items.findIndex((item) => item.id === id);
     if (index === -1) {
-      return false;
+      throw new Error(`id=${id} not found`);
     }
 
     items.splice(index, 1);
     this.write(items);
-    return true;
   }
 
   async add({ id, ...rest }: Item) {

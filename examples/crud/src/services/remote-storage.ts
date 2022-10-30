@@ -52,8 +52,7 @@ class RemoteStorage implements IStorage<Item, number> {
   }
 
   async delete(id: number) {
-    const { json } = await this.api.delete(this.formatUrl(id));
-    return json;
+    await this.api.delete(this.formatUrl(id));
   }
 
   async add({ id, ...rest }: Item) {

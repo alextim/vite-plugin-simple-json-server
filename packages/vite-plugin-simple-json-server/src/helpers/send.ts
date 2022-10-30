@@ -53,6 +53,9 @@ export function sendData(res: ServerResponse, data: any, msg: string[], logger: 
 
   res.statusCode = statusCode;
   if (statusCode === 204) {
+    // Safari (and potentially other browsers) need content-length 0,
+    // for 204 or they just hang waiting for a body
+    res.setHeader('Content-Length', '0');
     res.end();
   } else {
     if (!mime) {

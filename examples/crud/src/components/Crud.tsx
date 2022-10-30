@@ -81,9 +81,8 @@ const Crud = ({ storage }: Props) => {
   const onDelete = async (id: number) => {
     setLoading(true);
     try {
-      if (!(await storage.delete(id))) {
-        throw new Error(`delete: id=${id} not found in storage`);
-      }
+      await storage.delete(id);
+
       const isPageEmpty = items.length === 1;
 
       const newOffset = isPageEmpty ? Math.max(0, offset - limit) : offset;
