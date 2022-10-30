@@ -242,7 +242,7 @@ Full CRUD operations are only available for array-like JSON with a numeric `id` 
 | POST      | Create         | <ul><li>201 (Created), created item, `Location` header with link to `/products/{id}` containing new ID.</li><li>409 (Conflict) if resource already exists.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> | 405 (Method Not Allowed).              |
 | PUT       | Update/Replace | 405 (Method Not Allowed). | <ul><li>200 (OK), replaced item.</li><li>404 (Not Found), if ID not found.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> |
 | PATCH     | Update/Modify  | 405 (Method Not Allowed). | <ul><li>200 (OK), modified item.</li><li>404 (Not Found), if ID not found.</li><li>400 (Bad Request) for empty body, not valid JSON or too big body (>1e6)</li></ul> |
-| DELETE    | Delete         | 405 (Method Not Allowed). | <ul><li>200 (OK), empty object `{}`.</li><li>404 (Not Found), if ID not found.</li></ul>                                                    |
+| DELETE    | Delete         | 405 (Method Not Allowed). | <ul><li>204 (OK)</li><li>404 (Not Found), if ID not found.</li></ul>                                                    |
 
 ### Object
 
