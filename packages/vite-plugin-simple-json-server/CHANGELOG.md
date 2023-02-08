@@ -1,5 +1,11 @@
 # vite-plugin-simple-json-server
 
+## 0.6.2
+
+### Patch Changes
+
+- 8edc50c: chore: deps update
+
 ## 0.6.1
 
 ### Patch Changes
